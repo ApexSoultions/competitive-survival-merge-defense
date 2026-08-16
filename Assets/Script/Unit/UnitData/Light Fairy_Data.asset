@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df122ab55926bb345830f494d255c638, type: 3}
+  m_Name: Light Fairy_Data
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitName: Light Fairy
+  icon: {fileID: 4164213114258598589, guid: 957bf6712d387e54bac97a7896c6f1cf, type: 3}
+  prefab: {fileID: 3444463731680135898, guid: 6c3153cb332c94b4f843877c3064fabf, type: 3}
+  levelIcons:
+  - {fileID: 4164213114258598589, guid: 957bf6712d387e54bac97a7896c6f1cf, type: 3}
+  levelPrefabs:
+  - {fileID: 3444463731680135898, guid: 6c3153cb332c94b4f843877c3064fabf, type: 3}
+  - {fileID: 3444463731680135898, guid: e3d3a8c2f8e961d43abc969516406ad0, type: 3}
+  - {fileID: 3444463731680135898, guid: 4316153d995e75647b28b0e771187499, type: 3}
+  - {fileID: 3444463731680135898, guid: b409559e73dd1a545a085a6dbc61ea9a, type: 3}
+  - {fileID: 3444463731680135898, guid: e4aeabf1e0075bd47be4abb1e2563959, type: 3}
+  - {fileID: 3444463731680135898, guid: 4eee664738e1ac14085b057bebb20f09, type: 3}
+  manaCost: 50
+  attackDamage: 3
+  attackSpeed: 0.45
+  attackRange: 3

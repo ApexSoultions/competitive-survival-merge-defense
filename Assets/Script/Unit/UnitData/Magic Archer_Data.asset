@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df122ab55926bb345830f494d255c638, type: 3}
+  m_Name: Magic Archer_Data
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitName: Magic Archer
+  icon: {fileID: -6130079588993408331, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  prefab: {fileID: 3444463731680135898, guid: 2deaf5263beb99548a88615b77680856, type: 3}
+  levelIcons:
+  - {fileID: -6130079588993408331, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  levelPrefabs:
+  - {fileID: 3444463731680135898, guid: 2deaf5263beb99548a88615b77680856, type: 3}
+  - {fileID: 3444463731680135898, guid: 591297ec4edc9ef41ac7c1e31554fac8, type: 3}
+  - {fileID: 3444463731680135898, guid: de8e3f4bd4a6dbc40baafcb4f5021ae4, type: 3}
+  - {fileID: 3444463731680135898, guid: 7f133a60f94f1c5458f9ec8c4a5cf166, type: 3}
+  - {fileID: 3444463731680135898, guid: bed23ad183a43554fb8eef7f2b06ba74, type: 3}
+  - {fileID: 3444463731680135898, guid: 2a2f61176e8bbb747ab5cb19e8d58300, type: 3}
+  manaCost: 50
+  attackDamage: 10
+  attackSpeed: 1
+  attackRange: 3

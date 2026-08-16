@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df122ab55926bb345830f494d255c638, type: 3}
+  m_Name: Stone Guardian_Data
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitName: Stone Guardian
+  icon: {fileID: 2081609225425774721, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  prefab: {fileID: 3444463731680135898, guid: e4529c9cac202b34a84f96f7208b5417, type: 3}
+  levelIcons:
+  - {fileID: 2081609225425774721, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  levelPrefabs:
+  - {fileID: 3444463731680135898, guid: e4529c9cac202b34a84f96f7208b5417, type: 3}
+  - {fileID: 3444463731680135898, guid: 9a3910b511e658e4a9cadf7861fe8c25, type: 3}
+  - {fileID: 3444463731680135898, guid: 89d1b7374b01e5a4989f31e19829e730, type: 3}
+  - {fileID: 3444463731680135898, guid: 5545427d0452a0743827f10294ca75b6, type: 3}
+  - {fileID: 3444463731680135898, guid: 3086a57e2efdf9b4cb12c15059321bca, type: 3}
+  - {fileID: 3444463731680135898, guid: 8be994c8967c7de4eba848349f019097, type: 3}
+  manaCost: 50
+  attackDamage: 35
+  attackSpeed: 0.45
+  attackRange: 3.2

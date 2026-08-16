@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de6d0fae9144527beafc9348fdb407d, type: 3}
+  m_Name: GameConfigRegistry
+  m_EditorClassIdentifier: 
+  sceneFlow: {fileID: 11400000, guid: 3a1b3d9bc34d4713bb5c58ad48be8046, type: 2}
+  gameBalance: {fileID: 11400000, guid: cb44bc9c4e5049a38b01549b5a8d5847, type: 2}
+  mobileQuality: {fileID: 11400000, guid: 3ea81abc9ea240edad01b326f4a2ac8b, type: 2}
+  activeAbilities: {fileID: 11400000, guid: b15a2e4d09f543ba976167927d8677d7, type: 2}
+  defaultWaveTable: {fileID: 11400000, guid: 41c882a43c634f6390562152d8e3bafd, type: 2}

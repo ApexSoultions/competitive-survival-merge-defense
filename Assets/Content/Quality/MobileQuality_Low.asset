@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08e06f2a9a134bc0a2d6f1a883e8cb36, type: 3}
+  m_Name: MobileQuality_Low
+  m_EditorClassIdentifier: 
+  tier: 0
+  targetFrameRate: 30
+  vsync: 0
+  maxConcurrentVfx: 12
+  maxConcurrentDamageNumbers: 16
+  enableScreenShake: 0
+  enableDamageNumbers: 1
+  enableStatusIcons: 0
+  particleBudgetScale: 0.5
+  reducePostProcessing: 1
+  urpNotes: "Low \u2014 prefer fewer particles, no shake, 30 FPS."

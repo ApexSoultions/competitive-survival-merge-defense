@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df122ab55926bb345830f494d255c638, type: 3}
+  m_Name: Poison Druid_Data
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitName: Plague Doctor
+  icon: {fileID: -6548289768654288691, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  prefab: {fileID: 3444463731680135898, guid: 390aac486c87448429418b40a4b7047c, type: 3}
+  levelIcons:
+  - {fileID: -6548289768654288691, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  levelPrefabs:
+  - {fileID: 3444463731680135898, guid: 390aac486c87448429418b40a4b7047c, type: 3}
+  - {fileID: 3444463731680135898, guid: 5006af6d5a7fd7b4abeb8317c9c8c9cd, type: 3}
+  - {fileID: 3444463731680135898, guid: 7ba510806cc9dd847bcb1e1d3404ecf0, type: 3}
+  - {fileID: 3444463731680135898, guid: 88dd26c7971566944ad115822b2b64a3, type: 3}
+  - {fileID: 3444463731680135898, guid: 0019b7c58ccb98f429ee7be29a21697d, type: 3}
+  - {fileID: 3444463731680135898, guid: f6d1a4cd32dd95d4680b65bb65d90e63, type: 3}
+  manaCost: 50
+  attackDamage: 10
+  attackSpeed: 1
+  attackRange: 3

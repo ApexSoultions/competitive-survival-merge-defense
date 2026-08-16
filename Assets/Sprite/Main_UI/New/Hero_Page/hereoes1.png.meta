@@ -1,0 +1,728 @@
+fileFormatVersion: 2
+guid: 5bcfa33d7520e9140aeb55daff2fd260
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2724997635753214094
+    second: hereoes1_0
+  - first:
+      213: -4367504559407628202
+    second: hereoes1_1
+  - first:
+      213: -3434344345498430675
+    second: hereoes1_2
+  - first:
+      213: 8998658997837149348
+    second: hereoes1_3
+  - first:
+      213: -4848203765559717248
+    second: hereoes1_4
+  - first:
+      213: 4420103666133921656
+    second: hereoes1_5
+  - first:
+      213: 2180158614914406850
+    second: hereoes1_6
+  - first:
+      213: 1429775259923654496
+    second: hereoes1_7
+  - first:
+      213: 8041646520437770145
+    second: hereoes1_8
+  - first:
+      213: -1673732050166574429
+    second: hereoes1_9
+  - first:
+      213: 5804441280583368436
+    second: hereoes1_10
+  - first:
+      213: 8499329998554076865
+    second: hereoes1_11
+  - first:
+      213: 4471059459832979637
+    second: hereoes1_12
+  - first:
+      213: 4561022580882046318
+    second: hereoes1_13
+  - first:
+      213: -1494961034368473678
+    second: hereoes1_14
+  - first:
+      213: -4248445339650797675
+    second: hereoes1_15
+  - first:
+      213: -4697116339848204706
+    second: hereoes1_16
+  - first:
+      213: -1945788120099254252
+    second: hereoes1_17
+  - first:
+      213: -3711621096452919113
+    second: hereoes1_18
+  - first:
+      213: -5787526890962330334
+    second: hereoes1_19
+  - first:
+      213: 566776663965386570
+    second: hereoes1_20
+  - first:
+      213: -475160691818060161
+    second: hereoes1_21
+  - first:
+      213: -5406235996081792626
+    second: hereoes1_22
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: hereoes1_0
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 2366
+        width: 365
+        height: 273
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27f7623861dde2ad0800000000000000
+      internalID: -2724997635753214094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_1
+      rect:
+        serializedVersion: 2
+        x: 507
+        y: 2388
+        width: 234
+        height: 249
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6500c954eb18363c0800000000000000
+      internalID: -4367504559407628202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_2
+      rect:
+        serializedVersion: 2
+        x: 839
+        y: 2370
+        width: 257
+        height: 288
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d23d1328302c650d0800000000000000
+      internalID: -3434344345498430675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_3
+      rect:
+        serializedVersion: 2
+        x: 1215
+        y: 2325
+        width: 251
+        height: 328
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a4b4fc7ea8a1ec70800000000000000
+      internalID: 8998658997837149348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_4
+      rect:
+        serializedVersion: 2
+        x: 1557
+        y: 2355
+        width: 281
+        height: 284
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0821a13bc58b7bcb0800000000000000
+      internalID: -4848203765559717248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_5
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 1879
+        width: 300
+        height: 362
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87f605a9ddc575d30800000000000000
+      internalID: 4420103666133921656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_6
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 1890
+        width: 270
+        height: 332
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c91bf395ba714e10800000000000000
+      internalID: 2180158614914406850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_7
+      rect:
+        serializedVersion: 2
+        x: 826
+        y: 1885
+        width: 257
+        height: 337
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 067246c060597d310800000000000000
+      internalID: 1429775259923654496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_8
+      rect:
+        serializedVersion: 2
+        x: 1183
+        y: 1914
+        width: 274
+        height: 272
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a703f367eaa99f60800000000000000
+      internalID: 8041646520437770145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_9
+      rect:
+        serializedVersion: 2
+        x: 1553
+        y: 1906
+        width: 290
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a292a47195b5c8e0800000000000000
+      internalID: -1673732050166574429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_10
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 1608
+        width: 109
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4fef8c867948d8050800000000000000
+      internalID: 5804441280583368436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_11
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 1608
+        width: 110
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c613a03a9fa3f570800000000000000
+      internalID: 8499329998554076865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_12
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 1608
+        width: 109
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b0aef8d3e46c0e30800000000000000
+      internalID: 4471059459832979637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_13
+      rect:
+        serializedVersion: 2
+        x: 526
+        y: 1608
+        width: 109
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6d720a3fd10c4f30800000000000000
+      internalID: 4561022580882046318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_14
+      rect:
+        serializedVersion: 2
+        x: 650
+        y: 1608
+        width: 109
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b5aa612cd4d04be0800000000000000
+      internalID: -1494961034368473678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_15
+      rect:
+        serializedVersion: 2
+        x: 902
+        y: 1577
+        width: 314
+        height: 163
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59f437a097d7a05c0800000000000000
+      internalID: -4248445339650797675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_16
+      rect:
+        serializedVersion: 2
+        x: 1394
+        y: 1606
+        width: 294
+        height: 103
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5e2aa6439d70deb0800000000000000
+      internalID: -4697116339848204706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_17
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 1065
+        width: 1722
+        height: 525
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4101f45930c2ff4e0800000000000000
+      internalID: -1945788120099254252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_18
+      rect:
+        serializedVersion: 2
+        x: 610
+        y: 541
+        width: 437
+        height: 525
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b0f31d174cad7cc0800000000000000
+      internalID: -3711621096452919113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_19
+      rect:
+        serializedVersion: 2
+        x: 1088
+        y: 534
+        width: 809
+        height: 533
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22d5b20d4f29eafa0800000000000000
+      internalID: -5787526890962330334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_20
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 542
+        width: 431
+        height: 522
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4743aa7f589dd700800000000000000
+      internalID: 566776663965386570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_21
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 221
+        width: 1843
+        height: 236
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f76a4f84ed3e769f0800000000000000
+      internalID: -475160691818060161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hereoes1_22
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 32
+        width: 1710
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e895d99410139f4b0800000000000000
+      internalID: -5406235996081792626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      hereoes1_0: -2724997635753214094
+      hereoes1_1: -4367504559407628202
+      hereoes1_10: 5804441280583368436
+      hereoes1_11: 8499329998554076865
+      hereoes1_12: 4471059459832979637
+      hereoes1_13: 4561022580882046318
+      hereoes1_14: -1494961034368473678
+      hereoes1_15: -4248445339650797675
+      hereoes1_16: -4697116339848204706
+      hereoes1_17: -1945788120099254252
+      hereoes1_18: -3711621096452919113
+      hereoes1_19: -5787526890962330334
+      hereoes1_2: -3434344345498430675
+      hereoes1_20: 566776663965386570
+      hereoes1_21: -475160691818060161
+      hereoes1_22: -5406235996081792626
+      hereoes1_3: 8998658997837149348
+      hereoes1_4: -4848203765559717248
+      hereoes1_5: 4420103666133921656
+      hereoes1_6: 2180158614914406850
+      hereoes1_7: 1429775259923654496
+      hereoes1_8: 8041646520437770145
+      hereoes1_9: -1673732050166574429
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

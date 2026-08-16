@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ead8bd64b566499ca63e7754c6a674d1, type: 3}
+  m_Name: MobileQualityCatalog
+  m_EditorClassIdentifier: 
+  low: {fileID: 11400000, guid: 69e5cae9c92844b3b2aca35b1e6167dd, type: 2}
+  mid: {fileID: 11400000, guid: a2cb5516ea644795a2193715ceda5607, type: 2}
+  high: {fileID: 11400000, guid: 4294f902799e46eb9eb45ff982675098, type: 2}
+  lowMemoryBelowMb: 3072
+  midMemoryBelowMb: 6144
+  defaultTier: 1

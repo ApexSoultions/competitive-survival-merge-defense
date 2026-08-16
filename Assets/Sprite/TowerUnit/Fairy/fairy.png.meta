@@ -1,0 +1,354 @@
+fileFormatVersion: 2
+guid: c220c4d2735187d48a1c537232c4d126
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2990309890484215505
+    second: fairy_0
+  - first:
+      213: 4808560381157864972
+    second: fairy_1
+  - first:
+      213: 4520698335586148961
+    second: fairy_2
+  - first:
+      213: 4704531112747684950
+    second: fairy_3
+  - first:
+      213: 2485916238653805972
+    second: fairy_4
+  - first:
+      213: 9038047207732080932
+    second: fairy_5
+  - first:
+      213: -8129247833136589367
+    second: fairy_6
+  - first:
+      213: 6792007461002973164
+    second: fairy_7
+  - first:
+      213: 1773943826619582110
+    second: fairy_8
+  - first:
+      213: 7485137534063864438
+    second: fairy_9
+  - first:
+      213: 959771502127576029
+    second: fairy_10
+  - first:
+      213: 1241416875379797157
+    second: fairy_11
+  - first:
+      213: 4370943649567634205
+    second: fairy_12
+  - first:
+      213: 4286923907197484123
+    second: fairy_13
+  - first:
+      213: 3795496344913853951
+    second: fairy_14
+  - first:
+      213: -661347578312439332
+    second: fairy_15
+  - first:
+      213: -6593865649591695147
+    second: fairy_16
+  - first:
+      213: 3638101259513179197
+    second: fairy_17
+  - first:
+      213: -2703134291172277994
+    second: fairy_18
+  - first:
+      213: -1591989784333265226
+    second: fairy_19
+  - first:
+      213: -5755592807001189688
+    second: fairy_20
+  - first:
+      213: 3106673742438364204
+    second: fairy_21
+  - first:
+      213: -7179021438088083092
+    second: fairy_22
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: fairy_0
+      rect:
+        serializedVersion: 2
+        x: 663
+        y: 31
+        width: 317
+        height: 301
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f21e9597ff84086d0800000000000000
+      internalID: -2990309890484215505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fairy_1
+      rect:
+        serializedVersion: 2
+        x: 375
+        y: 385
+        width: 244
+        height: 208
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c067ee790307bb240800000000000000
+      internalID: 4808560381157864972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fairy_15
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 381
+        width: 268
+        height: 198
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd94f99a1eb62d6f0800000000000000
+      internalID: -661347578312439332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fairy_17
+      rect:
+        serializedVersion: 2
+        x: 87
+        y: 391
+        width: 208
+        height: 157
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3c2f2ee1d12d7230800000000000000
+      internalID: 3638101259513179197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fairy_21
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 69
+        width: 278
+        height: 265
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2472131f4f1d1b20800000000000000
+      internalID: 3106673742438364204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fairy_22
+      rect:
+        serializedVersion: 2
+        x: 368
+        y: 40
+        width: 271
+        height: 280
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6988d3c90efe5c90800000000000000
+      internalID: -7179021438088083092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 508f1bd96c07d4b499c555e98260fbb9
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      fairy_0: -2990309890484215505
+      fairy_1: 4808560381157864972
+      fairy_10: 959771502127576029
+      fairy_11: 1241416875379797157
+      fairy_12: 4370943649567634205
+      fairy_13: 4286923907197484123
+      fairy_14: 3795496344913853951
+      fairy_15: -661347578312439332
+      fairy_16: -6593865649591695147
+      fairy_17: 3638101259513179197
+      fairy_18: -2703134291172277994
+      fairy_19: -1591989784333265226
+      fairy_2: 4520698335586148961
+      fairy_20: -5755592807001189688
+      fairy_21: 3106673742438364204
+      fairy_22: -7179021438088083092
+      fairy_3: 4704531112747684950
+      fairy_4: 2485916238653805972
+      fairy_5: 9038047207732080932
+      fairy_6: -8129247833136589367
+      fairy_7: 6792007461002973164
+      fairy_8: 1773943826619582110
+      fairy_9: 7485137534063864438
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

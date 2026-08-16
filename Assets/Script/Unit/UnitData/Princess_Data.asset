@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df122ab55926bb345830f494d255c638, type: 3}
+  m_Name: Princess_Data
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitName: Princess
+  icon: {fileID: -4546708218990064361, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  prefab: {fileID: 3444463731680135898, guid: 556673611ba183641ac0d974707c66a6, type: 3}
+  levelIcons:
+  - {fileID: -4546708218990064361, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  levelPrefabs:
+  - {fileID: 3444463731680135898, guid: 556673611ba183641ac0d974707c66a6, type: 3}
+  - {fileID: 3444463731680135898, guid: 8614208eb353e174d8816975c50407d3, type: 3}
+  - {fileID: 3444463731680135898, guid: 1e2f3023ed3fc674aa2a01908656f9c2, type: 3}
+  - {fileID: 3444463731680135898, guid: 80c78404ec10094439f035dfdcdbbc59, type: 3}
+  - {fileID: 3444463731680135898, guid: 379370ce693d2264f99e055ba791a1a5, type: 3}
+  - {fileID: 3444463731680135898, guid: 50a29a1e3b6e9b1498cb276ae3831611, type: 3}
+  manaCost: 50
+  attackDamage: 4
+  attackSpeed: 0.55
+  attackRange: 3

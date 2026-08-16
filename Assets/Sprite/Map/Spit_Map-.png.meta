@@ -1,0 +1,600 @@
+fileFormatVersion: 2
+guid: 2ebc1665cd460be48b57c41214bfbbaf
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1534817020927793555
+    second: Spit_Map-_0
+  - first:
+      213: 1548238479017111366
+    second: Spit_Map-_1
+  - first:
+      213: -7448045746127032264
+    second: Spit_Map-_2
+  - first:
+      213: -6991028955478771674
+    second: Spit_Map-_3
+  - first:
+      213: -6214300899932338812
+    second: Spit_Map-_4
+  - first:
+      213: -8941914464543917562
+    second: Spit_Map-_5
+  - first:
+      213: -1967284950503528131
+    second: Spit_Map-_6
+  - first:
+      213: -5331252603535887824
+    second: Spit_Map-_7
+  - first:
+      213: 6325023015186811848
+    second: Spit_Map-_8
+  - first:
+      213: 6118399885199123423
+    second: Spit_Map-_9
+  - first:
+      213: -3066423558045914628
+    second: Spit_Map-_10
+  - first:
+      213: 7197619667963290253
+    second: Spit_Map-_11
+  - first:
+      213: 8185385733671035527
+    second: Spit_Map-_12
+  - first:
+      213: -2032418753453179939
+    second: Spit_Map-_13
+  - first:
+      213: -822452561810132584
+    second: Spit_Map-_14
+  - first:
+      213: -2499527046533621396
+    second: Spit_Map-_15
+  - first:
+      213: -5842258026887100682
+    second: Spit_Map-_16
+  - first:
+      213: -4106494621439397177
+    second: Spit_Map-_17
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Spit_Map-_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 483
+        width: 841
+        height: 846
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6620602d0c33bae0800000000000000
+      internalID: -1534817020927793555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_1
+      rect:
+        serializedVersion: 2
+        x: 894
+        y: 1171
+        width: 289
+        height: 158
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64fe76991b27c7510800000000000000
+      internalID: 1548238479017111366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_2
+      rect:
+        serializedVersion: 2
+        x: 893
+        y: 1065
+        width: 277
+        height: 87
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8303d37fad933a890800000000000000
+      internalID: -7448045746127032264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_3
+      rect:
+        serializedVersion: 2
+        x: 894
+        y: 926
+        width: 276
+        height: 124
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 628b73e7430eafe90800000000000000
+      internalID: -6991028955478771674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_4
+      rect:
+        serializedVersion: 2
+        x: 884
+        y: 830
+        width: 56
+        height: 81
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 485842c914e52c9a0800000000000000
+      internalID: -6214300899932338812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_5
+      rect:
+        serializedVersion: 2
+        x: 961
+        y: 830
+        width: 58
+        height: 65
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60abee8bb20f7e380800000000000000
+      internalID: -8941914464543917562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_6
+      rect:
+        serializedVersion: 2
+        x: 1042
+        y: 833
+        width: 43
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d39e349b2ccc2b4e0800000000000000
+      internalID: -1967284950503528131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_7
+      rect:
+        serializedVersion: 2
+        x: 1110
+        y: 833
+        width: 44
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 032fd56d0069306b0800000000000000
+      internalID: -5331252603535887824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_8
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 544
+        width: 74
+        height: 262
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8cb4160cbeef6c750800000000000000
+      internalID: 6325023015186811848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_9
+      rect:
+        serializedVersion: 2
+        x: 996
+        y: 544
+        width: 75
+        height: 262
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd3a517674ce8e450800000000000000
+      internalID: 6118399885199123423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_10
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 288
+        width: 299
+        height: 153
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf9a8c34500e175d0800000000000000
+      internalID: -3066423558045914628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_11
+      rect:
+        serializedVersion: 2
+        x: 891
+        y: 440
+        width: 82
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d82215114f413e360800000000000000
+      internalID: 7197619667963290253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_12
+      rect:
+        serializedVersion: 2
+        x: 999
+        y: 441
+        width: 82
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 782230de4f4589170800000000000000
+      internalID: 8185385733671035527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_13
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 306
+        width: 282
+        height: 123
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddbb49579e56bc3e0800000000000000
+      internalID: -2032418753453179939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_14
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 292
+        width: 133
+        height: 141
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89172b8a0cf0694f0800000000000000
+      internalID: -822452561810132584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_15
+      rect:
+        serializedVersion: 2
+        x: 813
+        y: 292
+        width: 130
+        height: 139
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c69d1ece465ef4dd0800000000000000
+      internalID: -2499527046533621396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_16
+      rect:
+        serializedVersion: 2
+        x: 978
+        y: 261
+        width: 180
+        height: 169
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f6483537412ceea0800000000000000
+      internalID: -5842258026887100682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spit_Map-_17
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 22
+        width: 1089
+        height: 213
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c27d0126ecc207c0800000000000000
+      internalID: -4106494621439397177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 96df9dbc856de96488eaea54895f541f
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      Spit_Map-_0: -1534817020927793555
+      Spit_Map-_1: 1548238479017111366
+      Spit_Map-_10: -3066423558045914628
+      Spit_Map-_11: 7197619667963290253
+      Spit_Map-_12: 8185385733671035527
+      Spit_Map-_13: -2032418753453179939
+      Spit_Map-_14: -822452561810132584
+      Spit_Map-_15: -2499527046533621396
+      Spit_Map-_16: -5842258026887100682
+      Spit_Map-_17: -4106494621439397177
+      Spit_Map-_2: -7448045746127032264
+      Spit_Map-_3: -6991028955478771674
+      Spit_Map-_4: -6214300899932338812
+      Spit_Map-_5: -8941914464543917562
+      Spit_Map-_6: -1967284950503528131
+      Spit_Map-_7: -5331252603535887824
+      Spit_Map-_8: 6325023015186811848
+      Spit_Map-_9: 6118399885199123423
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df122ab55926bb345830f494d255c638, type: 3}
+  m_Name: Golden Spirit_Data
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitName: Golden Spirit
+  icon: {fileID: -2086051523239133244, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  prefab: {fileID: 3444463731680135898, guid: bdc1c8843ef7f1d4a9ee75b0a5c10e69, type: 3}
+  levelIcons:
+  - {fileID: -2086051523239133244, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  levelPrefabs:
+  - {fileID: 3444463731680135898, guid: bdc1c8843ef7f1d4a9ee75b0a5c10e69, type: 3}
+  - {fileID: 3444463731680135898, guid: 9125060ba22312749894679e35d16f49, type: 3}
+  - {fileID: 3444463731680135898, guid: 497bb1aa4cfa32a4e9a8ce31276313a8, type: 3}
+  - {fileID: 3444463731680135898, guid: e48738415dec9bc4b901ea3fdb3965b5, type: 3}
+  - {fileID: 3444463731680135898, guid: f3559ff6a4267bc4db77879ba83d60e7, type: 3}
+  - {fileID: 3444463731680135898, guid: 6aa610d283ffab84ab81b608addcedde, type: 3}
+  manaCost: 50
+  attackDamage: 5
+  attackSpeed: 0.6
+  attackRange: 3

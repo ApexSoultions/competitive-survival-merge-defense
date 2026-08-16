@@ -1,0 +1,528 @@
+fileFormatVersion: 2
+guid: d0e18dd991ad13746af84c7292076f4d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -980612455008287920
+    second: SpriteSheet_Marge_0
+  - first:
+      213: 6804246196413741347
+    second: SpriteSheet_Marge_1
+  - first:
+      213: 4961207141177313545
+    second: SpriteSheet_Marge_2
+  - first:
+      213: -8712332095490867887
+    second: SpriteSheet_Marge_3
+  - first:
+      213: 6189546961973667943
+    second: SpriteSheet_Marge_4
+  - first:
+      213: 7112942023059313028
+    second: SpriteSheet_Marge_5
+  - first:
+      213: 6213588645158510488
+    second: SpriteSheet_Marge_6
+  - first:
+      213: 1058654827408475473
+    second: SpriteSheet_Marge_7
+  - first:
+      213: 6230468327426626989
+    second: SpriteSheet_Marge_8
+  - first:
+      213: -1910824812982751543
+    second: SpriteSheet_Marge_9
+  - first:
+      213: 1914041427146191439
+    second: SpriteSheet_Marge_10
+  - first:
+      213: -6656278347236260478
+    second: SpriteSheet_Marge_11
+  - first:
+      213: 7677251473626994551
+    second: SpriteSheet_Marge_12
+  - first:
+      213: 8870139756935249510
+    second: SpriteSheet_Marge_13
+  - first:
+      213: -8369494972307852449
+    second: SpriteSheet_Marge_14
+  - first:
+      213: 5507374255170694684
+    second: SpriteSheet_Marge_15
+  - first:
+      213: 6512834248290335838
+    second: SpriteSheet_Marge_16
+  - first:
+      213: -3266728880491262154
+    second: SpriteSheet_Marge_17
+  - first:
+      213: -1325696583859588865
+    second: SpriteSheet_Marge_18
+  - first:
+      213: 699601787698461545
+    second: SpriteSheet_Marge_19
+  - first:
+      213: 9202563891160985763
+    second: SpriteSheet_Marge_20
+  - first:
+      213: -1191021714506668827
+    second: SpriteSheet_Marge_21
+  - first:
+      213: 128762394356777461
+    second: SpriteSheet_Marge_22
+  - first:
+      213: 3162013622408755640
+    second: SpriteSheet_Marge_23
+  - first:
+      213: -8073178927849017489
+    second: SpriteSheet_Marge_24
+  - first:
+      213: -1637234763084899698
+    second: SpriteSheet_Marge_25
+  - first:
+      213: -2852576232258747870
+    second: SpriteSheet_Marge_26
+  - first:
+      213: -8826961230380744922
+    second: SpriteSheet_Marge_27
+  - first:
+      213: -6257932853222252605
+    second: SpriteSheet_Marge_28
+  - first:
+      213: -7952859431292306916
+    second: SpriteSheet_Marge_29
+  - first:
+      213: -8866181394433319919
+    second: SpriteSheet_Marge_30
+  - first:
+      213: 3031805816369410450
+    second: SpriteSheet_Marge_31
+  - first:
+      213: -2982335271544464271
+    second: SpriteSheet_Marge_32
+  - first:
+      213: 966910721071346468
+    second: SpriteSheet_Marge_33
+  - first:
+      213: -3525630329162359542
+    second: SpriteSheet_Marge_34
+  - first:
+      213: -10720513721611013
+    second: SpriteSheet_Marge_35
+  - first:
+      213: 2842532957000903276
+    second: SpriteSheet_Marge_36
+  - first:
+      213: -6666289231000320683
+    second: SpriteSheet_Marge_37
+  - first:
+      213: -3499972218015433172
+    second: SpriteSheet_Marge_38
+  - first:
+      213: -1112688546534832496
+    second: SpriteSheet_Marge_39
+  - first:
+      213: -6755570130760596733
+    second: SpriteSheet_Marge_40
+  - first:
+      213: 6409209110406232357
+    second: SpriteSheet_Marge_41
+  - first:
+      213: -646991012708990923
+    second: SpriteSheet_Marge_42
+  - first:
+      213: 8958722585934450078
+    second: SpriteSheet_Marge_43
+  - first:
+      213: -6618451830209960683
+    second: SpriteSheet_Marge_44
+  - first:
+      213: -7274890424384852255
+    second: SpriteSheet_Marge_45
+  - first:
+      213: 6099301764209901625
+    second: SpriteSheet_Marge_46
+  - first:
+      213: 6463828279360115148
+    second: SpriteSheet_Marge_47
+  - first:
+      213: -5442167006729561471
+    second: SpriteSheet_Marge_48
+  - first:
+      213: 4959323498122131816
+    second: SpriteSheet_Marge_49
+  - first:
+      213: -2838963744947297336
+    second: SpriteSheet_Marge_50
+  - first:
+      213: -1586502995792658416
+    second: SpriteSheet_Marge_51
+  - first:
+      213: -4440252286208728150
+    second: SpriteSheet_Marge_52
+  - first:
+      213: 2556315888565474920
+    second: SpriteSheet_Marge_53
+  - first:
+      213: -6242122831031730332
+    second: SpriteSheet_Marge_54
+  - first:
+      213: -6763929965446808083
+    second: SpriteSheet_Marge_55
+  - first:
+      213: 4337778261241674020
+    second: SpriteSheet_Marge_56
+  - first:
+      213: -5422923863999520945
+    second: SpriteSheet_Marge_57
+  - first:
+      213: 5378066305109200491
+    second: SpriteSheet_Marge_58
+  - first:
+      213: -4671052694130063645
+    second: SpriteSheet_Marge_59
+  - first:
+      213: 3562080918568420233
+    second: SpriteSheet_Marge_60
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SpriteSheet_Marge_0
+      rect:
+        serializedVersion: 2
+        x: 298
+        y: 541
+        width: 860
+        height: 473
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05348ecea2a2462f0800000000000000
+      internalID: -980612455008287920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpriteSheet_Marge_30
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 44
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11cdf9e2ffef4f480800000000000000
+      internalID: -8866181394433319919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpriteSheet_Marge_31
+      rect:
+        serializedVersion: 2
+        x: 245
+        y: 241
+        width: 396
+        height: 257
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29179a8a353231a20800000000000000
+      internalID: 3031805816369410450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpriteSheet_Marge_35
+      rect:
+        serializedVersion: 2
+        x: 656
+        y: 386
+        width: 88
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfc40d3efb9e9dff0800000000000000
+      internalID: -10720513721611013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpriteSheet_Marge_36
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 242
+        width: 371
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6a216cf9a4b27720800000000000000
+      internalID: 2842532957000903276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpriteSheet_Marge_37
+      rect:
+        serializedVersion: 2
+        x: 747
+        y: 357
+        width: 230
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 555c63093459c73a0800000000000000
+      internalID: -6666289231000320683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpriteSheet_Marge_50
+      rect:
+        serializedVersion: 2
+        x: 1011
+        y: 363
+        width: 286
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c32434f389f998d0800000000000000
+      internalID: -2838963744947297336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 83376c3e11c0475438fb3b9a70cfad1c
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      SpriteSheet_Marge_0: -980612455008287920
+      SpriteSheet_Marge_1: 6804246196413741347
+      SpriteSheet_Marge_10: 1914041427146191439
+      SpriteSheet_Marge_11: -6656278347236260478
+      SpriteSheet_Marge_12: 7677251473626994551
+      SpriteSheet_Marge_13: 8870139756935249510
+      SpriteSheet_Marge_14: -8369494972307852449
+      SpriteSheet_Marge_15: 5507374255170694684
+      SpriteSheet_Marge_16: 6512834248290335838
+      SpriteSheet_Marge_17: -3266728880491262154
+      SpriteSheet_Marge_18: -1325696583859588865
+      SpriteSheet_Marge_19: 699601787698461545
+      SpriteSheet_Marge_2: 4961207141177313545
+      SpriteSheet_Marge_20: 9202563891160985763
+      SpriteSheet_Marge_21: -1191021714506668827
+      SpriteSheet_Marge_22: 128762394356777461
+      SpriteSheet_Marge_23: 3162013622408755640
+      SpriteSheet_Marge_24: -8073178927849017489
+      SpriteSheet_Marge_25: -1637234763084899698
+      SpriteSheet_Marge_26: -2852576232258747870
+      SpriteSheet_Marge_27: -8826961230380744922
+      SpriteSheet_Marge_28: -6257932853222252605
+      SpriteSheet_Marge_29: -7952859431292306916
+      SpriteSheet_Marge_3: -8712332095490867887
+      SpriteSheet_Marge_30: -8866181394433319919
+      SpriteSheet_Marge_31: 3031805816369410450
+      SpriteSheet_Marge_32: -2982335271544464271
+      SpriteSheet_Marge_33: 966910721071346468
+      SpriteSheet_Marge_34: -3525630329162359542
+      SpriteSheet_Marge_35: -10720513721611013
+      SpriteSheet_Marge_36: 2842532957000903276
+      SpriteSheet_Marge_37: -6666289231000320683
+      SpriteSheet_Marge_38: -3499972218015433172
+      SpriteSheet_Marge_39: -1112688546534832496
+      SpriteSheet_Marge_4: 6189546961973667943
+      SpriteSheet_Marge_40: -6755570130760596733
+      SpriteSheet_Marge_41: 6409209110406232357
+      SpriteSheet_Marge_42: -646991012708990923
+      SpriteSheet_Marge_43: 8958722585934450078
+      SpriteSheet_Marge_44: -6618451830209960683
+      SpriteSheet_Marge_45: -7274890424384852255
+      SpriteSheet_Marge_46: 6099301764209901625
+      SpriteSheet_Marge_47: 6463828279360115148
+      SpriteSheet_Marge_48: -5442167006729561471
+      SpriteSheet_Marge_49: 4959323498122131816
+      SpriteSheet_Marge_5: 7112942023059313028
+      SpriteSheet_Marge_50: -2838963744947297336
+      SpriteSheet_Marge_51: -1586502995792658416
+      SpriteSheet_Marge_52: -4440252286208728150
+      SpriteSheet_Marge_53: 2556315888565474920
+      SpriteSheet_Marge_54: -6242122831031730332
+      SpriteSheet_Marge_55: -6763929965446808083
+      SpriteSheet_Marge_56: 4337778261241674020
+      SpriteSheet_Marge_57: -5422923863999520945
+      SpriteSheet_Marge_58: 5378066305109200491
+      SpriteSheet_Marge_59: -4671052694130063645
+      SpriteSheet_Marge_6: 6213588645158510488
+      SpriteSheet_Marge_60: 3562080918568420233
+      SpriteSheet_Marge_7: 1058654827408475473
+      SpriteSheet_Marge_8: 6230468327426626989
+      SpriteSheet_Marge_9: -1910824812982751543
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

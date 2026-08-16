@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df122ab55926bb345830f494d255c638, type: 3}
+  m_Name: Frost Witch_Data
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitName: Frost Witch
+  icon: {fileID: 7587040222958975443, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  prefab: {fileID: 3444463731680135898, guid: 0958761f0923b4e48b4e9acd77ee58a7, type: 3}
+  levelIcons:
+  - {fileID: 7587040222958975443, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  levelPrefabs:
+  - {fileID: 3444463731680135898, guid: 0958761f0923b4e48b4e9acd77ee58a7, type: 3}
+  - {fileID: 3444463731680135898, guid: 4d526f2e204258f49adbe3cf984d995f, type: 3}
+  - {fileID: 3444463731680135898, guid: 27bbbc4e37cfd0d4f91b050885ed971f, type: 3}
+  - {fileID: 3444463731680135898, guid: 756a8eabeffacb945a5cdaefd4bbabe7, type: 3}
+  - {fileID: 3444463731680135898, guid: d307c5a45dd2ff243bc6e1a875fd6cbf, type: 3}
+  - {fileID: 3444463731680135898, guid: 98691ff327ab4fa4baca4176a9af5486, type: 3}
+  manaCost: 50
+  attackDamage: 10
+  attackSpeed: 1
+  attackRange: 3

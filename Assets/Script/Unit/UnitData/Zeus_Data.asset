@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df122ab55926bb345830f494d255c638, type: 3}
+  m_Name: Zeus_Data
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitName: Zeus
+  icon: {fileID: -1943777252913948964, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  prefab: {fileID: 3444463731680135898, guid: 5eae41021cfe9344da7d3ac243b0678d, type: 3}
+  levelIcons:
+  - {fileID: -1943777252913948964, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  levelPrefabs:
+  - {fileID: 3444463731680135898, guid: 5eae41021cfe9344da7d3ac243b0678d, type: 3}
+  - {fileID: 3444463731680135898, guid: 29bd0692fb5b934438adb44b53907591, type: 3}
+  - {fileID: 3444463731680135898, guid: 2b0f679567272604fb4a7586e90f4078, type: 3}
+  - {fileID: 3444463731680135898, guid: c32b620af7f95034b93a8559debace4c, type: 3}
+  - {fileID: 3444463731680135898, guid: eecea05b839df1241ad47351e96742af, type: 3}
+  - {fileID: 3444463731680135898, guid: c37f50a7ac3e5a24ebb7a38b58348947, type: 3}
+  manaCost: 50
+  attackDamage: 16
+  attackSpeed: 1.15
+  attackRange: 4

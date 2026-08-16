@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df122ab55926bb345830f494d255c638, type: 3}
+  m_Name: Shapeshifte_Data
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitName: Shapeshifter
+  icon: {fileID: -4548189851348124799, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  prefab: {fileID: 3444463731680135898, guid: 0603fb5c630e44448be8a6ac34932032, type: 3}
+  levelIcons:
+  - {fileID: -4548189851348124799, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  levelPrefabs:
+  - {fileID: 3444463731680135898, guid: 0603fb5c630e44448be8a6ac34932032, type: 3}
+  - {fileID: 3444463731680135898, guid: ee9f893e6aeefe449991143897f0b51e, type: 3}
+  - {fileID: 3444463731680135898, guid: ce39fb8b47e3d5c44b8d292f30f954b9, type: 3}
+  - {fileID: 3444463731680135898, guid: d31c40f22dfa7fa4f872e39d9911331c, type: 3}
+  - {fileID: 3444463731680135898, guid: f95f47da6e1b76e40a9f4a5e4688700e, type: 3}
+  - {fileID: 3444463731680135898, guid: 6bf1ef460fa90fb49bc3edc1cbe879d7, type: 3}
+  manaCost: 50
+  attackDamage: 12
+  attackSpeed: 0.9
+  attackRange: 3.5

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5a6b7c8d9ea6123ab1c2d3e4f501455, type: 3}
+  m_Name: StarterTile
+  m_EditorClassIdentifier: Assembly-CSharp::SpecialTileDefinition
+  id: tile_starter
+  displayName: Starter Tile
+  description: 
+  icon: {fileID: 21300000, guid: 199b97f12ce9f7549acec6f9acd6ab1e, type: 3}
+  includedInLaunchPool: 1

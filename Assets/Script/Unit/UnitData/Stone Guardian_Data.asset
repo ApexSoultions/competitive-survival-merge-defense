@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df122ab55926bb345830f494d255c638, type: 3}
   m_Name: Stone Guardian_Data
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitId: unit_stone_guardian
   unitName: Stone Guardian
+  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: 2081609225425774721, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: e4529c9cac202b34a84f96f7208b5417, type: 3}
   levelIcons:

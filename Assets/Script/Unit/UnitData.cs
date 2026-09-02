@@ -5,7 +5,13 @@ public class UnitData : ScriptableObject
 {
     public const int MaximumLevel = 6;
 
+    [Header("Identity")]
+    [Tooltip("Stable id for save/load (NamingMap). Example: unit_fire_mage")]
+    public string unitId = "";
     public string unitName;
+    [Tooltip("Small class/role badge shown in the Unit_Icon corner on deck cards.")]
+    public Sprite tagIcon;
+    [Tooltip("Roster/deck portrait shown on Deck_Image in deck builder.")]
     public Sprite icon;
     public GameObject prefab;
 
@@ -19,6 +25,18 @@ public class UnitData : ScriptableObject
     public float attackSpeed = 1f;
     public float attackRange = 3f;
 
+    public string ResolvedId
+    {
+        get
+        {
+            if (!string.IsNullOrWhiteSpace(unitId))
+                return unitId.Trim();
+            if (!string.IsNullOrWhiteSpace(unitName))
+                return "unit_" + unitName.Trim().ToLowerInvariant().Replace(' ', '_');
+            return name;
+        }
+    }
+
     public Sprite GetIcon(int level)
     {
         int index = level - 1;
@@ -27,6 +45,12 @@ public class UnitData : ScriptableObject
 
         return icon;
     }
+
+    /// <summary>Portrait for deck builder Deck_Image (same as battle level art).</summary>
+    public Sprite GetDeckPortrait(int level) => GetIcon(level);
+
+    /// <summary>Small badge for deck builder Unit_Icon corner.</summary>
+    public Sprite GetTagIcon() => tagIcon;
 
     public GameObject GetPrefab(int level)
     {

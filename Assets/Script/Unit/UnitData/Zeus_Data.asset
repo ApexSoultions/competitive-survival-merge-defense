@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df122ab55926bb345830f494d255c638, type: 3}
   m_Name: Zeus_Data
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitId: unit_thunder_oracle
   unitName: Zeus
+  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: -1943777252913948964, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 5eae41021cfe9344da7d3ac243b0678d, type: 3}
   levelIcons:

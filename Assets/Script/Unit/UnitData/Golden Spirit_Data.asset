@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df122ab55926bb345830f494d255c638, type: 3}
   m_Name: Golden Spirit_Data
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitId: unit_gold_spirit
   unitName: Golden Spirit
+  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: -2086051523239133244, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: bdc1c8843ef7f1d4a9ee75b0a5c10e69, type: 3}
   levelIcons:

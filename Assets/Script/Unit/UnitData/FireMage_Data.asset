@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df122ab55926bb345830f494d255c638, type: 3}
   m_Name: FireMage_Data
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitId: unit_fire_mage
   unitName: Fire Mage
+  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: 616969474331799417, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: ace1490ad9ddae04aae086b9597ffa8c, type: 3}
   levelIcons:

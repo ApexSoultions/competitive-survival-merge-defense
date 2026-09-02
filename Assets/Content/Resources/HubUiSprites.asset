@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b7c4a91d3f48a0b6c5d8e1f0a2b394, type: 3}
+  m_Name: HubUiSprites
+  m_EditorClassIdentifier: 
+  decksBackground: {fileID: -4985175308428332740, guid: 464ef6f3558abf94589f1958c435d02b, type: 3}
+  deckCardFrame: {fileID: 3627800085808480131, guid: 36eaaec7e19ced4428e6783b4a11d9f6, type: 3}
+  editIcon: {fileID: 8109592450047492186, guid: d8c5cd506bbdbea46b5e142498c22fe2, type: 3}
+  battleButton: {fileID: -1804833150183284202, guid: a31fa5a9173ee8c44be395fd604d5ff5, type: 3}
+  pvpButton: {fileID: 5806626692348085253, guid: b282ddfbe9ed5364b870a2056c384efc, type: 3}
+  deckBuilderBackground: {fileID: -7669307989153804992, guid: 35d7fc496be84bc47a47d1d6a35074e4, type: 3}
+  saveDeckButton: {fileID: -2702022874384465953, guid: 6125d6060ef3bce469a343d1d327fce1, type: 3}
+  autoBuildButton: {fileID: 2748806328583499312, guid: 838343990c9eced489f1153bab3bb7fc, type: 3}
+  clearDeckButton: {fileID: -8974429086430162381, guid: c73f5d76c7e96d6489c458deffba9b8b, type: 3}
+  backIcon: {fileID: -6324310268130010240, guid: ed3c084f82f39604f8e4593dbf1875ba, type: 3}
+  filterAll: {fileID: -3346575053172843645, guid: d1373f1ab021cab48ae49adee9e52e55, type: 3}
+  filterUnits: {fileID: -3154150011874791226, guid: fb88cc94d06bb0a4d9420d101a8effc5, type: 3}
+  filterAbilities: {fileID: 4773031513114947462, guid: da5d82eef9bc03d4ca3837d914b32554, type: 3}
+  footerSelectedTab: {fileID: 21300000, guid: 0998382210fc7d44f9be2c77ccf42f76, type: 3}
+  footerUnselectedTab: {fileID: 21300000, guid: 1c669fe6ee3ba4c43969f2296aac209c, type: 3}
+  footerUnselectedTabEdge: {fileID: 21300000, guid: 9f20969acbe56e541a2ab71aff068920, type: 3}

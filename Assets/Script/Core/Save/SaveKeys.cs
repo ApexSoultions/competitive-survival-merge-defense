@@ -10,5 +10,7 @@ namespace Game.Core.Save
         // Reserved for Milestone 2 loadout persistence
         public const string LoadoutUnitIds = "LOADOUT_UNIT_IDS";
         public const string LoadoutActiveIds = "LOADOUT_ACTIVE_IDS";
+        public const string LoadoutRelicId = "LOADOUT_RELIC_ID";
+        public const string LoadoutSpecialTileId = "LOADOUT_SPECIAL_TILE_ID";
     }
 }

@@ -15,12 +15,18 @@ public class GameConfigRegistry : ScriptableObject
 
     [Header("Content catalogs")]
     [SerializeField] private ActiveAbilityCatalog activeAbilities;
+    [SerializeField] private UnitCatalog units;
+    [SerializeField] private RelicCatalog relics;
+    [SerializeField] private SpecialTileCatalog specialTiles;
     [SerializeField] private WaveTable defaultWaveTable;
 
     public SceneFlowConfig SceneFlow => sceneFlow;
     public GameBalanceConfig GameBalance => gameBalance;
     public MobileQualityCatalog MobileQuality => mobileQuality;
     public ActiveAbilityCatalog ActiveAbilities => activeAbilities;
+    public UnitCatalog Units => units;
+    public RelicCatalog Relics => relics;
+    public SpecialTileCatalog SpecialTiles => specialTiles;
     public WaveTable DefaultWaveTable => defaultWaveTable;
 
     public static GameConfigRegistry LoadDefault()

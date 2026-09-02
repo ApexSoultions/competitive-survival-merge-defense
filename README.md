@@ -61,4 +61,15 @@ Foundation architecture is in. Close-out Days 1–5 docs are done; device APK re
 
 **Changelog:** [`CHANGELOG.md`](CHANGELOG.md)
 
-**Next after M1 accepted:** [`M2_Backlog_AbilityCorrection.md`](Assets/Documentation/M2_Backlog_AbilityCorrection.md)
+## Hub Deck Builder (in progress)
+
+Deck selection moved to **Main_UI** (not BattleScene):
+
+1. Play from `Bootstrap`
+2. On Home, tap **Edit** on the deck strip
+3. Pick **6 units + 2 abilities** → **Save Deck** (or **Auto Build** then Save)
+4. Tap **Battle** — match uses the saved loadout (no in-battle character select)
+
+Unity menu (optional polish install into scenes): **Tools → Deck Builder → Install Hub Loadout UI**
+
+**Next:** global active ability casting in battle (M2 combat package).

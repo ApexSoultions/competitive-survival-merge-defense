@@ -3,9 +3,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// LEGACY in-battle deck picker. Disabled by default — hub Deck Builder + BattleLoadoutBootstrap own the flow.
+/// </summary>
 public class DeckSelectionManager : MonoBehaviour
 {
     public static DeckSelectionManager Instance { get; private set; }
+
+    [Header("Legacy")]
+    [Tooltip("Keep false. Hub Main_UI loadout is the product path.")]
+    [SerializeField] private bool enableLegacyInBattlePicker = false;
 
     [Header("Rules")]
     [SerializeField] private int maxSelectedUnits = 6;
@@ -22,6 +29,14 @@ public class DeckSelectionManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        if (!enableLegacyInBattlePicker)
+        {
+            if (deckSelectionPanel != null)
+                deckSelectionPanel.SetActive(false);
+            enabled = false;
+            return;
+        }
 
         BattleFlowState.EnterCharacterSelection();
         Time.timeScale = 0f;
@@ -46,7 +61,7 @@ public class DeckSelectionManager : MonoBehaviour
 
     public bool ToggleUnit(UnitData unitData)
     {
-        if (unitData == null)
+        if (!enableLegacyInBattlePicker || unitData == null)
             return false;
 
         if (selectedUnits.Contains(unitData))
@@ -58,7 +73,7 @@ public class DeckSelectionManager : MonoBehaviour
 
         if (selectedUnits.Count >= maxSelectedUnits)
         {
-            UnityEngine.Debug.Log("Deck full. Select only " + maxSelectedUnits + " units.");
+            Debug.Log("Deck full. Select only " + maxSelectedUnits + " units.");
             return false;
         }
 
@@ -71,7 +86,7 @@ public class DeckSelectionManager : MonoBehaviour
     {
         if (selectedUnits.Count != maxSelectedUnits)
         {
-            UnityEngine.Debug.Log("Select exactly " + maxSelectedUnits + " units.");
+            Debug.Log("Select exactly " + maxSelectedUnits + " units.");
             return;
         }
 
@@ -80,16 +95,16 @@ public class DeckSelectionManager : MonoBehaviour
         if (SummonManager.Instance != null)
             SummonManager.Instance.SetSelectedDeck(finalDeck);
         else
-            UnityEngine.Debug.LogWarning("SummonManager missing.");
+            Debug.LogWarning("SummonManager missing.");
 
         if (MergeManager.Instance != null)
             MergeManager.Instance.SetSelectedDeck(finalDeck);
         else
-            UnityEngine.Debug.LogWarning("MergeManager missing.");
+            Debug.LogWarning("MergeManager missing.");
 
         if (WaveBossManager.Instance == null)
         {
-            UnityEngine.Debug.LogWarning("WaveBossManager missing.");
+            Debug.LogWarning("WaveBossManager missing.");
             return;
         }
 

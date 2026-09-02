@@ -169,6 +169,35 @@ public static class GameContentValidator
         else
             sb.AppendLine("OK: ActiveAbilityCatalog");
 
+        if (registry.Units == null)
+        {
+            errors++;
+            sb.AppendLine("ERROR: Registry.Units missing — assign UnitCatalog (Tools → Deck Builder → Ensure Unit Catalog + IDs).");
+        }
+        else if (registry.Units.units == null || registry.Units.units.Length == 0)
+        {
+            warnings++;
+            sb.AppendLine("WARN: UnitCatalog is empty.");
+        }
+        else
+            sb.AppendLine("OK: UnitCatalog (" + registry.Units.units.Length + " units)");
+
+        if (registry.Relics == null)
+        {
+            warnings++;
+            sb.AppendLine("WARN: Registry.Relics missing — assign RelicCatalog (Tools → Deck Builder → Ensure Relic + Special Tile Content).");
+        }
+        else
+            sb.AppendLine("OK: RelicCatalog");
+
+        if (registry.SpecialTiles == null)
+        {
+            warnings++;
+            sb.AppendLine("WARN: Registry.SpecialTiles missing — assign SpecialTileCatalog.");
+        }
+        else
+            sb.AppendLine("OK: SpecialTileCatalog");
+
         if (registry.DefaultWaveTable == null)
         {
             errors++;

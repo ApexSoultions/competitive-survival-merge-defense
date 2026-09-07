@@ -40,10 +40,14 @@ public static class GameplayEvents
     public static event Action<GameplayDamageEvent> DamageDealt;
     public static event Action<Enemy> BossSpawned;
     public static event Action<Enemy, string> StatusApplied;
+    public static event Action<Enemy, string> StatusExpired;
 
     public const string StatusSlow = "slow";
     public const string StatusPoison = "poison";
     public const string StatusStun = "stun";
+    public const string StatusBurn = "burn";
+    public const string StatusFreeze = "freeze";
+    public const string StatusMark = "mark";
 
     public static void RaiseBattleStarted() => BattleStarted?.Invoke();
     public static void RaiseBattleEnded() => BattleEnded?.Invoke();
@@ -68,6 +72,13 @@ public static class GameplayEvents
         StatusApplied?.Invoke(target, statusId);
     }
 
+    public static void RaiseStatusExpired(Enemy target, string statusId)
+    {
+        if (target == null || string.IsNullOrEmpty(statusId))
+            return;
+        StatusExpired?.Invoke(target, statusId);
+    }
+
     /// <summary>Clears all subscribers (e.g. domain reload / tests). Prefer not calling in production matches.</summary>
     public static void ClearAll()
     {
@@ -84,5 +95,6 @@ public static class GameplayEvents
         DamageDealt = null;
         BossSpawned = null;
         StatusApplied = null;
+        StatusExpired = null;
     }
 }

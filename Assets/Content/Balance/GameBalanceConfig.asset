@@ -21,3 +21,6 @@ MonoBehaviour:
   boardHeight: 5
   deckUnitSlots: 6
   globalActiveSlots: 2
+  l10UnlockAccountLevel: 10
+  l20UnlockAccountLevel: 20
+  debugForceAllAbilityTiers: 0

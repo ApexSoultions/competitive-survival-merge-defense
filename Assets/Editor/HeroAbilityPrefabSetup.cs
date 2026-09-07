@@ -15,7 +15,7 @@ public static class HeroAbilityPrefabSetup
     private const string GoldSparklePath = VfxFolder + "/GoldSparkle.prefab";
     private const string CopyBeamPath = VfxFolder + "/CopyBeam.prefab";
     private const string CopyEffectPath = VfxFolder + "/CopyEffect.prefab";
-    private const string VfxVersionTag = "HeroAbilityVfxVersion=4";
+    private const string VfxVersionTag = "HeroAbilityVfxVersion=6";
     private const string StunSpritePath = "Assets/Sprite/Projection_AoE_Stone/stun.png";
     private const string GoldSpritePath = "Assets/Sprite/Projection_AoE_Stone/gold spirit.png";
     private const string ShapeshifterSpritePath = "Assets/Sprite/Projection_AoE_Stone/shapeshifter.png";
@@ -70,6 +70,13 @@ public static class HeroAbilityPrefabSetup
                 SetObject(serialized, "chainSound", thunderClip);
             });
 
+        ConfigureHeroPrefabs<ShadowAssassinAbility>(
+            "Assets/_Prefabs/Units/Magic Archer", new Color(0.72f, 0.18f, 0.42f),
+            serialized =>
+            {
+                SetObject(serialized, "markSprite", lightningImpactArt);
+            });
+
         ConfigureHeroPrefabs<StoneGolemStunAbility>(
             "Assets/_Prefabs/Units/Stone Guardian", new Color(0.78f, 0.72f, 0.58f),
             serialized =>
@@ -81,9 +88,9 @@ public static class HeroAbilityPrefabSetup
             "Assets/_Prefabs/Units/Golden Spirit", new Color(1f, 0.76f, 0.12f),
             serialized =>
             {
-                SetInt(serialized, "manaPerTick", 10);
-                SetFloat(serialized, "tickInterval", 5f);
-                SetIntArray(serialized, "manaByMergeLevel", 10, 20, 30, 40, 50, 60);
+                SetInt(serialized, "manaPerTick", 5);
+                SetFloat(serialized, "tickInterval", 12f);
+                SetIntArray(serialized, "manaByMergeLevel", 5, 10, 18, 32, 50, 75);
                 SetFloat(serialized, "mergeLevelMultiplier", 1f);
                 SetInt(serialized, "maximumMana", 0);
                 SetObject(serialized, "manaOrbPrefab", manaOrb);
@@ -112,9 +119,19 @@ public static class HeroAbilityPrefabSetup
             "Assets/_Prefabs/Units/Enchantress", new Color(0.38f, 1f, 0.24f),
             serialized =>
             {
-                SetInt(serialized, "maximumBuffedTowers", 4);
-                SetBool(serialized, "allowBuffStacking", false);
+                SetFloat(serialized, "fallbackDamageBonusPercent", 10f);
+                SetFloat(serialized, "fallbackAttackSpeedBonusPercent", 6f);
+                SetInt(serialized, "occupiedTilesRequired", 3);
             });
+
+        ConfigureHeroPrefabs<ShieldPriestessAbility>(
+            "Assets/_Prefabs/Units/Princess", new Color(0.95f, 0.85f, 0.35f),
+            serialized =>
+            {
+                SetFloat(serialized, "fallbackRefreshSeconds", 14f);
+                SetFloat(serialized, "fallbackDamageBonusPercent", 8f);
+            });
+        ConfigureDamageBuffEligibility("Assets/_Prefabs/Units/Princess", false);
 
         AssetImporter versionImporter = AssetImporter.GetAtPath(LightningImpactPath);
         if (versionImporter != null)
@@ -125,7 +142,7 @@ public static class HeroAbilityPrefabSetup
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("Hero abilities: created pooled projection-sprite VFX and wired Zeus, Stone Guardian, Golden Spirit, Shapeshifter, and Enchantress levels 1-6.");
+        Debug.Log("Hero abilities: wired Zeus, Magic Archer, Stone Guardian, Golden Spirit, Shapeshifter, Enchantress, and Princess levels 1-6.");
     }
 
     private static LightningRenderer CreateBeamPrefab(string path, int segments, float jitter, Sprite beamSprite)

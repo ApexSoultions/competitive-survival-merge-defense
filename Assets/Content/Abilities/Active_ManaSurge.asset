@@ -15,7 +15,7 @@ MonoBehaviour:
   id: active_mana_surge
   displayName: Mana Surge
   description: Launch-pool stub. Cast system wires in Milestone 2.
-  icon: {fileID: 0}
+  icon: {fileID: -1300078370347278256, guid: dc1b06f6800b58441aa68f2c37c53eed, type: 3}
   cooldownSeconds: 30
   targeting: 0
   power: 80
@@ -24,4 +24,4 @@ MonoBehaviour:
   vfxPrefab: {fileID: 0}
   castSfx: {fileID: 0}
   includedInLaunchPool: 1
-  implemented: 0
+  implemented: 1

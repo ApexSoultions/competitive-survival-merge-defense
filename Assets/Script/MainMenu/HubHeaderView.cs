@@ -12,6 +12,8 @@ public sealed class HubHeaderView : MonoBehaviour
     [Tooltip("Legacy meta wallet display only — NOT in-match mana.")]
     [SerializeField] private TMP_Text waterText;
     [SerializeField] private TMP_Text playerNameText;
+    [Tooltip("Optional dedicated account-level label. If null, leagueProgressText is used.")]
+    [SerializeField] private TMP_Text accountLevelText;
     [SerializeField] private TMP_Text leagueProgressText;
     [SerializeField] private TMP_Text chestTimerText;
     [SerializeField] private TMP_Text victoryTimerText;
@@ -38,8 +40,18 @@ public sealed class HubHeaderView : MonoBehaviour
 
         if (playerNameText != null && string.IsNullOrEmpty(playerNameText.text))
             SetText(playerNameText, "Commander");
-        if (leagueProgressText != null && string.IsNullOrEmpty(leagueProgressText.text))
+
+        // Phase 5: show persisted account level (L10/L20 unlock gate).
+        TMP_Text levelLabel = accountLevelText != null ? accountLevelText : leagueProgressText;
+        SetText(levelLabel, AccountProgressService.GetAccountLevel().ToString());
+
+        if (accountLevelText != null &&
+            leagueProgressText != null &&
+            string.IsNullOrEmpty(leagueProgressText.text))
+        {
             SetText(leagueProgressText, "— / —");
+        }
+
         if (chestTimerText != null && string.IsNullOrEmpty(chestTimerText.text))
             SetText(chestTimerText, "—");
         if (victoryTimerText != null && string.IsNullOrEmpty(victoryTimerText.text))

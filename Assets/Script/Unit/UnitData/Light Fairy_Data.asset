@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitId: unit_light_fairy
   unitName: Light Fairy
-  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
+  tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: 4164213114258598589, guid: 957bf6712d387e54bac97a7896c6f1cf, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 6c3153cb332c94b4f843877c3064fabf, type: 3}
   levelIcons:
@@ -27,6 +27,70 @@ MonoBehaviour:
   - {fileID: 3444463731680135898, guid: e4aeabf1e0075bd47be4abb1e2563959, type: 3}
   - {fileID: 3444463731680135898, guid: 4eee664738e1ac14085b057bebb20f09, type: 3}
   manaCost: 50
-  attackDamage: 3
-  attackSpeed: 0.45
-  attackRange: 3
+  attackDamage: 1
+  attackSpeed: 0.4545
+  attackRange: 99
+  baseDamage: 1
+  baseAttackInterval: 2.2
+  baseAttackRange: 99
+  criticalChance: 0.12
+  criticalDamageMultiplier: 1.65
+  minAttackInterval: 0.12
+  mergeSpeedMultipliers:
+  - 1
+  - 1.9
+  - 3.2
+  - 4.8
+  - 6.5
+  - 8.5
+  targetPriority: 0
+  abilityL1:
+    id: light_fairy_l1_radiant_blessing
+    displayName: Radiant Blessing
+    description: Drag onto ally below ML6 to grant +1 Merge Level (keeps type/position/stacks).
+    power: 1
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - mergeLevelGain
+    - maxTargetMergeLevel
+    parameterValues:
+    - 1
+    - 5
+  abilityL10:
+    id: light_fairy_l10_gleam_of_grace
+    displayName: Gleam of Grace
+    description: Successful Radiant Blessing refunds mana.
+    power: 8
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - baseManaRefund
+    parameterValues:
+    - 8
+  abilityL20:
+    id: light_fairy_l20_guiding_light
+    displayName: Guiding Light
+    description: Each successful Radiant Blessing permanently increases future mana refunds.
+    power: 2
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 6
+    stackRule: 3
+    parameterNames:
+    - softCapBonusMana
+    - refundAtSoftCap
+    - overflowEfficiencyPercent
+    - overflowStackMana
+    parameterValues:
+    - 12
+    - 20
+    - 25
+    - 0.5

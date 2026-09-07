@@ -12,6 +12,7 @@ public abstract class TowerAbilityBase : MonoBehaviour
 
     protected Tower AttackTower { get; private set; }
     protected BoardTower BoardTower { get; private set; }
+    protected UnitAbilityRuntime AbilityRuntime { get; private set; }
 
     public abstract string AbilityName { get; }
     public virtual bool CanBeCopied => true;
@@ -40,6 +41,12 @@ public abstract class TowerAbilityBase : MonoBehaviour
             AttackTower = GetComponent<Tower>();
         if (BoardTower == null)
             BoardTower = GetComponent<BoardTower>();
+        if (AbilityRuntime == null)
+        {
+            AbilityRuntime = GetComponent<UnitAbilityRuntime>();
+            if (AbilityRuntime == null && BoardTower != null)
+                AbilityRuntime = BoardTower.AbilityRuntime;
+        }
     }
 
     public virtual void HandleAbilityButtonPressed()

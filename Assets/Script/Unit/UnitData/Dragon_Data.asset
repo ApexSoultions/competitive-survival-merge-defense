@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df122ab55926bb345830f494d255c638, type: 3}
+  m_Name: Dragon_Data
+  m_EditorClassIdentifier: Assembly-CSharp::UnitData
+  unitId: unit_dragon
+  unitName: Dragon
+  tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
+  icon: {fileID: -2185634534687665938, guid: 1598496f569c2ee429485d64ae581141, type: 3}
+  prefab: {fileID: 3444463731680135898, guid: a11c0001d7a90144b8e1f2a3b4c5d601, type: 3}
+  levelIcons:
+  - {fileID: -2185634534687665938, guid: 1598496f569c2ee429485d64ae581141, type: 3}
+  - {fileID: -5178189745461699107, guid: ad7c9ea9a417908499813e1e4d0bbc77, type: 3}
+  - {fileID: 2594620442961722465, guid: cd6aaeeff241a19429f78bdb083fed4b, type: 3}
+  - {fileID: 9185701822280707311, guid: 22e740e65e01ede4391d3045cc065c89, type: 3}
+  - {fileID: 2789276564270249472, guid: b11d0bbd1137ca342945e5dc141d8982, type: 3}
+  - {fileID: 5354959931687701289, guid: 3cdffc6d69aa79e4189e86178e803655, type: 3}
+  levelPrefabs:
+  - {fileID: 3444463731680135898, guid: a11c0001d7a90144b8e1f2a3b4c5d601, type: 3}
+  - {fileID: 3444463731680135898, guid: a11c0002d7a90144b8e1f2a3b4c5d602, type: 3}
+  - {fileID: 3444463731680135898, guid: a11c0003d7a90144b8e1f2a3b4c5d603, type: 3}
+  - {fileID: 3444463731680135898, guid: a11c0004d7a90144b8e1f2a3b4c5d604, type: 3}
+  - {fileID: 3444463731680135898, guid: a11c0005d7a90144b8e1f2a3b4c5d605, type: 3}
+  - {fileID: 3444463731680135898, guid: a11c0006d7a90144b8e1f2a3b4c5d606, type: 3}
+  manaCost: 50
+  attackDamage: 16
+  attackSpeed: 0.8333
+  attackRange: 99
+  baseDamage: 16
+  baseAttackInterval: 1.2
+  baseAttackRange: 99
+  criticalChance: 0.12
+  criticalDamageMultiplier: 1.65
+  minAttackInterval: 0.12
+  mergeSpeedMultipliers:
+  - 1
+  - 1.9
+  - 3.2
+  - 4.8
+  - 6.5
+  - 8.5
+  targetPriority: 0
+  abilityL1:
+    id: dragon_l1_flame_burst
+    displayName: Flame Burst
+    description: Primary target 100% attack damage; nearby enemies 55%.
+    power: 100
+    radius: 1.5
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - nearbyDamagePercent
+    - bossDamageModifier
+    parameterValues:
+    - 55
+    - 70
+  abilityL10:
+    id: dragon_l10_burning_trail
+    displayName: Burning Trail
+    description: Enemies hit by Flame Burst burn for 15% attack damage/sec for 3s (refresh).
+    power: 15
+    radius: 0
+    durationSeconds: 3
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 1
+    parameterNames:
+    - burnDamagePercentPerSecond
+    parameterValues:
+    - 15
+  abilityL20:
+    id: dragon_l20_rising_heat
+    displayName: Rising Heat
+    description: When one attack damages at least 3 enemies, permanently gain attack speed.
+    power: 2
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 10
+    stackRule: 3
+    parameterNames:
+    - stackTriggerMinEnemies
+    - softCapPercent
+    - overflowEfficiencyPercent
+    - overflowStackPercent
+    parameterValues:
+    - 3
+    - 20
+    - 10
+    - 0.2

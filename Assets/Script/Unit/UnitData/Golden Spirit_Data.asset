@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitId: unit_gold_spirit
   unitName: Golden Spirit
-  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
+  tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: -2086051523239133244, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: bdc1c8843ef7f1d4a9ee75b0a5c10e69, type: 3}
   levelIcons:
@@ -27,6 +27,80 @@ MonoBehaviour:
   - {fileID: 3444463731680135898, guid: f3559ff6a4267bc4db77879ba83d60e7, type: 3}
   - {fileID: 3444463731680135898, guid: 6aa610d283ffab84ab81b608addcedde, type: 3}
   manaCost: 50
-  attackDamage: 5
-  attackSpeed: 0.6
-  attackRange: 3
+  attackDamage: 3
+  attackSpeed: 0.5000
+  attackRange: 99
+  baseDamage: 3
+  baseAttackInterval: 2.0
+  baseAttackRange: 99
+  criticalChance: 0.12
+  criticalDamageMultiplier: 1.65
+  minAttackInterval: 0.12
+  mergeSpeedMultipliers:
+  - 1
+  - 1.9
+  - 3.2
+  - 4.8
+  - 6.5
+  - 8.5
+  targetPriority: 1
+  abilityL1:
+    id: gold_spirit_l1_treasure_pulse
+    displayName: Treasure Pulse
+    description: Generates mana while on the board (5 mana every 12s at ML1).
+    power: 5
+    radius: 0
+    durationSeconds: 12
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - manaPerPulseMl1
+    - manaPerPulseMl2
+    - manaPerPulseMl3
+    - manaPerPulseMl4
+    - manaPerPulseMl5
+    - manaPerPulseMl6
+    - intervalSeconds
+    parameterValues:
+    - 5
+    - 10
+    - 18
+    - 32
+    - 50
+    - 75
+    - 12
+  abilityL10:
+    id: gold_spirit_l10_lucky_return
+    displayName: Lucky Return
+    description: Every 5 player merges, each Gold Spirit generates bonus mana.
+    power: 4
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - mergesPerTrigger
+    - manaPerSpirit
+    parameterValues:
+    - 5
+    - 4
+  abilityL20:
+    id: gold_spirit_l20_golden_legacy
+    displayName: Golden Legacy
+    description: Each defeated Boss permanently improves Treasure Pulse mana for all Gold Spirits.
+    power: 8
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 5
+    stackRule: 3
+    parameterNames:
+    - softCapPercent
+    - overflowEfficiencyPercent
+    - overflowStackPercent
+    parameterValues:
+    - 40
+    - 50
+    - 4

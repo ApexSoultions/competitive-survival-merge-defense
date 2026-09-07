@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitId: unit_shadow_assassin
   unitName: Magic Archer
-  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
+  tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: -6130079588993408331, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 2deaf5263beb99548a88615b77680856, type: 3}
   levelIcons:
@@ -27,6 +27,70 @@ MonoBehaviour:
   - {fileID: 3444463731680135898, guid: bed23ad183a43554fb8eef7f2b06ba74, type: 3}
   - {fileID: 3444463731680135898, guid: 2a2f61176e8bbb747ab5cb19e8d58300, type: 3}
   manaCost: 50
-  attackDamage: 10
-  attackSpeed: 1
-  attackRange: 3
+  attackDamage: 24
+  attackSpeed: 1.3333
+  attackRange: 99
+  baseDamage: 24
+  baseAttackInterval: 0.75
+  baseAttackRange: 99
+  criticalChance: 0.12
+  criticalDamageMultiplier: 1.65
+  minAttackInterval: 0.12
+  mergeSpeedMultipliers:
+  - 1
+  - 1.9
+  - 3.2
+  - 4.8
+  - 6.5
+  - 8.5
+  targetPriority: 4
+  abilityL1:
+    id: shadow_assassin_l1_marked_for_death
+    displayName: Marked for Death
+    description: Marks current Boss/Elite; marked targets take +30% damage from this unit.
+    power: 30
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - markBossEliteOnly
+    parameterValues:
+    - 1
+  abilityL10:
+    id: shadow_assassin_l10_execution_strike
+    displayName: Execution Strike
+    description: +60% damage to normals/Elites below 25% HP; Bosses below 35% HP.
+    power: 60
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - normalEliteHpThresholdPercent
+    - bossHpThresholdPercent
+    parameterValues:
+    - 25
+    - 35
+  abilityL20:
+    id: shadow_assassin_l20_killers_momentum
+    displayName: Killer's Momentum
+    description: Boss/Elite kill participation grants permanent attack speed.
+    power: 4
+    radius: 0
+    durationSeconds: 3
+    cooldownSeconds: 0
+    maxStacks: 6
+    stackRule: 3
+    parameterNames:
+    - participationWindowSeconds
+    - softCapPercent
+    - overflowEfficiencyPercent
+    - overflowStackPercent
+    parameterValues:
+    - 3
+    - 24
+    - 40
+    - 1.6

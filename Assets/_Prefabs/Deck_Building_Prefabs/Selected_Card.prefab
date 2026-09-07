@@ -304,6 +304,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1a2b3c4d5e6478990ab1c2d3e4f5011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckCardView
+  abilityCategoryTag: {fileID: 21300000, guid: 63f0fe350eda1ae4cb6a04de21714bee, type: 3}
+  relicCategoryTag: {fileID: 21300000, guid: 1326f6a1beaaca645b239f618c7a3187, type: 3}
+  specialTileCategoryTag: {fileID: 21300000, guid: 199b97f12ce9f7549acec6f9acd6ab1e, type: 3}
+  visualSettings: {fileID: 11400000, guid: d4e5f6a7b8c9401234567890bcdef012, type: 2}
 --- !u!114 &8811000111222333777
 MonoBehaviour:
   m_ObjectHideFlags: 0

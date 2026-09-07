@@ -34,6 +34,9 @@ public sealed class EnemyCombatFeedbackTheme : ScriptableObject
     [SerializeField] private Color slowColor = new Color(0.25f, 0.78f, 1f, 1f);
     [SerializeField] private Color poisonColor = new Color(0.38f, 0.9f, 0.2f, 1f);
     [SerializeField] private Color stunColor = new Color(1f, 0.75f, 0.12f, 1f);
+    [SerializeField] private Color burnColor = new Color(1f, 0.42f, 0.08f, 1f);
+    [SerializeField] private Color freezeColor = new Color(0.45f, 0.88f, 1f, 1f);
+    [SerializeField] private Color markColor = new Color(0.78f, 0.2f, 0.48f, 1f);
 
     public Sprite HealthFrameSprite => healthFrameSprite;
     public Sprite HealthFillSprite => healthFillSprite;
@@ -51,6 +54,28 @@ public sealed class EnemyCombatFeedbackTheme : ScriptableObject
     public Color SlowColor => slowColor;
     public Color PoisonColor => poisonColor;
     public Color StunColor => stunColor;
+    public Color BurnColor => burnColor;
+    public Color FreezeColor => freezeColor;
+    public Color MarkColor => markColor;
+
+    public Color GetStatusColor(EnemyStatusType statusType)
+    {
+        switch (statusType)
+        {
+            case EnemyStatusType.Poison:
+                return poisonColor;
+            case EnemyStatusType.Stun:
+                return stunColor;
+            case EnemyStatusType.Burn:
+                return burnColor;
+            case EnemyStatusType.Freeze:
+                return freezeColor;
+            case EnemyStatusType.Mark:
+                return markColor;
+            default:
+                return slowColor;
+        }
+    }
 
     public Color GetDamageColor(EnemyDamageType type)
     {

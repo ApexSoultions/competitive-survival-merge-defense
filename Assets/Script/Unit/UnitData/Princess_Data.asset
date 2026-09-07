@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitId: unit_shield_priestess
   unitName: Princess
-  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
+  tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: -4546708218990064361, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 556673611ba183641ac0d974707c66a6, type: 3}
   levelIcons:
@@ -27,6 +27,74 @@ MonoBehaviour:
   - {fileID: 3444463731680135898, guid: 379370ce693d2264f99e055ba791a1a5, type: 3}
   - {fileID: 3444463731680135898, guid: 50a29a1e3b6e9b1498cb276ae3831611, type: 3}
   manaCost: 50
-  attackDamage: 4
-  attackSpeed: 0.55
-  attackRange: 3
+  attackDamage: 2
+  attackSpeed: 0.5000
+  attackRange: 4
+  baseDamage: 2
+  baseAttackInterval: 2.0
+  baseAttackRange: 4
+  criticalChance: 0.12
+  criticalDamageMultiplier: 1.65
+  minAttackInterval: 0.12
+  mergeSpeedMultipliers:
+  - 1
+  - 1.9
+  - 3.2
+  - 4.8
+  - 6.5
+  - 8.5
+  targetPriority: 0
+  abilityL1:
+    id: shield_priestess_l1_protective_aura
+    displayName: Protective Aura
+    description: Adjacent allies get a 1-hit shield; refreshes on interval.
+    power: 1
+    radius: 4
+    durationSeconds: 14
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - shieldHits
+    - refreshSeconds
+    - orthogonalTiles
+    parameterValues:
+    - 1
+    - 14
+    - 4
+  abilityL10:
+    id: shield_priestess_l10_sacred_proximity
+    displayName: Sacred Proximity
+    description: Shielded adjacent allies gain +8% damage (highest bonus wins; no multi-stack).
+    power: 8
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - damageBonusPercent
+    - nonStacking
+    parameterValues:
+    - 8
+    - 1
+  abilityL20:
+    id: shield_priestess_l20_devoted_formation
+    displayName: Devoted Formation
+    description: Adjacent ally Elite/Boss kill participation improves shield recharge speed.
+    power: 3
+    radius: 0
+    durationSeconds: 3
+    cooldownSeconds: 0
+    maxStacks: 8
+    stackRule: 3
+    parameterNames:
+    - participationWindowSeconds
+    - softCapPercent
+    - overflowEfficiencyPercent
+    - overflowStackPercent
+    parameterValues:
+    - 3
+    - 24
+    - 40
+    - 1.2

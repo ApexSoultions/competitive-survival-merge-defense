@@ -88,6 +88,14 @@ public class BoardTowerInputController : MonoBehaviour
             return;
         }
 
+        // Global active targeting owns the next battlefield tap.
+        if (GlobalActiveCastTargetingController.IsTargetingActive)
+        {
+            if (pointerDown || isDragging || selectedTower != null)
+                ClearState();
+            return;
+        }
+
         if (mainCamera == null)
             mainCamera = Camera.main;
 

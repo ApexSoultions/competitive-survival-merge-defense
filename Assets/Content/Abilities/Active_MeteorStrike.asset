@@ -15,13 +15,13 @@ MonoBehaviour:
   id: active_meteor_strike
   displayName: Meteor Strike
   description: Launch-pool stub. Cast system wires in Milestone 2.
-  icon: {fileID: 0}
+  icon: {fileID: -5399626533638061736, guid: dc1b06f6800b58441aa68f2c37c53eed, type: 3}
   cooldownSeconds: 25
-  targeting: 1
+  targeting: 2
   power: 200
   radius: 2.5
   durationSeconds: 0
   vfxPrefab: {fileID: 0}
   castSfx: {fileID: 0}
   includedInLaunchPool: 1
-  implemented: 0
+  implemented: 1

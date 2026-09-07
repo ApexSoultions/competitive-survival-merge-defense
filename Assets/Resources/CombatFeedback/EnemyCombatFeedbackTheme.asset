@@ -36,3 +36,6 @@ MonoBehaviour:
   slowColor: {r: 0.25, g: 0.78, b: 1, a: 1}
   poisonColor: {r: 0.38, g: 0.9, b: 0.2, a: 1}
   stunColor: {r: 1, g: 0.75, b: 0.12, a: 1}
+  burnColor: {r: 1, g: 0.42, b: 0.08, a: 1}
+  freezeColor: {r: 0.45, g: 0.88, b: 1, a: 1}
+  markColor: {r: 0.78, g: 0.2, b: 0.48, a: 1}

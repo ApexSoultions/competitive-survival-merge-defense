@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitId: unit_stone_guardian
   unitName: Stone Guardian
-  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
+  tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: 2081609225425774721, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: e4529c9cac202b34a84f96f7208b5417, type: 3}
   levelIcons:
@@ -27,6 +27,76 @@ MonoBehaviour:
   - {fileID: 3444463731680135898, guid: 3086a57e2efdf9b4cb12c15059321bca, type: 3}
   - {fileID: 3444463731680135898, guid: 8be994c8967c7de4eba848349f019097, type: 3}
   manaCost: 50
-  attackDamage: 35
-  attackSpeed: 0.45
-  attackRange: 3.2
+  attackDamage: 28
+  attackSpeed: 0.4762
+  attackRange: 99
+  baseDamage: 28
+  baseAttackInterval: 2.1
+  baseAttackRange: 99
+  criticalChance: 0.12
+  criticalDamageMultiplier: 1.65
+  minAttackInterval: 0.35
+  mergeSpeedMultipliers:
+  - 1
+  - 1.9
+  - 3.2
+  - 4.8
+  - 6.5
+  - 8.5
+  targetPriority: 3
+  abilityL1:
+    id: stone_guardian_l1_crushing_blow
+    displayName: Crushing Blow
+    description: Bonus damage vs Elites (+30%) and Bosses (+15%).
+    power: 30
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - eliteBonusPercent
+    - bossBonusPercent
+    parameterValues:
+    - 30
+    - 15
+  abilityL10:
+    id: stone_guardian_l10_armor_fracture
+    displayName: Armor Fracture
+    description: Every 3rd consecutive attack on same target reduces defense briefly.
+    power: 12
+    radius: 0
+    durationSeconds: 4
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - attacksRequired
+    - durationSeconds
+    - eliteDefenseReductionPercent
+    - bossDefenseReductionPercent
+    parameterValues:
+    - 3
+    - 4
+    - 12
+    - 6
+  abilityL20:
+    id: stone_guardian_l20_trophy_of_stone
+    displayName: Trophy of Stone
+    description: Elite kill participation grants permanent Elite damage.
+    power: 4
+    radius: 0
+    durationSeconds: 3
+    cooldownSeconds: 0
+    maxStacks: 6
+    stackRule: 3
+    parameterNames:
+    - participationWindowSeconds
+    - softCapPercent
+    - overflowEfficiencyPercent
+    - overflowStackPercent
+    parameterValues:
+    - 3
+    - 24
+    - 40
+    - 1.6

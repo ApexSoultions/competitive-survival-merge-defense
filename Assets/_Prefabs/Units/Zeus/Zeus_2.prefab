@@ -5198,6 +5198,8 @@ MonoBehaviour:
   criticalChance: 0.12
   criticalDamageMultiplier: 1.65
   fullAreaTargeting: 1
+  targetPriority: 0
+  canReceiveAlliedDamageBuffs: 1
   multiTarget: 0
   maxTargets: 1
   firePoint: {fileID: 5969733890881672437}
@@ -5207,6 +5209,11 @@ MonoBehaviour:
     m_Bits: 8
   damageType: 0
   elementColor: {r: 0.38, g: 0.84, b: 1, a: 1}
+  runtimeDamageMultiplier: 1
+  runtimeActiveDamageBuffSources: 0
+  runtimeBaseDamage: 0
+  runtimeCurrentDamage: 0
+  runtimeLastProjectileDamage: 0
 --- !u!114 &1762574443636792892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5321,9 +5328,10 @@ MonoBehaviour:
   cooldownDuration: 12
   startReady: 1
   chainRadius: 2.5
-  maximumChainCount: 4
-  chainDamageMultiplier: 0.65
+  fallbackMaxTargets: 3
+  fallbackChainDamagePercent: 65
   chainDelay: 0.08
+  fallbackBossDamageModifier: 75
   lightningRendererPrefab: {fileID: 6941187382557812896, guid: 494192276b5287c4f85d512ea0af30e0, type: 3}
   lightningImpactPrefab: {fileID: 4421842782173899693, guid: 37b8be22d41bfbe4886378db6bc55777, type: 3}
   lightningColor: {r: 0.38, g: 0.84, b: 1, a: 1}

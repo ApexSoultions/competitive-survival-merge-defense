@@ -5357,6 +5357,8 @@ MonoBehaviour:
   criticalChance: 0.12
   criticalDamageMultiplier: 1.65
   fullAreaTargeting: 1
+  targetPriority: 0
+  canReceiveAlliedDamageBuffs: 1
   multiTarget: 0
   maxTargets: 1
   firePoint: {fileID: 5969733890881672437}
@@ -5366,6 +5368,11 @@ MonoBehaviour:
     m_Bits: 8
   damageType: 0
   elementColor: {r: 1, g: 1, b: 1, a: 1}
+  runtimeDamageMultiplier: 1
+  runtimeActiveDamageBuffSources: 0
+  runtimeBaseDamage: 0
+  runtimeCurrentDamage: 0
+  runtimeLastProjectileDamage: 0
 --- !u!114 &1762574443636792892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5479,8 +5486,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlagueDoctorPoisonAbility
   cooldownDuration: 12
   startReady: 1
-  tickDamage: 5
-  duration: 4
+  fallbackTickDamage: 5
+  fallbackDuration: 5
   tickInterval: 1
   projectionSprite: {fileID: -5005990984189769374, guid: 716bf314bbdf1c5468500988201f8d1f, type: 3}
 --- !u!1 &4270143167056911161

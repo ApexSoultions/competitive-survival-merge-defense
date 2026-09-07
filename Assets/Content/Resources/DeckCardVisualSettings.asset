@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2c3d4e5f6a7489012345678abce5012, type: 3}
+  m_Name: DeckCardVisualSettings
+  m_EditorClassIdentifier: Assembly-CSharp::DeckCardVisualSettings
+  tagFrameSprite: {fileID: 1596426606536946004, guid: a6f72994ab7f23343bd00198ff0b2b63, type: 3}
+  abilityCategoryTag: {fileID: 21300000, guid: 63f0fe350eda1ae4cb6a04de21714bee, type: 3}
+  relicCategoryTag: {fileID: 21300000, guid: 1326f6a1beaaca645b239f618c7a3187, type: 3}
+  specialTileCategoryTag: {fileID: 21300000, guid: 199b97f12ce9f7549acec6f9acd6ab1e, type: 3}

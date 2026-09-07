@@ -67,12 +67,21 @@ public class MergeManager : MonoBehaviour
             return false;
         }
 
+        // Client Option B: nothing can merge into Light Fairy (including Fairy→Fairy).
+        // Fairy may only be dragged onto other units as Radiant Blessing.
+        if (targetTower.GetComponent<LightFairyAbility>() != null)
+        {
+            UnityEngine.Debug.Log("Merge blocked: cannot merge into Light Fairy.");
+            return false;
+        }
+
         LightFairyAbility lightFairy = sourceTower.GetComponent<LightFairyAbility>();
         if (lightFairy != null)
             return TryUpgradeWithLightFairy(lightFairy, sourceTower, targetTower, sourceCell, targetCell);
 
+        // Shapeshifter copies other units; Shapeshifter→Shapeshifter uses normal random merge.
         ShapeshifterAbility shapeshifter = sourceTower.GetComponent<ShapeshifterAbility>();
-        if (shapeshifter != null)
+        if (shapeshifter != null && targetTower.GetComponent<ShapeshifterAbility>() == null)
             return TryCopyShapeshifter(shapeshifter, sourceTower, targetTower, sourceCell);
 
         if (sourceTower.UnitData != targetTower.UnitData)
@@ -97,6 +106,7 @@ public class MergeManager : MonoBehaviour
 
         int nextLevel = sourceTower.Level + 1;
 
+        // Option B: same-type same-level merge → random unit from the current 6-unit deck at +1 level.
         UnitData resultUnit = GetRandomUnitFromDeck(sourceTower.UnitData, nextLevel);
 
         if (resultUnit == null)
@@ -161,7 +171,7 @@ public class MergeManager : MonoBehaviour
             return false;
         }
 
-        int upgradedLevel = targetTower.Level + 1;
+        int upgradedLevel = targetTower.Level + lightFairy.GetMergeLevelGain();
         UnitData upgradedUnit = targetTower.UnitData;
         GameObject upgradedPrefab = upgradedUnit.GetPrefabExact(upgradedLevel);
         if (upgradedPrefab == null)
@@ -176,6 +186,7 @@ public class MergeManager : MonoBehaviour
             ? targetAttack.CaptureDirectUpgradeRuntimeState()
             : null;
         TowerAbilityBase[] previousAbilities = targetTower.GetComponents<TowerAbilityBase>();
+        UnitAbilityRuntime previousAbilityRuntime = targetTower.GetComponent<UnitAbilityRuntime>();
 
         targetCell.ClearCell(targetTower);
         bool placed = targetCell.PlaceTower(upgradedPrefab, upgradedUnit, upgradedLevel);
@@ -197,7 +208,13 @@ public class MergeManager : MonoBehaviour
         Tower upgradedAttack = upgradedTower.GetComponent<Tower>();
         upgradedAttack?.RestoreDirectUpgradeRuntimeState(combatState);
         TransferAbilityStates(previousAbilities, upgradedTower.GetComponents<TowerAbilityBase>());
+        if (previousAbilityRuntime != null && upgradedTower.AbilityRuntime != null)
+        {
+            upgradedTower.AbilityRuntime.TransferStacksFrom(previousAbilityRuntime);
+            upgradedTower.AbilityRuntime.ApplyAttackSpeedBonusFromL20Stacks();
+        }
 
+        lightFairy.OnBlessingSucceeded();
         lightFairy.PlayUpgradeFeedback(upgradedTower);
         PlayLightFairyUpgradeEffect(targetCell.SpawnPosition);
 
@@ -283,6 +300,8 @@ public class MergeManager : MonoBehaviour
 
         BoardTower copiedTower = sourceCell.CurrentTower;
         shapeshifter.PlayTransformationFeedback(targetTower);
+        if (copiedTower != null)
+            shapeshifter.ApplyCopiedFormModifiers(copiedTower);
 
         sourceTower.SetCell(null);
         Destroy(sourceTower.gameObject);

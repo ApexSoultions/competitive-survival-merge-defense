@@ -12,5 +12,8 @@ namespace Game.Core.Save
         public const string LoadoutActiveIds = "LOADOUT_ACTIVE_IDS";
         public const string LoadoutRelicId = "LOADOUT_RELIC_ID";
         public const string LoadoutSpecialTileId = "LOADOUT_SPECIAL_TILE_ID";
+
+        // Phase 5 — account progression (L10 / L20 ability unlocks)
+        public const string AccountLevel = "ACCOUNT_LEVEL";
     }
 }

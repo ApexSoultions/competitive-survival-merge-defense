@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitId: unit_thunder_oracle
   unitName: Zeus
-  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
+  tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: -1943777252913948964, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 5eae41021cfe9344da7d3ac243b0678d, type: 3}
   levelIcons:
@@ -27,6 +27,78 @@ MonoBehaviour:
   - {fileID: 3444463731680135898, guid: eecea05b839df1241ad47351e96742af, type: 3}
   - {fileID: 3444463731680135898, guid: c37f50a7ac3e5a24ebb7a38b58348947, type: 3}
   manaCost: 50
-  attackDamage: 16
-  attackSpeed: 1.15
-  attackRange: 4
+  attackDamage: 14
+  attackSpeed: 1.0000
+  attackRange: 99
+  baseDamage: 14
+  baseAttackInterval: 1.0
+  baseAttackRange: 99
+  criticalChance: 0.12
+  criticalDamageMultiplier: 1.65
+  minAttackInterval: 0.12
+  mergeSpeedMultipliers:
+  - 1
+  - 1.9
+  - 3.2
+  - 4.8
+  - 6.5
+  - 8.5
+  targetPriority: 0
+  abilityL1:
+    id: thunder_oracle_l1_chain_lightning
+    displayName: Chain Lightning
+    description: Hits primary then chains to nearby unhit enemies.
+    power: 100
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - primaryDamagePercent
+    - chainDamagePercent
+    - additionalJumps
+    - maxTargets
+    - bossDamageModifier
+    parameterValues:
+    - 100
+    - 65
+    - 2
+    - 3
+    - 75
+  abilityL10:
+    id: thunder_oracle_l10_storm_circle
+    displayName: Storm Circle
+    description: When chain hits at least 3 enemies, final target takes an extra lightning burst.
+    power: 40
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - minEnemiesForBurst
+    - burstDamagePercent
+    parameterValues:
+    - 3
+    - 40
+  abilityL20:
+    id: thunder_oracle_l20_thunder_rhythm
+    displayName: Thunder Rhythm
+    description: Every 5 player merges while Thunder Oracle is on board grants permanent attack speed.
+    power: 2
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 10
+    stackRule: 3
+    parameterNames:
+    - mergesPerTrigger
+    - softCapPercent
+    - overflowEfficiencyPercent
+    - overflowStackPercent
+    parameterValues:
+    - 5
+    - 20
+    - 25
+    - 0.5

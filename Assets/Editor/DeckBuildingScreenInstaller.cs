@@ -16,14 +16,21 @@ public static class DeckBuildingScreenInstaller
     private const string RegistryPath = "Assets/Content/Resources/GameConfigRegistry.asset";
     private const string RelicCatalogPath = "Assets/Content/Relics/RelicCatalog.asset";
     private const string SpecialTileCatalogPath = "Assets/Content/SpecialTiles/SpecialTileCatalog.asset";
+    private const string DeckCardVisualSettingsPath = "Assets/Content/Resources/DeckCardVisualSettings.asset";
+    private const string AbilityTagIconPath = "Assets/GUI/Screens - Main Menu, Battle HUD, Editor/PNG/Main Menu/Deck Icons/Abilities_Icon.png";
+    private const string RelicTagIconPath = "Assets/GUI/Screens - Main Menu, Battle HUD, Editor/PNG/Main Menu/Deck Icons/Relic_Icon.png";
+    private const string SpecialTileTagIconPath = "Assets/GUI/Screens - Main Menu, Battle HUD, Editor/PNG/Main Menu/Deck Icons/Special_Tile.png";
+    private const string AbilityPortraitIconPath = "Assets/GUI/Screens - Main Menu, Battle HUD, Editor/PNG/Main Menu/Deck Icons/Abilities_Icon.png";
 
     [MenuItem("Tools/Deck Builder/Wire Deck Building Screen")]
     public static void WireDeckBuildingScreen()
     {
         EnsureContentAssets();
         EnsureDeckCardPrefabs();
+        AssignAbilityPlaceholderIcons();
 
         DeckCardView cardPrefab = AssetDatabase.LoadAssetAtPath<DeckCardView>(CardsPrefabPath);
+        DeckCardVisualSettings visualSettings = EnsureDeckCardVisualSettings();
 
         var scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
         Transform deckBuilding = FindNamed(null, "Deck_Building");
@@ -55,6 +62,12 @@ public static class DeckBuildingScreenInstaller
         DeckCardView[] abilityViews = FindAbilitySlotViews(topSelected);
         DeckCardView relicView = FindSlotView(topSelected, "Relic", "Relic");
         DeckCardView tileView = FindSlotView(topSelected, "Special Tile", "Special_Tile");
+
+        ApplyVisualSettingsToViews(visualSettings, unitViews);
+        ApplyVisualSettingsToViews(visualSettings, abilityViews);
+        ApplyVisualSettingsToView(visualSettings, relicView);
+        ApplyVisualSettingsToView(visualSettings, tileView);
+        ApplyVisualSettingsToView(visualSettings, cardPrefab);
 
         Button filterAll = FindFilterButton(bottomSelected, "All");
         Button filterUnits = FindFilterButton(bottomSelected, "Units");
@@ -94,6 +107,7 @@ public static class DeckBuildingScreenInstaller
         SetReference(deckSo, "filterTraitButton", filterTrait);
         SetReference(deckSo, "filterRelicButton", filterRelic);
         SetReference(deckSo, "filterSpecialTilesButton", filterTiles);
+        SetReference(deckSo, "cardVisualSettings", visualSettings);
         deckSo.ApplyModifiedPropertiesWithoutUndo();
 
         EditorUtility.SetDirty(deckBuilder.gameObject);
@@ -108,8 +122,16 @@ public static class DeckBuildingScreenInstaller
             "- Cards prefab + DeckCardView/Button\n" +
             "- Chosen slots (6 units, 2 abilities, relic, tile)\n" +
             "- Collection scroll + filter buttons\n" +
-            "- Relic/SpecialTile catalogs on GameConfigRegistry",
+            "- Relic/SpecialTile catalogs on GameConfigRegistry\n" +
+            "- Deck card visual settings + ability placeholder icons",
             "OK");
+    }
+
+    [MenuItem("Tools/Deck Builder/Assign Ability Placeholder Icons")]
+    public static void AssignAbilityPlaceholderIconsMenu()
+    {
+        AssignAbilityPlaceholderIcons();
+        EditorUtility.DisplayDialog("Deck Builder", "Assigned placeholder icons to Active ability assets.", "OK");
     }
 
     [MenuItem("Tools/Deck Builder/Ensure Relic + Special Tile Content")]
@@ -159,19 +181,97 @@ public static class DeckBuildingScreenInstaller
 
     private static void EnsureDeckCardPrefabs()
     {
-        PatchDeckCardPrefab(CardsPrefabPath);
-        PatchDeckCardPrefab(SelectedCardPrefabPath);
+        DeckCardVisualSettings visualSettings = EnsureDeckCardVisualSettings();
+        PatchDeckCardPrefab(CardsPrefabPath, visualSettings);
+        PatchDeckCardPrefab(SelectedCardPrefabPath, visualSettings);
         AssetDatabase.SaveAssets();
     }
 
-    private static void PatchDeckCardPrefab(string prefabPath)
+    private static DeckCardVisualSettings EnsureDeckCardVisualSettings()
+    {
+        DeckCardVisualSettings settings = AssetDatabase.LoadAssetAtPath<DeckCardVisualSettings>(DeckCardVisualSettingsPath);
+        if (settings == null)
+        {
+            EnsureFolder("Assets/Content/Resources");
+            settings = ScriptableObject.CreateInstance<DeckCardVisualSettings>();
+            AssetDatabase.CreateAsset(settings, DeckCardVisualSettingsPath);
+        }
+
+        Sprite abilityTag = LoadFirstSprite(AbilityTagIconPath);
+        Sprite relicTag = LoadFirstSprite(RelicTagIconPath);
+        Sprite tileTag = LoadFirstSprite(SpecialTileTagIconPath);
+
+        if (abilityTag != null)
+            settings.abilityCategoryTag = abilityTag;
+        if (relicTag != null)
+            settings.relicCategoryTag = relicTag;
+        if (tileTag != null)
+            settings.specialTileCategoryTag = tileTag;
+
+        EditorUtility.SetDirty(settings);
+        return settings;
+    }
+
+    private static void AssignAbilityPlaceholderIcons()
+    {
+        Sprite placeholder = LoadFirstSprite(AbilityPortraitIconPath);
+        if (placeholder == null)
+            return;
+
+        string[] paths =
+        {
+            "Assets/Content/Abilities/Active_FrostNova.asset",
+            "Assets/Content/Abilities/Active_MeteorStrike.asset",
+            "Assets/Content/Abilities/Active_ManaSurge.asset",
+            "Assets/Content/Abilities/Active_ArcaneOverclock.asset",
+            "Assets/Content/Abilities/Active_ExecutionSigil.asset",
+            "Assets/Content/Abilities/Active_RadiantCleanse.asset"
+        };
+
+        for (int i = 0; i < paths.Length; i++)
+        {
+            ActiveAbilityDefinition ability = AssetDatabase.LoadAssetAtPath<ActiveAbilityDefinition>(paths[i]);
+            if (ability == null)
+                continue;
+
+            if (ability.icon == null)
+                ability.icon = placeholder;
+            EditorUtility.SetDirty(ability);
+        }
+
+        AssetDatabase.SaveAssets();
+    }
+
+    private static void ApplyVisualSettingsToViews(DeckCardVisualSettings settings, DeckCardView[] views)
+    {
+        if (views == null)
+            return;
+
+        for (int i = 0; i < views.Length; i++)
+            ApplyVisualSettingsToView(settings, views[i]);
+    }
+
+    private static void ApplyVisualSettingsToView(DeckCardVisualSettings settings, DeckCardView view)
+    {
+        if (settings == null || view == null)
+            return;
+
+        view.ApplyVisualSettings(settings);
+        EditorUtility.SetDirty(view);
+    }
+
+    private static void PatchDeckCardPrefab(string prefabPath, DeckCardVisualSettings visualSettings)
     {
         GameObject root = PrefabUtility.LoadPrefabContents(prefabPath);
         if (root == null)
             return;
 
-        if (root.GetComponent<DeckCardView>() == null)
-            root.AddComponent<DeckCardView>();
+        DeckCardView deckCardView = root.GetComponent<DeckCardView>();
+        if (deckCardView == null)
+            deckCardView = root.AddComponent<DeckCardView>();
+
+        if (visualSettings != null)
+            deckCardView.ApplyVisualSettings(visualSettings);
 
         Button button = root.GetComponent<Button>();
         if (button == null)
@@ -181,6 +281,8 @@ public static class DeckBuildingScreenInstaller
         if (target == null)
         {
             Transform deckImage = FindChildRecursive(root.transform, "Deck_Image");
+            if (deckImage == null)
+                deckImage = FindChildRecursive(root.transform, "Ability_Image");
             target = deckImage != null ? deckImage.GetComponent<Image>() : null;
         }
 

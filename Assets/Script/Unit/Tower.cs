@@ -58,9 +58,12 @@ public class Tower : MonoBehaviour
         public Color elementColor;
         public TowerDamageType damageType;
         public UnitData attackPresentationUnit;
+        public UnitTargetPriority targetPriority;
     }
 
     public event Action<Tower, Enemy, float> AttackHit;
+    /// <summary>Raised when a projectile is spawned (visual attack start).</summary>
+    public event Action<Tower, Enemy> AttackStarted;
 
     private static readonly List<Tower> activeTowers = new List<Tower>(32);
 
@@ -79,6 +82,9 @@ public class Tower : MonoBehaviour
     [Header("Targeting")]
     [Tooltip("When enabled, this unit can select enemies anywhere on the active battlefield. Disable it to use Attack Range.")]
     [SerializeField] private bool fullAreaTargeting = true;
+
+    [Tooltip("Enemy pick order from UnitData. Default = closest to exit (legacy).")]
+    [SerializeField] private UnitTargetPriority targetPriority = UnitTargetPriority.Default;
 
     [Header("Allied Buff Eligibility")]
     [Tooltip("Disable for support-only units that must not receive allied damage bonuses.")]
@@ -100,6 +106,7 @@ public class Tower : MonoBehaviour
     [SerializeField] private Color elementColor = Color.white;
 
     private BoardTower boardTower;
+    private UnitVisualAnimator visualAnimator;
     private readonly List<Enemy> targetBuffer = new List<Enemy>(4);
     private readonly Dictionary<int, TimedDamageBuff> damageBuffs = new Dictionary<int, TimedDamageBuff>(4);
     private readonly List<int> expiredDamageBuffIds = new List<int>(4);
@@ -149,10 +156,22 @@ public class Tower : MonoBehaviour
         damageMultiplier = 1f;
         UpdateDamageBuffReadout();
 
-        UnitIdleBreathing idleBreathing = GetComponent<UnitIdleBreathing>();
-        if (idleBreathing == null)
-            idleBreathing = gameObject.AddComponent<UnitIdleBreathing>();
-        idleBreathing.Initialize();
+        visualAnimator = GetComponentInChildren<UnitVisualAnimator>(true);
+
+        // Sprite-frame idle replaces scale breathing when a visual animator is present.
+        if (visualAnimator == null)
+        {
+            UnitIdleBreathing idleBreathing = GetComponent<UnitIdleBreathing>();
+            if (idleBreathing == null)
+                idleBreathing = gameObject.AddComponent<UnitIdleBreathing>();
+            idleBreathing.Initialize();
+        }
+        else
+        {
+            UnitIdleBreathing idleBreathing = GetComponent<UnitIdleBreathing>();
+            if (idleBreathing != null)
+                Destroy(idleBreathing);
+        }
     }
 
     private void OnEnable()
@@ -244,21 +263,114 @@ public class Tower : MonoBehaviour
         }
     }
 
-    private static bool HasHigherPriority(Enemy candidate, Enemy current)
+    public UnitTargetPriority TargetPriority => targetPriority;
+
+    public void SetTargetPriority(UnitTargetPriority priority)
+    {
+        targetPriority = priority;
+    }
+
+    private bool HasHigherPriority(Enemy candidate, Enemy current)
+    {
+        switch (targetPriority)
+        {
+            case UnitTargetPriority.Nearest:
+                return CompareNearest(candidate, current) < 0;
+
+            case UnitTargetPriority.LowestHealth:
+                return CompareHealthAscending(candidate, current) < 0;
+
+            case UnitTargetPriority.HighestHealth:
+                return CompareHealthDescending(candidate, current) < 0;
+
+            case UnitTargetPriority.BossThenEliteThenHighestHealth:
+                return CompareThreatThen(candidate, current, preferHighestHealth: true) < 0;
+
+            case UnitTargetPriority.BossThenEliteThenLowestHealth:
+                return CompareThreatThen(candidate, current, preferHighestHealth: false) < 0;
+
+            case UnitTargetPriority.Default:
+            default:
+                return CompareClosestToExit(candidate, current) < 0;
+        }
+    }
+
+    private static int CompareClosestToExit(Enemy candidate, Enemy current)
     {
         float candidateDistance = candidate.RemainingRouteDistance;
         float currentDistance = current.RemainingRouteDistance;
 
         if (!Mathf.Approximately(candidateDistance, currentDistance))
-            return candidateDistance < currentDistance;
+            return candidateDistance < currentDistance ? -1 : 1;
 
-        return candidate.GetInstanceID() < current.GetInstanceID();
+        return CompareInstanceId(candidate, current);
+    }
+
+    private int CompareNearest(Enemy candidate, Enemy current)
+    {
+        float candidateSqr = (candidate.transform.position - transform.position).sqrMagnitude;
+        float currentSqr = (current.transform.position - transform.position).sqrMagnitude;
+
+        if (!Mathf.Approximately(candidateSqr, currentSqr))
+            return candidateSqr < currentSqr ? -1 : 1;
+
+        return CompareClosestToExit(candidate, current);
+    }
+
+    private static int CompareHealthAscending(Enemy candidate, Enemy current)
+    {
+        if (!Mathf.Approximately(candidate.CurrentHealth, current.CurrentHealth))
+            return candidate.CurrentHealth < current.CurrentHealth ? -1 : 1;
+
+        return CompareClosestToExit(candidate, current);
+    }
+
+    private static int CompareHealthDescending(Enemy candidate, Enemy current)
+    {
+        if (!Mathf.Approximately(candidate.CurrentHealth, current.CurrentHealth))
+            return candidate.CurrentHealth > current.CurrentHealth ? -1 : 1;
+
+        return CompareClosestToExit(candidate, current);
+    }
+
+    private static int CompareThreatThen(Enemy candidate, Enemy current, bool preferHighestHealth)
+    {
+        int candidateThreat = GetThreatRank(candidate);
+        int currentThreat = GetThreatRank(current);
+        if (candidateThreat != currentThreat)
+            return candidateThreat > currentThreat ? -1 : 1;
+
+        return preferHighestHealth
+            ? CompareHealthDescending(candidate, current)
+            : CompareHealthAscending(candidate, current);
+    }
+
+    /// <summary>Boss = 2, Elite = 1, Normal = 0.</summary>
+    private static int GetThreatRank(Enemy enemy)
+    {
+        if (enemy == null)
+            return 0;
+        if (enemy.IsBoss)
+            return 2;
+        if (enemy.IsElite)
+            return 1;
+        return 0;
+    }
+
+    private static int CompareInstanceId(Enemy candidate, Enemy current)
+    {
+        return candidate.GetInstanceID().CompareTo(current.GetInstanceID());
     }
 
     private void FireAt(Enemy target)
     {
         if (bulletPrefab == null || firePoint == null)
             return;
+
+        if (visualAnimator == null)
+            visualAnimator = GetComponentInChildren<UnitVisualAnimator>(true);
+        visualAnimator?.PlayAttack();
+        AttackStarted?.Invoke(this, target);
 
         Bullet bullet = Bullet.Spawn(
             bulletPrefab,
@@ -343,7 +455,8 @@ public class Tower : MonoBehaviour
             damageType = ResolveDamageType(),
             attackPresentationUnit = attackPresentationOverride != null
                 ? attackPresentationOverride
-                : boardTower != null ? boardTower.UnitData : null
+                : boardTower != null ? boardTower.UnitData : null,
+            targetPriority = targetPriority
         };
     }
 
@@ -361,6 +474,7 @@ public class Tower : MonoBehaviour
         elementColor = profile.elementColor;
         damageType = profile.damageType;
         attackPresentationOverride = profile.attackPresentationUnit;
+        targetPriority = profile.targetPriority;
 
         float cooldown = 1f / attackRate;
         attackTimer = Mathf.Min(attackTimer, cooldown);

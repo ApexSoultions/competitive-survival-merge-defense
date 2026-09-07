@@ -681,6 +681,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1a2b3c4d5e6478990ab1c2d3e4f5011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckCardView
+  abilityCategoryTag: {fileID: 0}
+  relicCategoryTag: {fileID: 0}
+  specialTileCategoryTag: {fileID: 0}
+  visualSettings: {fileID: 11400000, guid: d4e5f6a7b8c9401234567890bcdef012, type: 2}
 --- !u!1 &55554172
 GameObject:
   m_ObjectHideFlags: 0
@@ -3640,6 +3644,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1a2b3c4d5e6478990ab1c2d3e4f5011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckCardView
+  abilityCategoryTag: {fileID: 0}
+  relicCategoryTag: {fileID: 0}
+  specialTileCategoryTag: {fileID: 0}
+  visualSettings: {fileID: 11400000, guid: d4e5f6a7b8c9401234567890bcdef012, type: 2}
 --- !u!1 &371696225
 GameObject:
   m_ObjectHideFlags: 0
@@ -3943,6 +3951,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1a2b3c4d5e6478990ab1c2d3e4f5011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckCardView
+  abilityCategoryTag: {fileID: 0}
+  relicCategoryTag: {fileID: 0}
+  specialTileCategoryTag: {fileID: 0}
+  visualSettings: {fileID: 11400000, guid: d4e5f6a7b8c9401234567890bcdef012, type: 2}
 --- !u!1 &377619705
 GameObject:
   m_ObjectHideFlags: 0
@@ -5988,6 +6000,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1a2b3c4d5e6478990ab1c2d3e4f5011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckCardView
+  abilityCategoryTag: {fileID: 0}
+  relicCategoryTag: {fileID: 0}
+  specialTileCategoryTag: {fileID: 0}
+  visualSettings: {fileID: 11400000, guid: d4e5f6a7b8c9401234567890bcdef012, type: 2}
 --- !u!1 &564085922
 GameObject:
   m_ObjectHideFlags: 0
@@ -7035,6 +7051,7 @@ MonoBehaviour:
   goldText: {fileID: 0}
   waterText: {fileID: 0}
   playerNameText: {fileID: 0}
+  accountLevelText: {fileID: 2132381748}
   leagueProgressText: {fileID: 0}
   chestTimerText: {fileID: 0}
   victoryTimerText: {fileID: 0}
@@ -7817,6 +7834,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1a2b3c4d5e6478990ab1c2d3e4f5011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckCardView
+  abilityCategoryTag: {fileID: 0}
+  relicCategoryTag: {fileID: 0}
+  specialTileCategoryTag: {fileID: 0}
+  visualSettings: {fileID: 0}
 --- !u!1 &789078033
 GameObject:
   m_ObjectHideFlags: 0
@@ -8136,6 +8157,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1a2b3c4d5e6478990ab1c2d3e4f5011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckCardView
+  abilityCategoryTag: {fileID: 0}
+  relicCategoryTag: {fileID: 0}
+  specialTileCategoryTag: {fileID: 0}
+  visualSettings: {fileID: 11400000, guid: d4e5f6a7b8c9401234567890bcdef012, type: 2}
 --- !u!1 &828421033
 GameObject:
   m_ObjectHideFlags: 0
@@ -8301,6 +8326,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1a2b3c4d5e6478990ab1c2d3e4f5011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckCardView
+  abilityCategoryTag: {fileID: 0}
+  relicCategoryTag: {fileID: 0}
+  specialTileCategoryTag: {fileID: 0}
+  visualSettings: {fileID: 0}
 --- !u!1 &867901018
 GameObject:
   m_ObjectHideFlags: 0
@@ -9299,6 +9328,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1a2b3c4d5e6478990ab1c2d3e4f5011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckCardView
+  abilityCategoryTag: {fileID: 0}
+  relicCategoryTag: {fileID: 0}
+  specialTileCategoryTag: {fileID: 0}
+  visualSettings: {fileID: 0}
 --- !u!1 &1023029519
 GameObject:
   m_ObjectHideFlags: 0
@@ -13186,6 +13219,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1a2b3c4d5e6478990ab1c2d3e4f5011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckCardView
+  abilityCategoryTag: {fileID: 0}
+  relicCategoryTag: {fileID: 0}
+  specialTileCategoryTag: {fileID: 0}
+  visualSettings: {fileID: 11400000, guid: d4e5f6a7b8c9401234567890bcdef012, type: 2}
 --- !u!1 &1448327078
 GameObject:
   m_ObjectHideFlags: 0
@@ -14253,6 +14290,7 @@ MonoBehaviour:
   collectionList: {fileID: 1590437892}
   collectionCardPrefab: {fileID: 8811000111222333444, guid: 80830694b640fdb459aa09d254f42bc9, type: 3}
   collectionContent: {fileID: 1037011905}
+  cardVisualSettings: {fileID: 11400000, guid: d4e5f6a7b8c9401234567890bcdef012, type: 2}
   filterAllButton: {fileID: 673678856}
   filterUnitsButton: {fileID: 100080957}
   filterAbilitiesButton: {fileID: 1154098549}
@@ -14541,6 +14579,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1a2b3c4d5e6478990ab1c2d3e4f5011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DeckCardView
+  abilityCategoryTag: {fileID: 0}
+  relicCategoryTag: {fileID: 0}
+  specialTileCategoryTag: {fileID: 0}
+  visualSettings: {fileID: 0}
 --- !u!1 &1651592197
 GameObject:
   m_ObjectHideFlags: 0

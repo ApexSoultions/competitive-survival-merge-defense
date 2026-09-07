@@ -77,6 +77,8 @@ public sealed class BattleLoadoutBootstrap : MonoBehaviour
         else
             Debug.LogWarning("[BattleLoadoutBootstrap] MergeManager missing.");
 
+        InitializeGlobalActives(loadout);
+
         if (WaveBossManager.Instance == null)
         {
             Debug.LogWarning("[BattleLoadoutBootstrap] WaveBossManager missing.");
@@ -91,5 +93,15 @@ public sealed class BattleLoadoutBootstrap : MonoBehaviour
 
         if (GameStatsTracker.Instance != null)
             GameStatsTracker.Instance.StartTracking();
+    }
+
+    private static void InitializeGlobalActives(LoadoutService loadout)
+    {
+        if (loadout == null || loadout.SavedLoadout == null)
+            return;
+
+        ActiveAbilityDefinition[] actives = loadout.SavedLoadout.actives;
+        GlobalActiveCastService castService = GlobalActiveCastService.EnsureExists();
+        castService.Initialize(actives, loadout.ActiveSlots);
     }
 }

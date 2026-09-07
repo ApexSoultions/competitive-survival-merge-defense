@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Thunder Oracle L1 Chain Lightning, L10 Storm Circle, L20 Thunder Rhythm — from UnitData.
+/// </summary>
 [RequireComponent(typeof(Tower))]
 public sealed class ChainLightningAbility : TowerAbilityBase
 {
-    [Header("Chain Settings")]
+    [Header("Fallback Chain Settings")]
     [SerializeField, Min(0.1f)] private float chainRadius = 2.5f;
-    [Tooltip("Total enemies in one chain, including the primary attack target.")]
-    [SerializeField, Min(1)] private int maximumChainCount = 4;
-    [SerializeField, Min(0f)] private float chainDamageMultiplier = 0.65f;
+    [SerializeField, Min(1)] private int fallbackMaxTargets = 3;
+    [SerializeField, Min(0f)] private float fallbackChainDamagePercent = 65f;
     [SerializeField, Min(0f)] private float chainDelay = 0.08f;
+    [SerializeField, Range(0f, 100f)] private float fallbackBossDamageModifier = 75f;
 
     [Header("Lightning Visuals")]
     [SerializeField] private LightningRenderer lightningRendererPrefab;
@@ -26,7 +29,19 @@ public sealed class ChainLightningAbility : TowerAbilityBase
     [SerializeField] private AudioClip chainSound;
     [SerializeField, Range(0f, 2f)] private float chainSoundVolume = 0.8f;
 
-    public override string AbilityName => "Chain Lightning";
+    private int mergesWhileOnBoard;
+
+    public override string AbilityName
+    {
+        get
+        {
+            ResolveOwnerReferences();
+            return AbilityRuntime != null
+                ? AbilityRuntime.GetDisplayName(UnitAbilityTier.L1, "Chain Lightning")
+                : "Chain Lightning";
+        }
+    }
+
     public override Color AbilityColor => lightningColor;
     protected override Sprite RageProjectionSprite => lightningImpactPrefab != null
         ? lightningImpactPrefab.PrimarySprite
@@ -37,12 +52,14 @@ public sealed class ChainLightningAbility : TowerAbilityBase
         ResolveOwnerReferences();
         if (AttackTower != null)
             AttackTower.AttackHit += HandleAttackHit;
+        GameplayEvents.UnitMerged += HandleUnitMerged;
     }
 
     private void OnDisable()
     {
         if (AttackTower != null)
             AttackTower.AttackHit -= HandleAttackHit;
+        GameplayEvents.UnitMerged -= HandleUnitMerged;
     }
 
     private void HandleAttackHit(Tower sourceTower, Enemy primaryTarget, float primaryDamage)
@@ -60,22 +77,48 @@ public sealed class ChainLightningAbility : TowerAbilityBase
         if (primaryTarget == null || AttackTower == null)
             return false;
 
-        float damage = AttackTower.CurrentDamage;
+        float damage = ScaleVsBoss(AttackTower.CurrentDamage, primaryTarget);
         primaryTarget.TakeDamage(damage, EnemyDamageType.Lightning);
         float visualScale = AbilityVisualSizing.GetCharacterScale(BoardTower, transform, referenceCharacterSize) * visualScaleMultiplier;
         StartCoroutine(ChainRoutine(primaryTarget, damage, visualScale));
         return true;
     }
 
+    private void HandleUnitMerged(UnitData unit, int level)
+    {
+        if (!isActiveAndEnabled || !BattleFlowState.IsGameplayActive)
+            return;
+
+        ResolveOwnerReferences();
+        if (AbilityRuntime == null || !AbilityRuntime.IsTierActive(UnitAbilityTier.L20))
+            return;
+
+        mergesWhileOnBoard++;
+        int mergesPerTrigger = Mathf.Max(
+            1,
+            Mathf.RoundToInt(AbilityRuntime.GetParameter(UnitAbilityTier.L20, "mergesPerTrigger", 5f)));
+
+        if (mergesWhileOnBoard < mergesPerTrigger)
+            return;
+
+        mergesWhileOnBoard = 0;
+        AbilityRuntime.TryAddL20Stack();
+        AbilityRuntime.ApplyAttackSpeedBonusFromL20Stacks();
+    }
+
     private IEnumerator ChainRoutine(Enemy primaryTarget, float primaryDamage, float visualScale)
     {
+        ResolveOwnerReferences();
         HashSet<Enemy> struck = new HashSet<Enemy> { primaryTarget };
         Vector3 currentPosition = primaryTarget.transform.position;
+        Enemy lastTarget = primaryTarget;
         SpawnImpact(currentPosition, visualScale);
         PlayChainSound();
 
-        int remainingJumps = Mathf.Max(0, maximumChainCount - 1);
-        float chainDamage = Mathf.Max(0f, primaryDamage * chainDamageMultiplier);
+        int maxTargets = ResolveMaxTargets();
+        int remainingJumps = Mathf.Max(0, maxTargets - 1);
+        float chainPercent = ResolveChainDamagePercent() / 100f;
+        float chainDamage = Mathf.Max(0f, primaryDamage * chainPercent);
 
         for (int jump = 0; jump < remainingJumps; jump++)
         {
@@ -84,16 +127,85 @@ public sealed class ChainLightningAbility : TowerAbilityBase
 
             Enemy next = FindNearestTarget(currentPosition, struck);
             if (next == null)
-                yield break;
+                break;
 
             Vector3 nextPosition = next.transform.position;
             SpawnBeam(currentPosition, nextPosition, visualScale);
             struck.Add(next);
-            next.TakeDamage(chainDamage, EnemyDamageType.Lightning);
+            next.TakeDamage(ScaleVsBoss(chainDamage, next), EnemyDamageType.Lightning);
             SpawnImpact(nextPosition, visualScale);
             PlayChainSound();
             currentPosition = nextPosition;
+            lastTarget = next;
         }
+
+        TryStormCircle(struck.Count, lastTarget);
+    }
+
+    private void TryStormCircle(int enemiesHit, Enemy finalTarget)
+    {
+        ResolveOwnerReferences();
+        if (AbilityRuntime == null || !AbilityRuntime.IsTierActive(UnitAbilityTier.L10))
+            return;
+        if (finalTarget == null || !finalTarget.IsTargetable || AttackTower == null)
+            return;
+
+        int minEnemies = Mathf.Max(
+            1,
+            Mathf.RoundToInt(AbilityRuntime.GetParameter(UnitAbilityTier.L10, "minEnemiesForBurst", 3f)));
+        if (enemiesHit < minEnemies)
+            return;
+
+        float burstPercent = AbilityRuntime.GetParameter(
+            UnitAbilityTier.L10,
+            "burstDamagePercent",
+            AbilityRuntime.GetPower(UnitAbilityTier.L10, 40f));
+        float burstDamage = AttackTower.CurrentDamage * (burstPercent / 100f);
+        burstDamage = ScaleVsBoss(burstDamage, finalTarget);
+        if (burstDamage > 0f)
+        {
+            finalTarget.TakeDamage(burstDamage, EnemyDamageType.Lightning);
+            AoEImpactController.PlayImpact(finalTarget.transform.position, 0.85f, AoEVisualType.Fire);
+        }
+    }
+
+    private float ScaleVsBoss(float damage, Enemy enemy)
+    {
+        if (enemy == null || !enemy.IsBoss)
+            return damage;
+
+        float bossMod = fallbackBossDamageModifier;
+        if (AbilityRuntime != null && AbilityRuntime.IsTierActive(UnitAbilityTier.L1))
+            bossMod = AbilityRuntime.GetParameter(UnitAbilityTier.L1, "bossDamageModifier", bossMod);
+
+        return damage * (bossMod / 100f);
+    }
+
+    private int ResolveMaxTargets()
+    {
+        if (AbilityRuntime != null && AbilityRuntime.IsTierActive(UnitAbilityTier.L1))
+        {
+            int jumps = Mathf.RoundToInt(
+                AbilityRuntime.GetParameter(UnitAbilityTier.L1, "additionalJumps", 2f));
+            int maxTargets = Mathf.RoundToInt(
+                AbilityRuntime.GetParameter(UnitAbilityTier.L1, "maxTargets", fallbackMaxTargets));
+            return Mathf.Max(1, Mathf.Max(maxTargets, jumps + 1));
+        }
+
+        return Mathf.Max(1, fallbackMaxTargets);
+    }
+
+    private float ResolveChainDamagePercent()
+    {
+        if (AbilityRuntime != null && AbilityRuntime.IsTierActive(UnitAbilityTier.L1))
+        {
+            return AbilityRuntime.GetParameter(
+                UnitAbilityTier.L1,
+                "chainDamagePercent",
+                fallbackChainDamagePercent);
+        }
+
+        return fallbackChainDamagePercent;
     }
 
     private Enemy FindNearestTarget(Vector3 origin, HashSet<Enemy> excluded)
@@ -144,6 +256,15 @@ public sealed class ChainLightningAbility : TowerAbilityBase
             GameAudioManager.PlayAbilityClip(chainSound, chainSoundVolume);
     }
 
+    protected override void TransferDirectUpgradeSpecificStateTo(TowerAbilityBase destination)
+    {
+        ChainLightningAbility other = destination as ChainLightningAbility;
+        if (other == null)
+            return;
+
+        other.mergesWhileOnBoard = mergesWhileOnBoard;
+    }
+
     protected override void CopyRuntimeSettingsFrom(TowerAbilityBase source)
     {
         ChainLightningAbility other = source as ChainLightningAbility;
@@ -151,9 +272,10 @@ public sealed class ChainLightningAbility : TowerAbilityBase
             return;
 
         chainRadius = other.chainRadius;
-        maximumChainCount = other.maximumChainCount;
-        chainDamageMultiplier = other.chainDamageMultiplier;
+        fallbackMaxTargets = other.fallbackMaxTargets;
+        fallbackChainDamagePercent = other.fallbackChainDamagePercent;
         chainDelay = other.chainDelay;
+        fallbackBossDamageModifier = other.fallbackBossDamageModifier;
         lightningRendererPrefab = other.lightningRendererPrefab;
         lightningImpactPrefab = other.lightningImpactPrefab;
         lightningColor = other.lightningColor;
@@ -169,8 +291,8 @@ public sealed class ChainLightningAbility : TowerAbilityBase
     private void OnValidate()
     {
         chainRadius = Mathf.Max(0.1f, chainRadius);
-        maximumChainCount = Mathf.Max(1, maximumChainCount);
-        chainDamageMultiplier = Mathf.Max(0f, chainDamageMultiplier);
+        fallbackMaxTargets = Mathf.Max(1, fallbackMaxTargets);
+        fallbackChainDamagePercent = Mathf.Max(0f, fallbackChainDamagePercent);
         chainDelay = Mathf.Max(0f, chainDelay);
         lineWidth = Mathf.Max(0.005f, lineWidth);
         referenceCharacterSize = Mathf.Max(0.1f, referenceCharacterSize);

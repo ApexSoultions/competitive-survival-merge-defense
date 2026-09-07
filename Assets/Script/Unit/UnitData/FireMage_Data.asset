@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitId: unit_fire_mage
   unitName: Fire Mage
-  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
+  tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: 616969474331799417, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: ace1490ad9ddae04aae086b9597ffa8c, type: 3}
   levelIcons:
@@ -27,6 +27,70 @@ MonoBehaviour:
   - {fileID: 3444463731680135898, guid: d932e47df42eda942b466cd0417bf520, type: 3}
   - {fileID: 3444463731680135898, guid: 0305b8f4e5483ff498236597b01bd7a5, type: 3}
   manaCost: 50
-  attackDamage: 10
-  attackSpeed: 50
-  attackRange: 3
+  attackDamage: 16
+  attackSpeed: 0.8333
+  attackRange: 99
+  baseDamage: 16
+  baseAttackInterval: 1.2
+  baseAttackRange: 99
+  criticalChance: 0.12
+  criticalDamageMultiplier: 1.65
+  minAttackInterval: 0.12
+  mergeSpeedMultipliers:
+  - 1
+  - 1.9
+  - 3.2
+  - 4.8
+  - 6.5
+  - 8.5
+  targetPriority: 0
+  abilityL1:
+    id: fire_mage_l1_flame_burst
+    displayName: Flame Burst
+    description: Primary target 100% attack damage; nearby enemies 55%.
+    power: 100
+    radius: 1.5
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - nearbyDamagePercent
+    - bossDamageModifier
+    parameterValues:
+    - 55
+    - 70
+  abilityL10:
+    id: fire_mage_l10_burning_trail
+    displayName: Burning Trail
+    description: Enemies hit by Flame Burst burn for 15% attack damage/sec for 3s (refresh).
+    power: 15
+    radius: 0
+    durationSeconds: 3
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 1
+    parameterNames:
+    - burnDamagePercentPerSecond
+    parameterValues:
+    - 15
+  abilityL20:
+    id: fire_mage_l20_rising_heat
+    displayName: Rising Heat
+    description: When one attack damages at least 3 enemies, permanently gain attack speed.
+    power: 2
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 10
+    stackRule: 3
+    parameterNames:
+    - stackTriggerMinEnemies
+    - softCapPercent
+    - overflowEfficiencyPercent
+    - overflowStackPercent
+    parameterValues:
+    - 3
+    - 20
+    - 10
+    - 0.2

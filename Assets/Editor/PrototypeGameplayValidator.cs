@@ -30,13 +30,15 @@ public static class PrototypeGameplayValidator
         new HeroSpec("Fire Mage", "Assets/Script/Unit/UnitData/FireMage_Data.asset", "Assets/_Prefabs/Units/Fire Mage", typeof(FireMageAoEAbility), "char level 1_1", "char level 2_1", "char level 3_1", "char level 4_2", "char level 5_1", "char level 6_1"),
         new HeroSpec("Frost Witch", "Assets/Script/Unit/UnitData/Frost Witch_Data.asset", "Assets/_Prefabs/Units/Frost Witch", typeof(FrostWitchSlowAbility), "char level 1_2", "char level 2_2", "char level 3_2", "char level 4_3", "char level 5_5", "char level 6_3"),
         new HeroSpec("Golden Spirit", "Assets/Script/Unit/UnitData/Golden Spirit_Data.asset", "Assets/_Prefabs/Units/Golden Spirit", typeof(GoldSpiritAbility), "char level 1_3", "char level 2_3", "char level 3_3", "char level 4_4", "char level 5_2", "char level 6_2"),
-        new HeroSpec("Magic Archer", "Assets/Script/Unit/UnitData/Magic Archer_Data.asset", "Assets/_Prefabs/Units/Magic Archer", null, "char level 1_4", "char level 2_7", "char level 3_6", "char level 4_5", "char level 5_7", "char level 6_4"),
+        new HeroSpec("Magic Archer", "Assets/Script/Unit/UnitData/Magic Archer_Data.asset", "Assets/_Prefabs/Units/Magic Archer", typeof(ShadowAssassinAbility), "char level 1_4", "char level 2_7", "char level 3_6", "char level 4_5", "char level 5_7", "char level 6_4"),
         new HeroSpec("Plague Doctor", "Assets/Script/Unit/UnitData/Poison Druid_Data.asset", "Assets/_Prefabs/Units/Poison Druid", typeof(PlagueDoctorPoisonAbility), "char level 1_5", "char level 2_12", "char level 3_10", "char level 4_1", "char level 5_9", "char level 6_7"),
         new HeroSpec("Shapeshifter", "Assets/Script/Unit/UnitData/Shapeshifte_Data.asset", "Assets/_Prefabs/Units/Shapeshifter", typeof(ShapeshifterAbility), "char level 1_6", "char level 2_14", "char level 3_11", "char level 4_6", "char level 5_19", "char level 6_8"),
-        new HeroSpec("Princess", "Assets/Script/Unit/UnitData/Princess_Data.asset", "Assets/_Prefabs/Units/Princess", null, "char level 1_7", "char level 2_15", "char level 3_13", "char level 4_7", "char level 5_22", "char level 6_9"),
+        new HeroSpec("Princess", "Assets/Script/Unit/UnitData/Princess_Data.asset", "Assets/_Prefabs/Units/Princess", typeof(ShieldPriestessAbility), "char level 1_7", "char level 2_15", "char level 3_13", "char level 4_7", "char level 5_22", "char level 6_9"),
         new HeroSpec("Stone Guardian", "Assets/Script/Unit/UnitData/Stone Guardian_Data.asset", "Assets/_Prefabs/Units/Stone Guardian", typeof(StoneGolemStunAbility), "char level 1_8", "char level 2_16", "char level 3_15", "char level 4_8", "char level 5_3", "char level 6_10"),
         new HeroSpec("Zeus", "Assets/Script/Unit/UnitData/Zeus_Data.asset", "Assets/_Prefabs/Units/Zeus", typeof(ChainLightningAbility), "char level 1_9", "char level 2_17", "char level 3_18", "char level 4_9", "char level 5_4", "char level 6_5"),
-        new HeroSpec("Light Fairy", "Assets/Script/Unit/UnitData/Light Fairy_Data.asset", "Assets/_Prefabs/Units/Light_Fairy", typeof(LightFairyAbility), "fairy_17", "fairy_1", "fairy_15", "fairy_21", "fairy_22", "fairy_0")
+        new HeroSpec("Light Fairy", "Assets/Script/Unit/UnitData/Light Fairy_Data.asset", "Assets/_Prefabs/Units/Light_Fairy", typeof(LightFairyAbility), "fairy_17", "fairy_1", "fairy_15", "fairy_21", "fairy_22", "fairy_0"),
+        // All merge levels share the Dragon idle clip first frame (UnitVisualAnimator).
+        new HeroSpec("Dragon", "Assets/Script/Unit/UnitData/Dragon_Data.asset", "Assets/_Prefabs/Units/Dragon", typeof(FireMageAoEAbility), "IDL 1_0", "IDL 1_0", "IDL 1_0", "IDL 1_0", "IDL 1_0", "IDL 1_0")
     };
 
     [MenuItem("Tools/Prototype/Validate Gameplay Content")]
@@ -166,15 +168,9 @@ public static class PrototypeGameplayValidator
         if (tower != null)
         {
             SerializedObject serializedTower = new SerializedObject(tower);
-            if (level == 1 && ShouldValidateUnitDataStats(spec.displayName))
-            {
-                ValidateFloat(label, "UnitData attack damage", data.attackDamage,
-                    serializedTower.FindProperty("damage")?.floatValue ?? float.NaN, errors);
-                ValidateFloat(label, "UnitData attack speed", data.attackSpeed,
-                    serializedTower.FindProperty("attackRate")?.floatValue ?? float.NaN, errors);
-                ValidateFloat(label, "UnitData attack range", data.attackRange,
-                    serializedTower.FindProperty("attackRange")?.floatValue ?? float.NaN, errors);
-            }
+
+            // Phase 2+: combat stats come from UnitData via UnitCombatStatsResolver at spawn.
+            // Prefab Inspector damage/rate/range are not authoritative — do not diff them.
 
             if (serializedTower.FindProperty("firePoint")?.objectReferenceValue == null)
                 errors.Add(label + ": fire point is missing.");
@@ -190,13 +186,29 @@ public static class PrototypeGameplayValidator
             }
         }
 
+        if (level == 1)
+            ValidatePhase2CombatStats(spec.displayName + " UnitData", data, errors);
+
         ValidateSpecialAbilityConfiguration(spec, prefab, label, errors);
     }
 
-    private static bool ShouldValidateUnitDataStats(string heroName)
+    private static void ValidatePhase2CombatStats(string label, UnitData data, List<string> errors)
     {
-        return heroName == "Golden Spirit" || heroName == "Shapeshifter" || heroName == "Princess" ||
-               heroName == "Stone Guardian" || heroName == "Zeus" || heroName == "Light Fairy";
+        if (data == null)
+            return;
+
+        if (!UnitCombatStatsResolver.HasAuthoritativeCombatStats(data))
+        {
+            errors.Add(label + ": missing Phase 2 combat stats (baseDamage / baseAttackInterval / baseAttackRange).");
+            return;
+        }
+
+        if (data.GetBaseDamage() <= 0f)
+            errors.Add(label + ": GetBaseDamage() <= 0.");
+        if (data.GetAttackInterval(1) <= 0f)
+            errors.Add(label + ": GetAttackInterval(ML1) <= 0.");
+        if (data.GetBaseAttackRange() <= 0f)
+            errors.Add(label + ": GetBaseAttackRange() <= 0.");
     }
 
     private static void ValidateSpecialAbilityConfiguration(
@@ -207,12 +219,8 @@ public static class PrototypeGameplayValidator
     {
         if (spec.displayName == "Enchantress")
         {
-            NatureBlessingBuffAbility blessing = prefab.GetComponent<NatureBlessingBuffAbility>();
-            SerializedObject serialized = blessing != null ? new SerializedObject(blessing) : null;
-            if (serialized == null || serialized.FindProperty("maximumBuffedTowers")?.intValue != 4)
-                errors.Add(label + ": Nature Blessing must be fixed to exactly four targets.");
-            if (serialized != null && serialized.FindProperty("allowBuffStacking")?.boolValue == true)
-                errors.Add(label + ": Nature Blessing must not multiply repeatedly across refreshes or sources.");
+            if (prefab.GetComponent<NatureBlessingBuffAbility>() == null)
+                errors.Add(label + ": Rune Grid ability component is missing.");
         }
         else if (spec.displayName == "Zeus")
         {
@@ -220,16 +228,28 @@ public static class PrototypeGameplayValidator
                 errors.Add(label + ": Zeus must not contain a stun ability or stun status configuration.");
 
             ChainLightningAbility chain = prefab.GetComponent<ChainLightningAbility>();
-            SerializedObject serialized = chain != null ? new SerializedObject(chain) : null;
-            if (serialized == null || serialized.FindProperty("chainDamageMultiplier").floatValue < 0f)
-                errors.Add(label + ": configurable chain damage is invalid.");
+            if (chain == null)
+            {
+                errors.Add(label + ": ChainLightningAbility is missing.");
+            }
+            else
+            {
+                // Legacy Inspector field may be absent after SO-driven Phase 3; presence of the component is enough.
+                SerializedObject serialized = new SerializedObject(chain);
+                SerializedProperty chainDamage = serialized.FindProperty("chainDamageMultiplier");
+                if (chainDamage != null && chainDamage.floatValue < 0f)
+                    errors.Add(label + ": configurable chain damage is invalid.");
+            }
         }
         else if (spec.displayName == "Stone Guardian")
         {
-            StoneGolemStunAbility stun = prefab.GetComponent<StoneGolemStunAbility>();
-            SerializedObject serialized = stun != null ? new SerializedObject(stun) : null;
-            if (serialized == null || serialized.FindProperty("stunDuration").floatValue <= 0f)
-                errors.Add(label + ": configurable stun duration is missing or invalid.");
+            if (prefab.GetComponent<StoneGolemStunAbility>() == null)
+                errors.Add(label + ": Crushing Blow ability component is missing.");
+        }
+        else if (spec.displayName == "Magic Archer")
+        {
+            if (prefab.GetComponent<ShadowAssassinAbility>() == null)
+                errors.Add(label + ": Shadow Assassin ability component is missing.");
         }
         else if (spec.displayName == "Golden Spirit")
         {
@@ -242,7 +262,7 @@ public static class PrototypeGameplayValidator
                 errors.Add(label + ": mana-support units must be excluded from Enchantress damage buffs.");
 
             SerializedObject serialized = new SerializedObject(gold);
-            ValidateFloat(label, "mana tick interval", 5f,
+            ValidateFloat(label, "mana tick interval", 12f,
                 serialized.FindProperty("tickInterval").floatValue, errors);
 
             SerializedProperty amounts = serialized.FindProperty("manaByMergeLevel");
@@ -252,12 +272,13 @@ public static class PrototypeGameplayValidator
             }
             else
             {
+                int[] expectedByLevel = { 5, 10, 18, 32, 50, 75 };
                 for (int level = 1; level <= UnitData.MaximumLevel; level++)
                 {
-                    int expected = level * 10;
+                    int expected = expectedByLevel[level - 1];
                     int actual = amounts.GetArrayElementAtIndex(level - 1).intValue;
-                    if (actual != expected || gold.GetManaAmountForLevel(level) != expected)
-                        errors.Add(label + ": merge level " + level + " must grant " + expected + " mana.");
+                    if (actual != expected)
+                        errors.Add(label + ": merge level " + level + " fallback mana should be " + expected + ".");
                 }
             }
         }
@@ -289,6 +310,8 @@ public static class PrototypeGameplayValidator
             return level == 4
                 ? "Assets/_Prefabs/Bullets/Fire_Mage/Bullet_4.prefab"
                 : "Assets/_Prefabs/Bullets/Fire_Mage/Bullet.prefab";
+        if (heroName == "Dragon")
+            return "Assets/_Prefabs/Bullets/Dragon/Dragon_Fireball.prefab";
         if (heroName == "Frost Witch")
             return "Assets/_Prefabs/Bullets/Frost Witch/Frost Witch_1.prefab";
         if (heroName == "Golden Spirit")

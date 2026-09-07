@@ -13,19 +13,46 @@ public sealed class DeckChosenSlotsUI : MonoBehaviour
     [SerializeField] private DeckCardView specialTileSlotView;
 
     private LoadoutService service;
+    private DeckCardVisualSettings visualSettings;
 
     public event Action<int> UnitSlotClicked;
     public event Action<int> AbilitySlotClicked;
     public event Action RelicSlotClicked;
     public event Action SpecialTileSlotClicked;
 
-    public void Initialize(LoadoutService loadoutService, Transform chosenDeckRoot = null)
+    public void Initialize(LoadoutService loadoutService, Transform chosenDeckRoot = null, DeckCardVisualSettings settings = null)
     {
         service = loadoutService;
+        visualSettings = settings;
         if (chosenDeckRoot != null)
             TryAutoBindSlots(chosenDeckRoot);
+        ApplyVisualSettingsToSlots();
         WireSlotButtons();
         Refresh();
+    }
+
+    private void ApplyVisualSettingsToSlots()
+    {
+        ApplyVisualSettings(unitSlotViews);
+        ApplyVisualSettings(abilitySlotViews);
+        ApplyVisualSettings(relicSlotView);
+        ApplyVisualSettings(specialTileSlotView);
+    }
+
+    private void ApplyVisualSettings(DeckCardView view)
+    {
+        if (view == null || visualSettings == null)
+            return;
+        view.ApplyVisualSettings(visualSettings);
+    }
+
+    private void ApplyVisualSettings(DeckCardView[] views)
+    {
+        if (views == null)
+            return;
+
+        for (int i = 0; i < views.Length; i++)
+            ApplyVisualSettings(views[i]);
     }
 
     private void TryAutoBindSlots(Transform chosenDeckRoot)

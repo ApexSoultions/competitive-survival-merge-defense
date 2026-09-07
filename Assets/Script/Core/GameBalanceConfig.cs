@@ -24,4 +24,22 @@ public class GameBalanceConfig : ScriptableObject
     [Header("Pre-match loadout (Option A)")]
     [Range(1, 6)] public int deckUnitSlots = 6;
     [Range(1, 2)] public int globalActiveSlots = 2;
+
+    [Header("Phase 5 — Account ability unlocks")]
+    [Tooltip("Account level required for unit L10 abilities. L1 is always on.")]
+    [Min(1)] public int l10UnlockAccountLevel = 10;
+    [Tooltip("Account level required for unit L20 abilities.")]
+    [Min(1)] public int l20UnlockAccountLevel = 20;
+    [Tooltip("DEV: when true, all L1/L10/L20 tiers stay active (pre-Phase-5 behavior). Turn off to test real gating.")]
+    public bool debugForceAllAbilityTiers = true;
+
+    public bool IsL10Unlocked(int accountLevel)
+    {
+        return accountLevel >= Mathf.Max(1, l10UnlockAccountLevel);
+    }
+
+    public bool IsL20Unlocked(int accountLevel)
+    {
+        return accountLevel >= Mathf.Max(1, l20UnlockAccountLevel);
+    }
 }

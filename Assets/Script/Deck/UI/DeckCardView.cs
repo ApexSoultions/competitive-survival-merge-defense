@@ -11,13 +11,52 @@ public sealed class DeckCardView : MonoBehaviour
     private static readonly Color SelectedTint = new Color(1f, 0.85f, 0.25f, 1f);
     private static readonly Color EmptyFrameTint = new Color(1f, 1f, 1f, 0.12f);
 
+    private static readonly string[] PortraitChildNames =
+    {
+        "Deck_Image",
+        "Ability_Image",
+        "Relic_Image",
+        "Speciality_Image"
+    };
+
+    private static readonly string[] LevelChildNames =
+    {
+        "Deck_Level",
+        "Ability_Level",
+        "Relic_Level",
+        "Speciality_Level"
+    };
+
+    [Header("Category Tag Badges (Inspector)")]
+    public Sprite abilityCategoryTag;
+    public Sprite relicCategoryTag;
+    public Sprite specialTileCategoryTag;
+
+    [Header("Optional Shared Settings")]
+    public DeckCardVisualSettings visualSettings;
+
     private Image frameImage;
     private Image unitIcon;
+    private Image tagBackground;
     private Image deckImage;
     private TMP_Text deckLevel;
     private TMP_Text deckName;
     private Color frameDefaultColor = Color.white;
     private bool resolved;
+
+    public void ApplyVisualSettings(DeckCardVisualSettings settings)
+    {
+        if (settings == null)
+            return;
+
+        visualSettings = settings;
+        if (settings.abilityCategoryTag != null)
+            abilityCategoryTag = settings.abilityCategoryTag;
+        if (settings.relicCategoryTag != null)
+            relicCategoryTag = settings.relicCategoryTag;
+        if (settings.specialTileCategoryTag != null)
+            specialTileCategoryTag = settings.specialTileCategoryTag;
+    }
 
     public void BindUnit(UnitData unit, int level = 1)
     {
@@ -37,7 +76,87 @@ public sealed class DeckCardView : MonoBehaviour
         ShowTagBadge(unit.GetTagIcon() != null);
     }
 
-    public void BindAbility(ActiveAbilityDefinition ability)
+    public Image FrameImage
+    {
+        get
+        {
+            EnsureResolved();
+            return frameImage;
+        }
+    }
+
+    public Image PortraitImage
+    {
+        get
+        {
+            EnsureResolved();
+            return deckImage;
+        }
+    }
+
+    public Image TagIconImage
+    {
+        get
+        {
+            EnsureResolved();
+            return unitIcon;
+        }
+    }
+
+    public Image TagBackgroundImage
+    {
+        get
+        {
+            EnsureResolved();
+            return tagBackground;
+        }
+    }
+
+    public TMP_Text LevelLabel
+    {
+        get
+        {
+            EnsureResolved();
+            return deckLevel;
+        }
+    }
+
+    public void ApplyUnitTagFallback(Sprite fallbackIcon)
+    {
+        EnsureResolved();
+        if (fallbackIcon == null || unitIcon == null)
+            return;
+
+        if (unitIcon.sprite != null && unitIcon.enabled)
+            return;
+
+        ApplyTagIcon(fallbackIcon);
+        ShowTagBadge(true);
+    }
+
+    public void ApplyTagFrameSprite(Sprite frameSprite)
+    {
+        EnsureResolved();
+        if (tagBackground == null || frameSprite == null)
+            return;
+
+        tagBackground.sprite = frameSprite;
+        tagBackground.color = Color.white;
+        tagBackground.enabled = true;
+    }
+
+    public void BindPortrait(Sprite portrait, int level, Sprite categoryTag = null)
+    {
+        EnsureResolved();
+        ApplyDeckPortrait(portrait);
+        ApplyTagIcon(categoryTag);
+        SetLevelText("LVL " + level);
+        ShowLevel(true);
+        ShowName(false);
+        ShowTagBadge(categoryTag != null);
+    }
+
+    public void BindAbility(ActiveAbilityDefinition ability, int level = 1)
     {
         EnsureResolved();
         if (ability == null)
@@ -46,16 +165,17 @@ public sealed class DeckCardView : MonoBehaviour
             return;
         }
 
+        Sprite categoryTag = ResolveAbilityTag();
         ApplyDeckPortrait(ability.icon);
-        ApplyTagIcon(null);
-        SetLevelText(string.Empty);
+        ApplyTagIcon(categoryTag);
+        SetLevelText("LVL " + level);
         SetNameText(ability.displayName);
-        ShowLevel(false);
+        ShowLevel(true);
         ShowName(!string.IsNullOrEmpty(ability.displayName));
-        ShowTagBadge(false);
+        ShowTagBadge(categoryTag != null);
     }
 
-    public void BindRelic(RelicDefinition relic)
+    public void BindRelic(RelicDefinition relic, int level = 1)
     {
         EnsureResolved();
         if (relic == null)
@@ -64,16 +184,17 @@ public sealed class DeckCardView : MonoBehaviour
             return;
         }
 
+        Sprite categoryTag = ResolveRelicTag();
         ApplyDeckPortrait(relic.icon);
-        ApplyTagIcon(null);
-        SetLevelText(string.Empty);
+        ApplyTagIcon(categoryTag);
+        SetLevelText("LVL " + level);
         SetNameText(relic.displayName);
-        ShowLevel(false);
+        ShowLevel(true);
         ShowName(!string.IsNullOrEmpty(relic.displayName));
-        ShowTagBadge(false);
+        ShowTagBadge(categoryTag != null);
     }
 
-    public void BindSpecialTile(SpecialTileDefinition tile)
+    public void BindSpecialTile(SpecialTileDefinition tile, int level = 1)
     {
         EnsureResolved();
         if (tile == null)
@@ -82,13 +203,14 @@ public sealed class DeckCardView : MonoBehaviour
             return;
         }
 
+        Sprite categoryTag = ResolveSpecialTileTag();
         ApplyDeckPortrait(tile.icon);
-        ApplyTagIcon(null);
-        SetLevelText(string.Empty);
+        ApplyTagIcon(categoryTag);
+        SetLevelText("LVL " + level);
         SetNameText(tile.displayName);
-        ShowLevel(false);
+        ShowLevel(true);
         ShowName(!string.IsNullOrEmpty(tile.displayName));
-        ShowTagBadge(false);
+        ShowTagBadge(categoryTag != null);
     }
 
     public void SetEmpty()
@@ -112,6 +234,27 @@ public sealed class DeckCardView : MonoBehaviour
         frameImage.color = on ? SelectedTint : frameDefaultColor;
     }
 
+    private Sprite ResolveAbilityTag()
+    {
+        if (abilityCategoryTag != null)
+            return abilityCategoryTag;
+        return visualSettings != null ? visualSettings.abilityCategoryTag : null;
+    }
+
+    private Sprite ResolveRelicTag()
+    {
+        if (relicCategoryTag != null)
+            return relicCategoryTag;
+        return visualSettings != null ? visualSettings.relicCategoryTag : null;
+    }
+
+    private Sprite ResolveSpecialTileTag()
+    {
+        if (specialTileCategoryTag != null)
+            return specialTileCategoryTag;
+        return visualSettings != null ? visualSettings.specialTileCategoryTag : null;
+    }
+
     private void EnsureResolved()
     {
         if (resolved)
@@ -120,8 +263,9 @@ public sealed class DeckCardView : MonoBehaviour
         resolved = true;
         frameImage = GetComponent<Image>();
         unitIcon = FindChildImage("Unit_Icon");
-        deckImage = FindChildImage("Deck_Image");
-        deckLevel = FindChildText("Deck_Level");
+        tagBackground = FindChildImage("Unity_Tag_BackGround");
+        deckImage = FindFirstChildImage(PortraitChildNames);
+        deckLevel = FindFirstChildText(LevelChildNames);
         deckName = FindChildText("Deck_Name");
         if (deckName == null)
             deckName = FindChildText("Unit_Name");
@@ -173,7 +317,7 @@ public sealed class DeckCardView : MonoBehaviour
         if (unitIcon != null)
             unitIcon.gameObject.SetActive(show);
 
-        Transform tagRoot = FindChildRecursive(transform, "Unity_Tag_BackGround");
+        Transform tagRoot = tagBackground != null ? tagBackground.transform : FindChildRecursive(transform, "Unity_Tag_BackGround");
         if (tagRoot != null)
             tagRoot.gameObject.SetActive(show);
     }
@@ -204,6 +348,30 @@ public sealed class DeckCardView : MonoBehaviour
         if (deckName == null)
             return;
         deckName.gameObject.SetActive(show);
+    }
+
+    private Image FindFirstChildImage(string[] childNames)
+    {
+        for (int i = 0; i < childNames.Length; i++)
+        {
+            Image image = FindChildImage(childNames[i]);
+            if (image != null)
+                return image;
+        }
+
+        return null;
+    }
+
+    private TMP_Text FindFirstChildText(string[] childNames)
+    {
+        for (int i = 0; i < childNames.Length; i++)
+        {
+            TMP_Text text = FindChildText(childNames[i]);
+            if (text != null)
+                return text;
+        }
+
+        return null;
     }
 
     private Image FindChildImage(string childName)

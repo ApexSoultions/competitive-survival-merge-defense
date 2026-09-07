@@ -22,6 +22,7 @@ public sealed class DeckCollectionListUI : MonoBehaviour
     [SerializeField] private DeckCardView cardPrefab;
 
     private LoadoutService service;
+    private DeckCardVisualSettings visualSettings;
     private CollectionFilter filter = CollectionFilter.All;
     private readonly List<DeckCardView> spawnedCards = new List<DeckCardView>();
 
@@ -32,13 +33,25 @@ public sealed class DeckCollectionListUI : MonoBehaviour
 
     public CollectionFilter CurrentFilter => filter;
 
-    public void Initialize(LoadoutService loadoutService, Transform content, DeckCardView prefab)
+    public void Initialize(LoadoutService loadoutService, Transform content, DeckCardView prefab, DeckCardVisualSettings settings = null)
     {
         service = loadoutService;
+        visualSettings = settings;
         if (content != null)
             contentRoot = content;
         if (prefab != null)
             cardPrefab = prefab;
+    }
+
+    private void ApplyVisualSettings(DeckCardView view)
+    {
+        if (view == null)
+            return;
+
+        if (visualSettings != null)
+            view.ApplyVisualSettings(visualSettings);
+        else if (cardPrefab != null)
+            view.ApplyVisualSettings(cardPrefab.visualSettings);
     }
 
     public void SetFilter(CollectionFilter next)
@@ -116,6 +129,7 @@ public sealed class DeckCollectionListUI : MonoBehaviour
     private void SpawnUnitCard(UnitData unit, bool selected)
     {
         DeckCardView view = Instantiate(cardPrefab, contentRoot);
+        ApplyVisualSettings(view);
         view.BindUnit(unit, 1);
         view.SetSelectedHighlight(selected);
         WireCard(view, () => UnitClicked?.Invoke(unit));
@@ -125,6 +139,7 @@ public sealed class DeckCollectionListUI : MonoBehaviour
     private void SpawnAbilityCard(ActiveAbilityDefinition ability, bool selected)
     {
         DeckCardView view = Instantiate(cardPrefab, contentRoot);
+        ApplyVisualSettings(view);
         view.BindAbility(ability);
         view.SetSelectedHighlight(selected);
         WireCard(view, () => AbilityClicked?.Invoke(ability));
@@ -134,6 +149,7 @@ public sealed class DeckCollectionListUI : MonoBehaviour
     private void SpawnRelicCard(RelicDefinition relic, bool selected)
     {
         DeckCardView view = Instantiate(cardPrefab, contentRoot);
+        ApplyVisualSettings(view);
         view.BindRelic(relic);
         view.SetSelectedHighlight(selected);
         WireCard(view, () => RelicClicked?.Invoke(relic));
@@ -143,6 +159,7 @@ public sealed class DeckCollectionListUI : MonoBehaviour
     private void SpawnSpecialTileCard(SpecialTileDefinition tile, bool selected)
     {
         DeckCardView view = Instantiate(cardPrefab, contentRoot);
+        ApplyVisualSettings(view);
         view.BindSpecialTile(tile);
         view.SetSelectedHighlight(selected);
         WireCard(view, () => SpecialTileClicked?.Invoke(tile));

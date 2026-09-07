@@ -15,7 +15,7 @@ MonoBehaviour:
   id: active_execution_sigil
   displayName: Execution Sigil
   description: Launch-pool stub. Cast system wires in Milestone 2.
-  icon: {fileID: 0}
+  icon: {fileID: -8368552518314864162, guid: dc1b06f6800b58441aa68f2c37c53eed, type: 3}
   cooldownSeconds: 40
   targeting: 3
   power: 150
@@ -24,4 +24,4 @@ MonoBehaviour:
   vfxPrefab: {fileID: 0}
   castSfx: {fileID: 0}
   includedInLaunchPool: 1
-  implemented: 0
+  implemented: 1

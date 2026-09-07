@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitId: unit_enchanter
   unitName: Enchantress
-  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
+  tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: -2292151009730567627, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 6730feba00bb8a7419895862d92f97a2, type: 3}
   levelIcons:
@@ -27,6 +27,70 @@ MonoBehaviour:
   - {fileID: 3444463731680135898, guid: 410cc256fff94d243980c8b24a519879, type: 3}
   - {fileID: 3444463731680135898, guid: 392cf8d18b084064f8caf396c653663d, type: 3}
   manaCost: 50
-  attackDamage: 10
-  attackSpeed: 1
-  attackRange: 3
+  attackDamage: 3
+  attackSpeed: 0.5556
+  attackRange: 99
+  baseDamage: 3
+  baseAttackInterval: 1.8
+  baseAttackRange: 99
+  criticalChance: 0.12
+  criticalDamageMultiplier: 1.65
+  minAttackInterval: 0.12
+  mergeSpeedMultipliers:
+  - 1
+  - 1.9
+  - 3.2
+  - 4.8
+  - 6.5
+  - 8.5
+  targetPriority: 0
+  abilityL1:
+    id: enchanter_l1_rune_grid
+    displayName: Rune Grid
+    description: Creates Rune Tiles on adjacent spaces; allies on tiles gain bonus damage.
+    power: 10
+    radius: 4
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - orthogonalTiles
+    - damageBonusPercent
+    parameterValues:
+    - 4
+    - 10
+  abilityL10:
+    id: enchanter_l10_resonant_formation
+    displayName: Resonant Formation
+    description: If at least 3 Rune Tiles are occupied, units on tiles gain attack-speed bonus.
+    power: 6
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - occupiedTilesRequired
+    - attackSpeedBonusPercent
+    parameterValues:
+    - 3
+    - 6
+  abilityL20:
+    id: enchanter_l20_living_glyphs
+    displayName: Living Glyphs
+    description: Completed merges on Rune Tiles permanently improve Rune Tile effectiveness.
+    power: 1
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 12
+    stackRule: 3
+    parameterNames:
+    - softCapPercent
+    - overflowEfficiencyPercent
+    - overflowStackPercent
+    parameterValues:
+    - 12
+    - 15
+    - 0.15

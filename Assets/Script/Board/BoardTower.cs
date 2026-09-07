@@ -16,12 +16,17 @@ public class BoardTower : MonoBehaviour
 
     public SpriteRenderer SpriteRenderer { get; private set; }
 
+    /// <summary>Prefab-authored Visual localScale, captured once before level scaling.</summary>
+    private Vector3 authoredVisualScale = Vector3.one;
+    private bool hasAuthoredVisualScale;
+
     private void Awake()
     {
         NormalizeRootScale();
         SpriteRenderer = FindVisualSpriteRenderer();
         NormalizeGameplayLayers();
         NormalizeRendering();
+        CaptureAuthoredVisualScale();
         ApplyPermanentLevelVisualScale();
     }
 
@@ -45,6 +50,7 @@ public class BoardTower : MonoBehaviour
 
         NormalizeGameplayLayers();
         NormalizeRendering();
+        CaptureAuthoredVisualScale();
         ApplyPermanentLevelVisualScale();
 
         EnsureRageAuraComponent();
@@ -54,6 +60,32 @@ public class BoardTower : MonoBehaviour
         {
             aura.RefreshAura();
         }
+
+        ApplyCombatStatsFromUnitData();
+        EnsureAbilityRuntime();
+    }
+
+    public UnitAbilityRuntime AbilityRuntime { get; private set; }
+
+    private void ApplyCombatStatsFromUnitData()
+    {
+        if (UnitData == null)
+            return;
+
+        Tower combat = GetComponent<Tower>();
+        if (combat == null)
+            return;
+
+        UnitCombatStatsResolver.TryApply(combat, UnitData, Level);
+    }
+
+    private void EnsureAbilityRuntime()
+    {
+        AbilityRuntime = GetComponent<UnitAbilityRuntime>();
+        if (AbilityRuntime == null)
+            AbilityRuntime = gameObject.AddComponent<UnitAbilityRuntime>();
+
+        AbilityRuntime.Bind(this);
     }
 
     public void SetCell(TowerBoardCell cell)
@@ -111,6 +143,25 @@ public class BoardTower : MonoBehaviour
         pulseCoroutine = null;
     }
 
+    private void CaptureAuthoredVisualScale()
+    {
+        if (hasAuthoredVisualScale)
+            return;
+
+        Transform visual = transform.Find(VisualObjectName);
+        if (visual != null)
+            authoredVisualScale = visual.localScale;
+
+        if (authoredVisualScale.x <= 0.0001f ||
+            authoredVisualScale.y <= 0.0001f ||
+            authoredVisualScale.z <= 0.0001f)
+        {
+            authoredVisualScale = Vector3.one;
+        }
+
+        hasAuthoredVisualScale = true;
+    }
+
     private void ApplyPermanentLevelVisualScale()
     {
         Transform visual = transform.Find(VisualObjectName);
@@ -122,9 +173,10 @@ public class BoardTower : MonoBehaviour
     private Vector3 GetPermanentLevelVisualScale()
     {
         int maximumLevel = global::UnitData.MaximumLevel;
-        int permanentLevel = Mathf.Clamp(Level, 1, maximumLevel);
-        float scale = LevelOneVisualScale + (permanentLevel - 1) * VisualScaleIncreasePerLevel;
-        return Vector3.one * scale;
+        int permanentLevel = Mathf.Clamp(Level > 0 ? Level : 1, 1, maximumLevel);
+        float levelScale = LevelOneVisualScale + (permanentLevel - 1) * VisualScaleIncreasePerLevel;
+        // Preserve prefab Visual scale (e.g. Dragon 0.25) while still applying ML size bumps.
+        return Vector3.Scale(authoredVisualScale, Vector3.one * levelScale);
     }
 
     private void NormalizeRootScale()

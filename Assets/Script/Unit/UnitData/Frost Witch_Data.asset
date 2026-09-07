@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitId: unit_frost_witch
   unitName: Frost Witch
-  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
+  tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: 7587040222958975443, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 0958761f0923b4e48b4e9acd77ee58a7, type: 3}
   levelIcons:
@@ -27,6 +27,78 @@ MonoBehaviour:
   - {fileID: 3444463731680135898, guid: d307c5a45dd2ff243bc6e1a875fd6cbf, type: 3}
   - {fileID: 3444463731680135898, guid: 98691ff327ab4fa4baca4176a9af5486, type: 3}
   manaCost: 50
-  attackDamage: 10
-  attackSpeed: 1
-  attackRange: 3
+  attackDamage: 8
+  attackSpeed: 0.8696
+  attackRange: 99
+  baseDamage: 8
+  baseAttackInterval: 1.15
+  baseAttackRange: 99
+  criticalChance: 0.12
+  criticalDamageMultiplier: 1.65
+  minAttackInterval: 0.12
+  mergeSpeedMultipliers:
+  - 1
+  - 1.9
+  - 3.2
+  - 4.8
+  - 6.5
+  - 8.5
+  targetPriority: 0
+  abilityL1:
+    id: frost_witch_l1_frost_shard
+    displayName: Frost Shard
+    description: Each attack applies Slow (refresh duration, not additive).
+    power: 20
+    radius: 0
+    durationSeconds: 2.5
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 1
+    parameterNames:
+    - slowPercent
+    parameterValues:
+    - 20
+  abilityL10:
+    id: frost_witch_l10_ice_prison
+    displayName: Ice Prison
+    description: Freeze briefly after 4 Chill stacks.
+    power: 4
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - chillStacksForFreeze
+    - freezeDurationNormal
+    - freezeDurationElite
+    - freezeDurationBoss
+    - immunityNormal
+    - immunityElite
+    - immunityBoss
+    parameterValues:
+    - 4
+    - 0.8
+    - 0.5
+    - 0.25
+    - 2
+    - 2.5
+    - 3
+  abilityL20:
+    id: frost_witch_l20_shatter_mastery
+    displayName: Shatter Mastery
+    description: When a frozen enemy shatters, permanently gain Shatter damage.
+    power: 2
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 10
+    stackRule: 3
+    parameterNames:
+    - softCapPercent
+    - overflowEfficiencyPercent
+    - overflowStackPercent
+    parameterValues:
+    - 20
+    - 10
+    - 0.2

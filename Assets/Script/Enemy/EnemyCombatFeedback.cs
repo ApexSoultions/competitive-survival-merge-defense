@@ -20,20 +20,27 @@ public enum EnemyDamageType
 
 public enum EnemyStatusType
 {
-    Slow,
-    Poison,
-    Stun
+    Slow = 0,
+    Poison = 1,
+    Stun = 2,
+    Burn = 3,
+    Freeze = 4,
+    Mark = 5
 }
 
 [DisallowMultipleComponent]
 public sealed class EnemyCombatFeedback : MonoBehaviour
 {
     private const float CanvasPixelsPerUnit = 100f;
-    private const int StatusCount = 3;
+    private const int StatusCount = 6;
     private const int SlowStatusIndex = (int)EnemyStatusType.Slow;
+    private const int BurnStatusIndex = (int)EnemyStatusType.Burn;
+    private const int FreezeStatusIndex = (int)EnemyStatusType.Freeze;
+    private const int MarkStatusIndex = (int)EnemyStatusType.Mark;
 
     private readonly float[] statusEndTimes = new float[StatusCount];
     private readonly GameObject[] statusIcons = new GameObject[StatusCount];
+    private readonly PooledStatusVisual[] timedStatusAuras = new PooledStatusVisual[StatusCount];
     private Enemy enemy;
     private EnemyCombatFeedbackTheme theme;
     private Canvas feedbackCanvas;
@@ -55,6 +62,8 @@ public sealed class EnemyCombatFeedback : MonoBehaviour
 
     [Header("Status Tint")]
     [SerializeField, Range(0f, 1f)] private float slowTintStrength = 0.38f;
+    [SerializeField, Range(0f, 1f)] private float freezeTintStrength = 0.48f;
+    [SerializeField, Range(0f, 1f)] private float burnTintStrength = 0.28f;
 
     public void Initialize(Enemy owner, Transform visualRoot)
     {
@@ -93,7 +102,7 @@ public sealed class EnemyCombatFeedback : MonoBehaviour
             return;
 
         UpdateHealthBar();
-        UpdateSlowStatus();
+        UpdateTimedStatusIcons();
         UpdateHitFlash();
         LayoutStatusIconsIfChanged();
     }
@@ -128,20 +137,38 @@ public sealed class EnemyCombatFeedback : MonoBehaviour
         {
             poisonStatus.Show(duration, statusIcon);
         }
+        else if (IsTimedIconStatus(statusType))
+        {
+            ShowTimedStatusIcon(statusType, duration, statusIcon);
+        }
         else
         {
-            statusEndTimes[SlowStatusIndex] = Time.time + duration;
-            if (statusIcons[SlowStatusIndex] != null)
-            {
-                if (statusIcon != null && statusIcons[SlowStatusIndex].TryGetComponent(out Image icon))
-                    icon.sprite = statusIcon;
-                statusIcons[SlowStatusIndex].SetActive(true);
-            }
-
-            if (!flashActive)
-                ApplyRestingColors();
+            return;
         }
 
+        LayoutStatusIconsIfChanged(true);
+    }
+
+    public void HideStatus(EnemyStatusType statusType)
+    {
+        if (!initialized)
+            return;
+
+        if (statusType == EnemyStatusType.Stun)
+        {
+            stunStatus?.ClearImmediate();
+        }
+        else if (statusType == EnemyStatusType.Poison)
+        {
+            poisonStatus?.ClearImmediate();
+        }
+        else if (IsTimedIconStatus(statusType))
+        {
+            ClearTimedStatusIcon((int)statusType);
+        }
+
+        if (!flashActive)
+            ApplyRestingColors();
         LayoutStatusIconsIfChanged(true);
     }
 
@@ -154,6 +181,7 @@ public sealed class EnemyCombatFeedback : MonoBehaviour
         flashActive = false;
         stunStatus.ClearImmediate();
         poisonStatus.ClearImmediate();
+        ClearAllTimedStatusIcons();
         if (feedbackCanvas != null)
             feedbackCanvas.gameObject.SetActive(false);
 
@@ -206,11 +234,14 @@ public sealed class EnemyCombatFeedback : MonoBehaviour
         statusRoot.anchorMax = new Vector2(0.5f, 1f);
         statusRoot.pivot = new Vector2(0.5f, 0f);
         statusRoot.anchoredPosition = new Vector2(0f, 5f);
-        statusRoot.sizeDelta = new Vector2(90f, isBoss ? 26f : 20f);
+        statusRoot.sizeDelta = new Vector2(160f, isBoss ? 26f : 20f);
 
         CreateStatusIcon(statusRoot, EnemyStatusType.Slow, "S", theme.SlowColor, isBoss);
         CreateStatusIcon(statusRoot, EnemyStatusType.Poison, "P", theme.PoisonColor, isBoss);
         CreateStatusIcon(statusRoot, EnemyStatusType.Stun, "!", theme.StunColor, isBoss);
+        CreateStatusIcon(statusRoot, EnemyStatusType.Burn, "B", theme.BurnColor, isBoss);
+        CreateStatusIcon(statusRoot, EnemyStatusType.Freeze, "F", theme.FreezeColor, isBoss);
+        CreateStatusIcon(statusRoot, EnemyStatusType.Mark, "M", theme.MarkColor, isBoss);
     }
 
     private void CreateStatusIcon(RectTransform parent, EnemyStatusType type, string labelText, Color color, bool isBoss)
@@ -245,6 +276,109 @@ public sealed class EnemyCombatFeedback : MonoBehaviour
         statusIcons[index].SetActive(false);
     }
 
+    private static bool IsTimedIconStatus(EnemyStatusType statusType)
+    {
+        return statusType == EnemyStatusType.Slow ||
+               statusType == EnemyStatusType.Burn ||
+               statusType == EnemyStatusType.Freeze ||
+               statusType == EnemyStatusType.Mark;
+    }
+
+    private void ShowTimedStatusIcon(EnemyStatusType statusType, float duration, Sprite statusIcon)
+    {
+        int index = (int)statusType;
+        statusEndTimes[index] = Time.time + duration;
+        GameObject iconObject = statusIcons[index];
+        if (iconObject != null)
+        {
+            if (statusIcon != null && iconObject.TryGetComponent(out Image icon))
+                icon.sprite = statusIcon;
+            iconObject.SetActive(true);
+        }
+
+        EnsureTimedStatusAura(statusType);
+
+        if (!flashActive)
+            ApplyRestingColors();
+    }
+
+    private void EnsureTimedStatusAura(EnemyStatusType statusType)
+    {
+        int index = (int)statusType;
+        if (timedStatusAuras[index] != null)
+            return;
+
+        CombatStatusVisualKind kind;
+        Vector3 offset;
+        float scale;
+        Color tint = theme != null ? theme.GetStatusColor(statusType) : Color.white;
+
+        switch (statusType)
+        {
+            case EnemyStatusType.Burn:
+                kind = CombatStatusVisualKind.Burn;
+                offset = new Vector3(0f, 0.42f, 0.03f);
+                scale = 1f;
+                break;
+            case EnemyStatusType.Freeze:
+                kind = CombatStatusVisualKind.Freeze;
+                offset = new Vector3(0f, 1.25f, -0.04f);
+                scale = 0.9f;
+                break;
+            case EnemyStatusType.Mark:
+                kind = CombatStatusVisualKind.Mark;
+                offset = new Vector3(0f, 0.55f, 0.02f);
+                scale = 0.85f;
+                break;
+            default:
+                return;
+        }
+
+        timedStatusAuras[index] = CombatStatusEffectPool.Acquire(kind, transform, offset, scale, tint);
+    }
+
+    private void UpdateTimedStatusIcons()
+    {
+        bool cleared = false;
+        cleared |= UpdateTimedStatusIcon(SlowStatusIndex);
+        cleared |= UpdateTimedStatusIcon(BurnStatusIndex);
+        cleared |= UpdateTimedStatusIcon(FreezeStatusIndex);
+        cleared |= UpdateTimedStatusIcon(MarkStatusIndex);
+
+        if (cleared && !flashActive)
+            ApplyRestingColors();
+    }
+
+    private bool UpdateTimedStatusIcon(int index)
+    {
+        if (statusEndTimes[index] <= 0f || Time.time < statusEndTimes[index])
+            return false;
+
+        ClearTimedStatusIcon(index);
+        return true;
+    }
+
+    private void ClearTimedStatusIcon(int index)
+    {
+        statusEndTimes[index] = 0f;
+        if (statusIcons[index] != null && statusIcons[index].activeSelf)
+            statusIcons[index].SetActive(false);
+
+        if (timedStatusAuras[index] != null)
+        {
+            CombatStatusEffectPool.Release(timedStatusAuras[index]);
+            timedStatusAuras[index] = null;
+        }
+    }
+
+    private void ClearAllTimedStatusIcons()
+    {
+        ClearTimedStatusIcon(SlowStatusIndex);
+        ClearTimedStatusIcon(BurnStatusIndex);
+        ClearTimedStatusIcon(FreezeStatusIndex);
+        ClearTimedStatusIcon(MarkStatusIndex);
+    }
+
     private void UpdateHealthBar()
     {
         if (healthFill == null || enemy.MaxHealth <= 0f)
@@ -253,19 +387,6 @@ public sealed class EnemyCombatFeedback : MonoBehaviour
         float targetHealth = Mathf.Clamp01(enemy.CurrentHealth / enemy.MaxHealth);
         displayedHealth = Mathf.SmoothDamp(displayedHealth, targetHealth, ref healthVelocity, Mathf.Max(0.01f, theme.SmoothHealthTime));
         healthFill.fillAmount = displayedHealth;
-    }
-
-    private void UpdateSlowStatus()
-    {
-        GameObject slowIcon = statusIcons[SlowStatusIndex];
-        if (Time.time < statusEndTimes[SlowStatusIndex])
-            return;
-
-        if (slowIcon != null && slowIcon.activeSelf)
-            slowIcon.SetActive(false);
-
-        if (!flashActive)
-            ApplyRestingColors();
     }
 
     private void BeginHitFlash(EnemyDamageType damageType)
@@ -381,7 +502,17 @@ public sealed class EnemyCombatFeedback : MonoBehaviour
             ? stunStatus.GetRestingColor(rendererIndex, visualRendererColors[rendererIndex])
             : visualRendererColors[rendererIndex];
 
-        if (Time.time < statusEndTimes[SlowStatusIndex])
+        if (Time.time < statusEndTimes[FreezeStatusIndex])
+        {
+            Color freezeColor = theme != null ? theme.FreezeColor : new Color(0.45f, 0.88f, 1f, 1f);
+            color = Color.Lerp(color, freezeColor, freezeTintStrength);
+        }
+        else if (Time.time < statusEndTimes[BurnStatusIndex])
+        {
+            Color burnColor = theme != null ? theme.BurnColor : new Color(1f, 0.42f, 0.08f, 1f);
+            color = Color.Lerp(color, burnColor, burnTintStrength);
+        }
+        else if (Time.time < statusEndTimes[SlowStatusIndex])
         {
             Color slowColor = theme != null ? theme.SlowColor : new Color(0.25f, 0.78f, 1f, 1f);
             color = Color.Lerp(color, slowColor, slowTintStrength);
@@ -393,6 +524,7 @@ public sealed class EnemyCombatFeedback : MonoBehaviour
     private void OnDisable()
     {
         flashActive = false;
+        ClearAllTimedStatusIcons();
         RestoreRendererColors();
     }
 

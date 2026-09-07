@@ -481,6 +481,7 @@ GameObject:
   - component: {fileID: 1762574443636792892}
   - component: {fileID: 6919435943910159170}
   - component: {fileID: 2732850956282432605}
+  - component: {fileID: 8118825910966142201}
   m_Layer: 7
   m_Name: Princess_1
   m_TagString: Untagged
@@ -525,6 +526,8 @@ MonoBehaviour:
   criticalChance: 0.12
   criticalDamageMultiplier: 1.65
   fullAreaTargeting: 1
+  targetPriority: 0
+  canReceiveAlliedDamageBuffs: 0
   multiTarget: 0
   maxTargets: 1
   firePoint: {fileID: 5969733890881672437}
@@ -533,7 +536,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   damageType: 0
-  elementColor: {r: 1, g: 1, b: 1, a: 1}
+  elementColor: {r: 0.95, g: 0.85, b: 0.35, a: 1}
+  runtimeDamageMultiplier: 1
+  runtimeActiveDamageBuffSources: 0
+  runtimeBaseDamage: 0
+  runtimeCurrentDamage: 0
+  runtimeLastProjectileDamage: 0
 --- !u!114 &1762574443636792892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -633,6 +641,25 @@ MonoBehaviour:
   outerRingSortingOffset: -2
   bubbleSortingOffset: -3
   particleSortingOffset: -1
+--- !u!114 &8118825910966142201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3444463731680135898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8d4f02e5c3e4f7a8b1d2e6f9c0a4b52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShieldPriestessAbility
+  cooldownDuration: 12
+  startReady: 1
+  fallbackRefreshSeconds: 14
+  fallbackDamageBonusPercent: 8
+  auraSprite: {fileID: 0}
+  auraColor: {r: 0.95, g: 0.85, b: 0.35, a: 0.85}
+  auraScale: 1.1
 --- !u!1 &3956018907287263649
 GameObject:
   m_ObjectHideFlags: 0

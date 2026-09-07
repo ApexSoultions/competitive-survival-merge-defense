@@ -1,16 +1,20 @@
 using UnityEngine;
 
+/// <summary>
+/// Gold Spirit: Treasure Pulse, Lucky Return, Golden Legacy — from UnitData.
+/// </summary>
 [RequireComponent(typeof(BoardTower))]
 public sealed class GoldSpiritAbility : TowerAbilityBase
 {
-    [Header("Mana Generation")]
-    [SerializeField, Min(0)] private int manaPerTick = 10;
-    [SerializeField, Min(0.1f)] private float tickInterval = 5f;
-    [Tooltip("Exact mana granted at merge levels 1-6. Missing entries fall back to Mana Per Tick scaling.")]
-    [SerializeField] private int[] manaByMergeLevel = { 10, 20, 30, 40, 50, 60 };
-    [Tooltip("Fallback additional fraction per level. 1 means Level 2 grants twice Mana Per Tick.")]
+    private static int MatchLegacyStacks;
+    private static float MatchLegacyBonusPercent;
+    private static int LastLegacyBossKillFrame = -1;
+
+    [Header("Fallback Mana Generation")]
+    [SerializeField, Min(0)] private int manaPerTick = 5;
+    [SerializeField, Min(0.1f)] private float tickInterval = 12f;
+    [SerializeField] private int[] manaByMergeLevel = { 5, 10, 18, 32, 50, 75 };
     [SerializeField, Min(0f)] private float mergeLevelMultiplier = 1f;
-    [Tooltip("Set to 0 for no cap.")]
     [SerializeField, Min(0)] private int maximumMana = 0;
 
     [Header("Mana Feedback")]
@@ -18,9 +22,7 @@ public sealed class GoldSpiritAbility : TowerAbilityBase
     [SerializeField] private AbilityFloatingText manaGainTextPrefab;
     [SerializeField] private PooledParticleEffect sparklePrefab;
     [SerializeField] private Color manaColor = new Color(1f, 0.76f, 0.12f, 1f);
-    [Tooltip("Offset from the top of the character, multiplied by its visual size.")]
     [SerializeField] private Vector3 orbSpawnOffset = new Vector3(0f, 0.08f, 0f);
-    [Tooltip("Offset from the top of the character, multiplied by its visual size.")]
     [SerializeField] private Vector3 textSpawnOffset = new Vector3(0f, 0.3f, 0f);
     [SerializeField, Min(0.05f)] private float orbTravelDuration = 0.7f;
     [SerializeField, Min(0.1f)] private float textLifetime = 0.95f;
@@ -34,25 +36,49 @@ public sealed class GoldSpiritAbility : TowerAbilityBase
     [SerializeField, Range(0f, 2f)] private float manaTickVolume = 0.75f;
 
     private float activeBattleTime;
+    private int mergesSeen;
 
-    public override string AbilityName => "Mana Generation";
+    public override string AbilityName
+    {
+        get
+        {
+            ResolveOwnerReferences();
+            return AbilityRuntime != null
+                ? AbilityRuntime.GetDisplayName(UnitAbilityTier.L1, "Treasure Pulse")
+                : "Treasure Pulse";
+        }
+    }
+
     public override bool CanBeCopied => false;
     public override bool SupportsManualActivation => false;
     public override Color AbilityColor => manaColor;
     protected override Sprite RageProjectionSprite => sparklePrefab != null && sparklePrefab.PrimarySprite != null
         ? sparklePrefab.PrimarySprite
         : base.RageProjectionSprite;
-    public int ManaPerTick => manaPerTick;
-    public float TickInterval => tickInterval;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetMatchLegacy()
+    {
+        MatchLegacyStacks = 0;
+        MatchLegacyBonusPercent = 0f;
+        LastLegacyBossKillFrame = -1;
+    }
 
     private void OnEnable()
     {
         ResetTimer();
+        mergesSeen = 0;
+        GameplayEvents.UnitMerged += HandleUnitMerged;
+        GameplayEvents.BattleStarted += HandleBattleStarted;
+        Enemy.OnAnyEnemyKilled += HandleEnemyKilled;
     }
 
     private void OnDisable()
     {
         ResetTimer();
+        GameplayEvents.UnitMerged -= HandleUnitMerged;
+        GameplayEvents.BattleStarted -= HandleBattleStarted;
+        Enemy.OnAnyEnemyKilled -= HandleEnemyKilled;
     }
 
     private void Update()
@@ -64,33 +90,112 @@ public sealed class GoldSpiritAbility : TowerAbilityBase
             return;
         }
 
+        if (AbilityRuntime == null || !AbilityRuntime.IsTierActive(UnitAbilityTier.L1))
+            return;
+
         activeBattleTime += Time.deltaTime;
-        float interval = Mathf.Max(0.1f, tickInterval);
+        float interval = ResolvePulseInterval();
         if (activeBattleTime < interval)
             return;
 
         activeBattleTime -= interval;
-        GenerateMana();
+        GenerateMana(GetTreasurePulseAmount());
     }
 
-    protected override bool ActivateAbility()
+    protected override bool ActivateAbility() => false;
+
+    private void HandleBattleStarted()
     {
-        // Gold Spirit is passive-only. The shared ability-button path must not
-        // create an extra reward outside this instance's five-second timer.
-        return false;
+        MatchLegacyStacks = 0;
+        MatchLegacyBonusPercent = 0f;
+        LastLegacyBossKillFrame = -1;
+        mergesSeen = 0;
+        ResetTimer();
     }
 
-    private bool GenerateMana()
+    private void HandleUnitMerged(UnitData unit, int level)
     {
         if (!CanGenerateOnBoard())
-            return false;
+            return;
 
-        int requestedAmount = GetManaAmountForLevel(BoardTower.Level);
-        if (requestedAmount <= 0)
+        ResolveOwnerReferences();
+        if (AbilityRuntime == null || !AbilityRuntime.IsTierActive(UnitAbilityTier.L10))
+            return;
+
+        mergesSeen++;
+        int mergesPerTrigger = Mathf.Max(
+            1,
+            Mathf.RoundToInt(AbilityRuntime.GetParameter(UnitAbilityTier.L10, "mergesPerTrigger", 5f)));
+        if (mergesSeen < mergesPerTrigger)
+            return;
+
+        mergesSeen = 0;
+        int bonus = Mathf.Max(
+            0,
+            Mathf.RoundToInt(AbilityRuntime.GetParameter(
+                UnitAbilityTier.L10,
+                "manaPerSpirit",
+                AbilityRuntime.GetPower(UnitAbilityTier.L10, 4f))));
+        if (bonus > 0)
+            GenerateMana(bonus);
+    }
+
+    private void HandleEnemyKilled(Enemy enemy)
+    {
+        if (enemy == null || !enemy.IsBoss)
+            return;
+
+        // Shared match legacy: only one Gold Spirit advances stacks per boss kill.
+        if (LastLegacyBossKillFrame == Time.frameCount)
+            return;
+
+        if (!CanGenerateOnBoard())
+            return;
+
+        ResolveOwnerReferences();
+        if (AbilityRuntime == null || !AbilityRuntime.IsTierActive(UnitAbilityTier.L20))
+            return;
+
+        UnitAbilityTierDefinition tier = AbilityRuntime.GetTier(UnitAbilityTier.L20);
+        if (tier == null || tier.stackRule != UnitAbilityStackRule.InfiniteInMatch)
+            return;
+
+        LastLegacyBossKillFrame = Time.frameCount;
+        MatchLegacyStacks++;
+        RecalculateMatchLegacy(tier);
+        Debug.Log(
+            "[GoldSpirit] Golden Legacy stacks=" + MatchLegacyStacks +
+            " bonus=" + MatchLegacyBonusPercent.ToString("0.##") + "%",
+            this);
+    }
+
+    private static void RecalculateMatchLegacy(UnitAbilityTierDefinition tier)
+    {
+        int softCapStacks = Mathf.Max(0, tier.maxStacks);
+        float stackValue = Mathf.Max(0f, tier.power);
+        float softCapPercent = tier.GetParameter("softCapPercent", softCapStacks * stackValue);
+        float overflow = tier.GetParameter("overflowStackPercent", 0f);
+        if (overflow <= 0f)
+            overflow = stackValue * (tier.GetParameter("overflowEfficiencyPercent", 0f) / 100f);
+
+        int capped = softCapStacks > 0 ? Mathf.Min(MatchLegacyStacks, softCapStacks) : MatchLegacyStacks;
+        float bonus = capped * stackValue;
+        if (softCapStacks > 0 && softCapPercent > 0f)
+            bonus = Mathf.Min(bonus, softCapPercent);
+
+        int overflowStacks = softCapStacks > 0 ? Mathf.Max(0, MatchLegacyStacks - softCapStacks) : 0;
+        if (overflowStacks > 0 && overflow > 0f)
+            bonus += overflowStacks * overflow;
+
+        MatchLegacyBonusPercent = bonus;
+    }
+
+    private bool GenerateMana(int requestedAmount)
+    {
+        if (!CanGenerateOnBoard() || requestedAmount <= 0)
             return false;
 
         int grantedAmount = 0;
-
         if (ManaManager.Instance != null)
             grantedAmount = ManaManager.Instance.AddManaCapped(requestedAmount, maximumMana);
         else if (BattleTopUI.Instance != null)
@@ -133,6 +238,26 @@ public sealed class GoldSpiritAbility : TowerAbilityBase
         return true;
     }
 
+    private float ResolvePulseInterval()
+    {
+        if (AbilityRuntime != null && AbilityRuntime.IsTierActive(UnitAbilityTier.L1))
+        {
+            float fromParam = AbilityRuntime.GetParameter(UnitAbilityTier.L1, "intervalSeconds", 0f);
+            if (fromParam > 0f)
+                return fromParam;
+            return AbilityRuntime.GetDurationSeconds(UnitAbilityTier.L1, tickInterval);
+        }
+
+        return Mathf.Max(0.1f, tickInterval);
+    }
+
+    private int GetTreasurePulseAmount()
+    {
+        int baseAmount = GetManaAmountForLevel(BoardTower != null ? BoardTower.Level : 1);
+        float multiplier = 1f + MatchLegacyBonusPercent / 100f;
+        return Mathf.Max(0, Mathf.RoundToInt(baseAmount * multiplier));
+    }
+
     private bool CanGenerateOnBoard()
     {
         return BattleFlowState.IsGameplayActive &&
@@ -152,11 +277,19 @@ public sealed class GoldSpiritAbility : TowerAbilityBase
     {
         int clampedLevel = Mathf.Clamp(level, 1, UnitData.MaximumLevel);
 
-        if (manaByMergeLevel != null &&
-            manaByMergeLevel.Length >= clampedLevel)
+        if (AbilityRuntime != null && AbilityRuntime.IsTierActive(UnitAbilityTier.L1))
         {
-            return Mathf.Max(0, manaByMergeLevel[clampedLevel - 1]);
+            string key = "manaPerPulseMl" + clampedLevel;
+            float fromSo = AbilityRuntime.GetParameter(UnitAbilityTier.L1, key, -1f);
+            if (fromSo >= 0f)
+                return Mathf.Max(0, Mathf.RoundToInt(fromSo));
+
+            float power = AbilityRuntime.GetPower(UnitAbilityTier.L1, manaPerTick);
+            return Mathf.Max(0, Mathf.RoundToInt(power));
         }
+
+        if (manaByMergeLevel != null && manaByMergeLevel.Length >= clampedLevel)
+            return Mathf.Max(0, manaByMergeLevel[clampedLevel - 1]);
 
         return Mathf.Max(0, Mathf.RoundToInt(manaPerTick * (1f + (clampedLevel - 1) * mergeLevelMultiplier)));
     }
@@ -198,8 +331,11 @@ public sealed class GoldSpiritAbility : TowerAbilityBase
     protected override void TransferDirectUpgradeSpecificStateTo(TowerAbilityBase destination)
     {
         GoldSpiritAbility upgraded = destination as GoldSpiritAbility;
-        if (upgraded != null)
-            upgraded.activeBattleTime = activeBattleTime;
+        if (upgraded == null)
+            return;
+
+        upgraded.activeBattleTime = activeBattleTime;
+        upgraded.mergesSeen = mergesSeen;
     }
 
     private void OnValidate()

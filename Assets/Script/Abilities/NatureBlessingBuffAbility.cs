@@ -1,72 +1,74 @@
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
+/// <summary>
+/// Enchantress: Rune Grid, Resonant Formation, Living Glyphs — from UnitData.
+/// Marks orthogonal neighbor cells as rune tiles; allies on them gain bonuses.
+/// </summary>
 [DisallowMultipleComponent]
 public sealed class NatureBlessingBuffAbility : TowerAbilityBase
 {
-    private const int RequiredBuffTargetCount = 4;
+    private static float MatchRuneBonusPercent;
+    private static int MatchRuneStacks;
+    private static int LastGlyphFrame = -1;
 
-    private struct TowerCandidate
-    {
-        public Tower tower;
-        public float squaredDistance;
-        public string cellName;
-        public string unitName;
-        public int mergeLevel;
-    }
-
-    [Header("Nature Blessing")]
-    [SerializeField, Min(0.05f)] private float buffRadius = 2.5f;
-    [SerializeField, HideInInspector] private int maximumBuffedTowers = RequiredBuffTargetCount;
-    [SerializeField, Min(1f)] private float damageMultiplier = 1.25f;
-    [SerializeField, Min(0.05f)] private float scanInterval = 1f;
-    [Tooltip("When disabled, multiple Enchantresses use only the strongest multiplier. When enabled, this source multiplies with other explicitly stackable sources.")]
-    [SerializeField] private bool allowBuffStacking = false;
-    [SerializeField] private LayerMask towerLayer;
+    [Header("Fallback Rune Values")]
+    [SerializeField, Min(0.01f)] private float fallbackDamageBonusPercent = 10f;
+    [SerializeField, Min(0.01f)] private float fallbackAttackSpeedBonusPercent = 6f;
+    [SerializeField, Min(1)] private int occupiedTilesRequired = 3;
 
     [Header("Buff Feedback")]
     [SerializeField] private Sprite auraSprite;
     [SerializeField] private Color auraColor = new Color(0.38f, 1f, 0.24f, 0.82f);
-    [SerializeField, Min(0.1f)] private float auraScale = 1.35f;
-    [SerializeField, Min(0f)] private float auraPulseSpeed = 2.5f;
+    [SerializeField, Min(0.1f)] private float auraScale = 1.15f;
+    [SerializeField, Min(0f)] private float auraPulseSpeed = 2.2f;
     [SerializeField, Range(0f, 0.35f)] private float auraPulseAmount = 0.08f;
 
-    [Header("Runtime Target Readout (Read Only)")]
-    [SerializeField] private bool logTargetChanges = true;
-    [SerializeField] private int runtimeBuffedTargetCount;
-    [SerializeField, TextArea(2, 6)] private string runtimeBuffedTargetSummary = "None";
+    private readonly List<TowerBoardCell> runeCells = new List<TowerBoardCell>(4);
+    private readonly List<TowerBoardCell> neighborBuffer = new List<TowerBoardCell>(4);
+    private readonly HashSet<Tower> buffedTowers = new HashSet<Tower>();
+    private readonly Dictionary<Tower, float> baseAttackRates = new Dictionary<Tower, float>(8);
+    private float nextRefreshTime;
 
-    private float nextScanTime;
-    private readonly List<TowerCandidate> candidates = new List<TowerCandidate>(24);
-    private readonly HashSet<Tower> affectedTowers = new HashSet<Tower>();
-    private readonly HashSet<Tower> nextAffectedTowers = new HashSet<Tower>();
-    private readonly List<Tower> orderedAffectedTowers = new List<Tower>(RequiredBuffTargetCount);
+    public override string AbilityName
+    {
+        get
+        {
+            ResolveOwnerReferences();
+            return AbilityRuntime != null
+                ? AbilityRuntime.GetDisplayName(UnitAbilityTier.L1, "Rune Grid")
+                : "Rune Grid";
+        }
+    }
 
-    public override string AbilityName => "Nature Blessing";
     public override bool CanBeCopied => false;
+    public override bool SupportsManualActivation => false;
     public override Color AbilityColor => auraColor;
-    public int ActiveBuffTargetCount => affectedTowers.Count;
-    public IReadOnlyList<Tower> ActiveBuffTargets => orderedAffectedTowers;
-    public float ConfiguredRange => buffRadius;
-    public float ConfiguredDamageMultiplier => damageMultiplier;
-    public int BuffSourceId => GetInstanceID();
-    public string RuntimeBuffedTargetSummary => runtimeBuffedTargetSummary;
     protected override Sprite RageProjectionSprite => auraSprite != null ? auraSprite : base.RageProjectionSprite;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetMatchRunes()
+    {
+        MatchRuneBonusPercent = 0f;
+        MatchRuneStacks = 0;
+        LastGlyphFrame = -1;
+    }
 
     private void OnEnable()
     {
         ResolveOwnerReferences();
-        maximumBuffedTowers = RequiredBuffTargetCount;
-        nextScanTime = 0f;
         TowerBoardCell.BoardChanged += HandleBoardChanged;
-        BattleFlowState.PhaseChanged += HandleBattlePhaseChanged;
+        GameplayEvents.UnitMerged += HandleUnitMerged;
+        GameplayEvents.BattleStarted += HandleBattleStarted;
+        nextRefreshTime = 0f;
     }
 
     private void OnDisable()
     {
         TowerBoardCell.BoardChanged -= HandleBoardChanged;
-        BattleFlowState.PhaseChanged -= HandleBattlePhaseChanged;
+        GameplayEvents.UnitMerged -= HandleUnitMerged;
+        GameplayEvents.BattleStarted -= HandleBattleStarted;
+        ClearRuneMarks();
         RemoveAllBuffs();
     }
 
@@ -74,274 +76,272 @@ public sealed class NatureBlessingBuffAbility : TowerAbilityBase
     {
         if (!BattleFlowState.IsGameplayActive)
         {
-            if (affectedTowers.Count > 0)
+            if (buffedTowers.Count > 0)
                 RemoveAllBuffs();
             return;
         }
 
-        RefreshBuffTargets(Time.time >= nextScanTime);
+        if (Time.time >= nextRefreshTime)
+            RefreshRuneSupport(true);
     }
 
     protected override bool ActivateAbility()
     {
-        return RefreshBuffTargets(true) > 0;
+        return RefreshRuneSupport(true) > 0;
+    }
+
+    private void HandleBattleStarted()
+    {
+        MatchRuneBonusPercent = 0f;
+        MatchRuneStacks = 0;
+        LastGlyphFrame = -1;
+        nextRefreshTime = 0f;
     }
 
     private void HandleBoardChanged()
     {
         if (BattleFlowState.IsGameplayActive)
-            RefreshBuffTargets(true);
+            RefreshRuneSupport(true);
     }
 
-    private void HandleBattlePhaseChanged(BattlePhase phase)
+    private void HandleUnitMerged(UnitData unit, int level)
     {
-        if (phase == BattlePhase.Active)
+        if (!BattleFlowState.IsGameplayActive)
+            return;
+
+        ResolveOwnerReferences();
+        if (AbilityRuntime == null || !AbilityRuntime.IsTierActive(UnitAbilityTier.L20))
+            return;
+
+        // If any occupied rune cell exists on this enchantress grid after a merge, grant a stack.
+        // Approximate "merge on rune tile": a rune cell currently has a tower.
+        bool mergeOnRune = false;
+        for (int i = 0; i < runeCells.Count; i++)
         {
-            nextScanTime = 0f;
-            RefreshBuffTargets(true);
+            if (runeCells[i] != null && runeCells[i].IsOccupied)
+            {
+                mergeOnRune = true;
+                break;
+            }
         }
-        else
-        {
-            RemoveAllBuffs();
-        }
+
+        if (!mergeOnRune)
+            return;
+
+        if (LastGlyphFrame == Time.frameCount)
+            return;
+
+        LastGlyphFrame = Time.frameCount;
+        UnitAbilityTierDefinition tier = AbilityRuntime.GetTier(UnitAbilityTier.L20);
+        MatchRuneStacks++;
+        RecalculateMatchRuneBonus(tier);
+        AbilityRuntime.TryAddL20Stack();
+        Debug.Log(
+            "[Enchantress] Living Glyphs stacks=" + MatchRuneStacks +
+            " bonus=" + MatchRuneBonusPercent.ToString("0.##") + "%",
+            this);
+        RefreshRuneSupport(true);
     }
 
-    private int RefreshBuffTargets(bool refreshActiveBuffs)
+    private int RefreshRuneSupport(bool force)
     {
         ResolveOwnerReferences();
-        if (AttackTower == null || !AttackTower.isActiveAndEnabled ||
-            BoardTower == null || BoardTower.CurrentCell == null ||
-            BoardTower.CurrentCell.CurrentTower != BoardTower)
+        nextRefreshTime = Time.time + 0.35f;
+
+        if (BoardTower == null || BoardTower.CurrentCell == null ||
+            BoardTower.CurrentCell.CurrentTower != BoardTower ||
+            AbilityRuntime == null || !AbilityRuntime.IsTierActive(UnitAbilityTier.L1))
         {
+            ClearRuneMarks();
             RemoveAllBuffs();
             return 0;
         }
 
-        float radiusSquared = buffRadius * buffRadius;
-        Vector2 sourcePosition = BoardTower.CurrentCell.SpawnPosition;
-        IReadOnlyList<Tower> towers = Tower.ActiveTowers;
+        BoardCellNeighborhood.GetOrthogonalNeighbors(BoardTower.CurrentCell, neighborBuffer);
+        ClearRuneMarks();
+        runeCells.Clear();
+        for (int i = 0; i < neighborBuffer.Count; i++)
+        {
+            TowerBoardCell cell = neighborBuffer[i];
+            if (cell == null)
+                continue;
+            runeCells.Add(cell);
+            RuneTileMarker.Ensure(cell).SetActive(true, auraColor);
+        }
+
+        float damageBonus = AbilityRuntime.GetParameter(
+            UnitAbilityTier.L1,
+            "damageBonusPercent",
+            AbilityRuntime.GetPower(UnitAbilityTier.L1, fallbackDamageBonusPercent));
+        damageBonus += MatchRuneBonusPercent;
+
+        int occupied = 0;
+        for (int i = 0; i < runeCells.Count; i++)
+        {
+            if (runeCells[i] != null && runeCells[i].IsOccupied)
+                occupied++;
+        }
+
+        bool resonant = AbilityRuntime.IsTierActive(UnitAbilityTier.L10) &&
+                        occupied >= Mathf.Max(
+                            1,
+                            Mathf.RoundToInt(AbilityRuntime.GetParameter(
+                                UnitAbilityTier.L10,
+                                "occupiedTilesRequired",
+                                occupiedTilesRequired)));
+        float asBonus = resonant
+            ? AbilityRuntime.GetParameter(
+                UnitAbilityTier.L10,
+                "attackSpeedBonusPercent",
+                AbilityRuntime.GetPower(UnitAbilityTier.L10, fallbackAttackSpeedBonusPercent))
+            : 0f;
+        asBonus += MatchRuneBonusPercent * 0.5f;
+
+        HashSet<Tower> next = new HashSet<Tower>();
         int sourceId = GetInstanceID();
-        candidates.Clear();
+        float buffDuration = 0.9f;
+        float damageMultiplier = 1f + damageBonus / 100f;
 
-        for (int i = 0; i < towers.Count; i++)
+        for (int i = 0; i < runeCells.Count; i++)
         {
-            Tower ally = towers[i];
-            // Destroyed Unity objects compare as null; prune stale ActiveTowers entries.
-            if (ally == null)
+            TowerBoardCell cell = runeCells[i];
+            BoardTower allyBoard = cell != null ? cell.CurrentTower : null;
+            if (allyBoard == null || allyBoard == BoardTower)
                 continue;
 
-            if (ally == AttackTower || !ally.CanDealNormalAttackDamage)
+            Tower ally = allyBoard.GetComponent<Tower>();
+            if (ally == null || !ally.CanDealNormalAttackDamage)
                 continue;
 
-            BoardTower allyBoardTower = ally.GetComponent<BoardTower>();
-            if (allyBoardTower == null || allyBoardTower == BoardTower ||
-                allyBoardTower.CurrentCell == null ||
-                allyBoardTower.CurrentCell.CurrentTower != allyBoardTower)
-            {
-                continue;
-            }
+            next.Add(ally);
+            ally.ApplyDamageBuff(
+                sourceId,
+                damageMultiplier,
+                buffDuration,
+                auraSprite,
+                auraColor,
+                auraScale,
+                auraPulseSpeed,
+                auraPulseAmount,
+                allowStacking: false);
 
-            if (towerLayer.value != 0 && (towerLayer.value & (1 << ally.gameObject.layer)) == 0)
-                continue;
-
-            Vector2 allyPosition = allyBoardTower.CurrentCell.SpawnPosition;
-            float squaredDistance = (allyPosition - sourcePosition).sqrMagnitude;
-            if (squaredDistance > radiusSquared)
-                continue;
-
-            candidates.Add(new TowerCandidate
-            {
-                tower = ally,
-                squaredDistance = squaredDistance,
-                cellName = allyBoardTower.CurrentCell.gameObject.name,
-                unitName = allyBoardTower.UnitData != null ? allyBoardTower.UnitData.unitName : ally.gameObject.name,
-                mergeLevel = allyBoardTower.Level
-            });
+            ApplyAttackSpeedBonus(ally, allyBoard, asBonus);
         }
 
-        candidates.Sort(CompareCandidates);
-        nextAffectedTowers.Clear();
-        orderedAffectedTowers.Clear();
-        int count = Mathf.Min(maximumBuffedTowers, candidates.Count);
-        float buffDuration = Mathf.Max(0.1f, scanInterval * 2f);
-
-        for (int i = 0; i < count; i++)
-            nextAffectedTowers.Add(candidates[i].tower);
-
-        // Copy first — HashSet mutation / destroyed refs during RemoveDamageBuff.
-        List<Tower> previousSnapshot = new List<Tower>(affectedTowers);
-        for (int i = 0; i < previousSnapshot.Count; i++)
+        List<Tower> previous = new List<Tower>(buffedTowers);
+        for (int i = 0; i < previous.Count; i++)
         {
-            Tower previous = previousSnapshot[i];
-            if (previous != null && !nextAffectedTowers.Contains(previous))
-                previous.RemoveDamageBuff(sourceId);
-        }
-
-        for (int i = 0; i < count; i++)
-        {
-            Tower ally = candidates[i].tower;
-            if (ally == null)
-                continue;
-
-            orderedAffectedTowers.Add(ally);
-
-            if (refreshActiveBuffs || !affectedTowers.Contains(ally))
+            Tower tower = previous[i];
+            if (tower != null && !next.Contains(tower))
             {
-                ally.ApplyDamageBuff(
-                    sourceId,
-                    damageMultiplier,
-                    buffDuration,
-                    auraSprite,
-                    auraColor,
-                    auraScale,
-                    auraPulseSpeed,
-                    auraPulseAmount,
-                    allowBuffStacking);
+                tower.RemoveDamageBuff(sourceId);
+                RestoreAttackRate(tower);
             }
         }
 
-        bool targetSetChanged = !affectedTowers.SetEquals(nextAffectedTowers);
+        buffedTowers.Clear();
+        foreach (Tower tower in next)
+            buffedTowers.Add(tower);
 
-        affectedTowers.Clear();
-        foreach (Tower ally in nextAffectedTowers)
-            affectedTowers.Add(ally);
-
-        UpdateRuntimeReadout();
-        if (targetSetChanged && logTargetChanges)
-        {
-            Debug.Log(
-                "Nature Blessing targets refreshed for " + GetOwnerLabel() + ": " +
-                runtimeBuffedTargetCount + "/" + RequiredBuffTargetCount + " valid allies within " +
-                buffRadius.ToString("0.##") + " range. " + runtimeBuffedTargetSummary,
-                this);
-        }
-
-        if (refreshActiveBuffs)
-            nextScanTime = Time.time + Mathf.Max(0.05f, scanInterval);
-
-        return affectedTowers.Count;
+        return buffedTowers.Count;
     }
 
-    private static int CompareCandidates(TowerCandidate left, TowerCandidate right)
+    private void ApplyAttackSpeedBonus(Tower tower, BoardTower boardTower, float asBonusPercent)
     {
-        int distanceComparison = left.squaredDistance.CompareTo(right.squaredDistance);
-        if (distanceComparison != 0)
-            return distanceComparison;
+        if (tower == null || boardTower == null || asBonusPercent <= 0f || boardTower.UnitData == null)
+            return;
 
-        int cellComparison = string.CompareOrdinal(left.cellName, right.cellName);
-        if (cellComparison != 0)
-            return cellComparison;
+        if (!baseAttackRates.ContainsKey(tower))
+        {
+            UnitCombatStatsResolver.TryApply(tower, boardTower.UnitData, boardTower.Level);
+            baseAttackRates[tower] = tower.CaptureAttackProfile().attackRate;
+        }
 
-        int unitComparison = string.CompareOrdinal(left.unitName, right.unitName);
-        if (unitComparison != 0)
-            return unitComparison;
+        float baseRate = baseAttackRates[tower];
+        Tower.AttackProfile profile = tower.CaptureAttackProfile();
+        profile.attackRate = Mathf.Max(0.1f, baseRate * (1f + asBonusPercent / 100f));
+        tower.ApplyAttackProfile(profile);
+    }
 
-        int levelComparison = left.mergeLevel.CompareTo(right.mergeLevel);
-        if (levelComparison != 0)
-            return levelComparison;
+    private void RestoreAttackRate(Tower tower)
+    {
+        if (tower == null || !baseAttackRates.TryGetValue(tower, out float baseRate))
+            return;
 
-        int leftId = left.tower != null ? left.tower.GetInstanceID() : int.MaxValue;
-        int rightId = right.tower != null ? right.tower.GetInstanceID() : int.MaxValue;
-        return leftId.CompareTo(rightId);
+        Tower.AttackProfile profile = tower.CaptureAttackProfile();
+        profile.attackRate = Mathf.Max(0.1f, baseRate);
+        tower.ApplyAttackProfile(profile);
+        baseAttackRates.Remove(tower);
     }
 
     private void RemoveAllBuffs()
     {
         int sourceId = GetInstanceID();
-        List<Tower> snapshot = new List<Tower>(affectedTowers);
+        List<Tower> snapshot = new List<Tower>(buffedTowers);
         for (int i = 0; i < snapshot.Count; i++)
         {
-            Tower ally = snapshot[i];
-            if (ally != null)
-                ally.RemoveDamageBuff(sourceId);
-        }
-
-        affectedTowers.Clear();
-        nextAffectedTowers.Clear();
-        orderedAffectedTowers.Clear();
-        UpdateRuntimeReadout();
-    }
-
-    private void UpdateRuntimeReadout()
-    {
-        runtimeBuffedTargetCount = orderedAffectedTowers.Count;
-        if (runtimeBuffedTargetCount == 0)
-        {
-            runtimeBuffedTargetSummary = "None";
-            return;
-        }
-
-        StringBuilder summary = new StringBuilder(192);
-        for (int i = 0; i < orderedAffectedTowers.Count; i++)
-        {
-            Tower tower = orderedAffectedTowers[i];
+            Tower tower = snapshot[i];
             if (tower == null)
                 continue;
-
-            if (summary.Length > 0)
-                summary.Append("; ");
-
-            BoardTower boardTower = tower.GetComponent<BoardTower>();
-            string unitName = boardTower != null && boardTower.UnitData != null
-                ? boardTower.UnitData.unitName
-                : tower.gameObject.name;
-            string cellName = boardTower != null && boardTower.CurrentCell != null
-                ? boardTower.CurrentCell.gameObject.name
-                : "No Cell";
-            summary.Append(cellName)
-                .Append(" ")
-                .Append(unitName)
-                .Append(": ")
-                .Append(tower.BaseDamage.ToString("0.##"))
-                .Append(" -> ")
-                .Append(tower.CurrentDamage.ToString("0.##"))
-                .Append(" damage");
+            tower.RemoveDamageBuff(sourceId);
+            RestoreAttackRate(tower);
         }
 
-        runtimeBuffedTargetSummary = summary.Length > 0 ? summary.ToString() : "None";
+        buffedTowers.Clear();
+        baseAttackRates.Clear();
     }
 
-    private string GetOwnerLabel()
+    private void ClearRuneMarks()
     {
-        if (BoardTower == null)
-            return gameObject.name;
+        for (int i = 0; i < runeCells.Count; i++)
+        {
+            if (runeCells[i] == null)
+                continue;
+            RuneTileMarker marker = runeCells[i].GetComponent<RuneTileMarker>();
+            if (marker != null)
+                marker.SetActive(false, auraColor);
+        }
 
-        string unitName = BoardTower.UnitData != null ? BoardTower.UnitData.unitName : gameObject.name;
-        string cellName = BoardTower.CurrentCell != null ? BoardTower.CurrentCell.gameObject.name : "No Cell";
-        return cellName + " " + unitName;
+        runeCells.Clear();
+    }
+
+    private static void RecalculateMatchRuneBonus(UnitAbilityTierDefinition tier)
+    {
+        if (tier == null)
+            return;
+
+        int softCapStacks = Mathf.Max(0, tier.maxStacks);
+        float stackValue = Mathf.Max(0f, tier.power);
+        float softCapPercent = tier.GetParameter("softCapPercent", softCapStacks * stackValue);
+        float overflow = tier.GetParameter("overflowStackPercent", 0f);
+        if (overflow <= 0f)
+            overflow = stackValue * (tier.GetParameter("overflowEfficiencyPercent", 0f) / 100f);
+
+        int capped = softCapStacks > 0 ? Mathf.Min(MatchRuneStacks, softCapStacks) : MatchRuneStacks;
+        float bonus = capped * stackValue;
+        if (softCapStacks > 0 && softCapPercent > 0f)
+            bonus = Mathf.Min(bonus, softCapPercent);
+
+        int overflowStacks = softCapStacks > 0 ? Mathf.Max(0, MatchRuneStacks - softCapStacks) : 0;
+        if (overflowStacks > 0 && overflow > 0f)
+            bonus += overflowStacks * overflow;
+
+        MatchRuneBonusPercent = bonus;
     }
 
     protected override void CopyRuntimeSettingsFrom(TowerAbilityBase source)
     {
-        NatureBlessingBuffAbility ability = (NatureBlessingBuffAbility)source;
-        buffRadius = ability.buffRadius;
-        maximumBuffedTowers = RequiredBuffTargetCount;
-        damageMultiplier = ability.damageMultiplier;
-        scanInterval = ability.scanInterval;
-        allowBuffStacking = ability.allowBuffStacking;
-        logTargetChanges = ability.logTargetChanges;
-        towerLayer = ability.towerLayer;
-        auraSprite = ability.auraSprite;
-        auraColor = ability.auraColor;
-        auraScale = ability.auraScale;
-        auraPulseSpeed = ability.auraPulseSpeed;
-        auraPulseAmount = ability.auraPulseAmount;
-        nextScanTime = 0f;
-        runtimeBuffedTargetCount = 0;
-        runtimeBuffedTargetSummary = "None";
-    }
+        NatureBlessingBuffAbility other = source as NatureBlessingBuffAbility;
+        if (other == null)
+            return;
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = new Color(auraColor.r, auraColor.g, auraColor.b, 0.65f);
-        Gizmos.DrawWireSphere(transform.position, buffRadius);
-    }
-
-    private void OnValidate()
-    {
-        buffRadius = Mathf.Max(0.05f, buffRadius);
-        maximumBuffedTowers = RequiredBuffTargetCount;
-        damageMultiplier = Mathf.Max(1f, damageMultiplier);
-        scanInterval = Mathf.Max(0.05f, scanInterval);
+        fallbackDamageBonusPercent = other.fallbackDamageBonusPercent;
+        fallbackAttackSpeedBonusPercent = other.fallbackAttackSpeedBonusPercent;
+        occupiedTilesRequired = other.occupiedTilesRequired;
+        auraSprite = other.auraSprite;
+        auraColor = other.auraColor;
+        auraScale = other.auraScale;
+        auraPulseSpeed = other.auraPulseSpeed;
+        auraPulseAmount = other.auraPulseAmount;
     }
 }

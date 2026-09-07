@@ -15,13 +15,13 @@ MonoBehaviour:
   id: active_arcane_overclock
   displayName: Arcane Overclock
   description: Launch-pool stub. Cast system wires in Milestone 2.
-  icon: {fileID: 0}
+  icon: {fileID: 8464202282911398084, guid: dc1b06f6800b58441aa68f2c37c53eed, type: 3}
   cooldownSeconds: 35
   targeting: 1
-  power: 0
-  radius: 0
-  durationSeconds: 0
+  power: 50
+  radius: 2.5
+  durationSeconds: 5
   vfxPrefab: {fileID: 0}
   castSfx: {fileID: 0}
   includedInLaunchPool: 1
-  implemented: 0
+  implemented: 1

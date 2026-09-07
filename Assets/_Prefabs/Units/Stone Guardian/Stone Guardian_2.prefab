@@ -5266,6 +5266,8 @@ MonoBehaviour:
   criticalChance: 0.12
   criticalDamageMultiplier: 1.65
   fullAreaTargeting: 1
+  targetPriority: 0
+  canReceiveAlliedDamageBuffs: 1
   multiTarget: 0
   maxTargets: 1
   firePoint: {fileID: 5969733890881672437}
@@ -5275,6 +5277,11 @@ MonoBehaviour:
     m_Bits: 8
   damageType: 0
   elementColor: {r: 0.78, g: 0.72, b: 0.58, a: 1}
+  runtimeDamageMultiplier: 1
+  runtimeActiveDamageBuffSources: 0
+  runtimeBaseDamage: 0
+  runtimeCurrentDamage: 0
+  runtimeLastProjectileDamage: 0
 --- !u!114 &1762574443636792892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5388,7 +5395,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StoneGolemStunAbility
   cooldownDuration: 12
   startReady: 1
-  stunDuration: 1.25
   stunStatusSprite: {fileID: -3160870047172565213, guid: 960adc26d9c12c14b9ecceecbe33a894, type: 3}
 --- !u!1 &4827735268148905505
 GameObject:

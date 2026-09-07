@@ -22,6 +22,7 @@ Player builds must use SceneFlow. Editor may open Hub/Battle alone for art.
 
 ## Architecture
 
+- [`Assets/Documentation/M2_CompleteDelivery.md`](Assets/Documentation/M2_CompleteDelivery.md) — **Milestone 2 complete** (phases, hub deck GUI, Dragon, statuses, gating)
 - [`Assets/Documentation/ScalableArchitecture.md`](Assets/Documentation/ScalableArchitecture.md)
 - [`Assets/Documentation/MilestoneCrosswalk.md`](Assets/Documentation/MilestoneCrosswalk.md) — 10/15/15/10/10 days, delivery pack, Option A
 - [`Assets/Documentation/M1_AssetReview.md`](Assets/Documentation/M1_AssetReview.md) — client GUI pack
@@ -61,15 +62,15 @@ Foundation architecture is in. Close-out Days 1–5 docs are done; device APK re
 
 **Changelog:** [`CHANGELOG.md`](CHANGELOG.md)
 
-## Hub Deck Builder (in progress)
+## Hub Deck Builder (done in M2)
 
-Deck selection moved to **Main_UI** (not BattleScene):
+Deck selection on **Main_UI** (see [`M2_CompleteDelivery.md`](Assets/Documentation/M2_CompleteDelivery.md) §8):
 
 1. Play from `Bootstrap`
 2. On Home, tap **Edit** on the deck strip
 3. Pick **6 units + 2 abilities** → **Save Deck** (or **Auto Build** then Save)
 4. Tap **Battle** — match uses the saved loadout (no in-battle character select)
 
-Unity menu (optional polish install into scenes): **Tools → Deck Builder → Install Hub Loadout UI**
+Unity menu (optional polish): **Tools → Deck Builder → Install Hub Loadout UI** / **Wire Deck Building Screen**
 
-**Next:** global active ability casting in battle (M2 combat package).
+**Milestone 2 Phases 1–5 complete.** Phase 6 = APK + formal QA pack (developer-owned APK).

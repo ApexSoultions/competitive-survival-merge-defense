@@ -292,6 +292,7 @@ public class WaveBossManager : MonoBehaviour
             return null;
 
         Enemy boss = Instantiate(bossPrefab);
+        boss.SetEnemyTier(EnemyTier.Boss);
         ApplyWaveScaling(boss, true);
         boss.SetRoute(route);
 

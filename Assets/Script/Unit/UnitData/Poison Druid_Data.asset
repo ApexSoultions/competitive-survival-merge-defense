@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitId: unit_poison_druid
   unitName: Plague Doctor
-  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
+  tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: -6548289768654288691, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 390aac486c87448429418b40a4b7047c, type: 3}
   levelIcons:
@@ -27,6 +27,76 @@ MonoBehaviour:
   - {fileID: 3444463731680135898, guid: 0019b7c58ccb98f429ee7be29a21697d, type: 3}
   - {fileID: 3444463731680135898, guid: f6d1a4cd32dd95d4680b65bb65d90e63, type: 3}
   manaCost: 50
-  attackDamage: 10
-  attackSpeed: 1
-  attackRange: 3
+  attackDamage: 12
+  attackSpeed: 0.8333
+  attackRange: 99
+  baseDamage: 12
+  baseAttackInterval: 1.2
+  baseAttackRange: 99
+  criticalChance: 0.12
+  criticalDamageMultiplier: 1.65
+  minAttackInterval: 0.12
+  mergeSpeedMultipliers:
+  - 1
+  - 1.9
+  - 3.2
+  - 4.8
+  - 6.5
+  - 8.5
+  targetPriority: 0
+  abilityL1:
+    id: poison_druid_l1_toxic_spores
+    displayName: Toxic Spores
+    description: Applies Poison (refresh duration; no independent stacks).
+    power: 16
+    radius: 0
+    durationSeconds: 5
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 1
+    parameterNames:
+    - durationSeconds
+    - damagePercentPerSecond
+    parameterValues:
+    - 5
+    - 16
+  abilityL10:
+    id: poison_druid_l10_miasma_link
+    displayName: Miasma Link
+    description: Poisoned enemies emit auras damaging nearby enemies.
+    power: 25
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - linkDamagePercentOfPoisonTick
+    - maxIncomingLinks
+    parameterValues:
+    - 25
+    - 2
+  abilityL20:
+    id: poison_druid_l20_growing_epidemic
+    displayName: Growing Epidemic
+    description: 5 poisoned enemies for 3 continuous seconds grants permanent Poison damage.
+    power: 3
+    radius: 0
+    durationSeconds: 3
+    cooldownSeconds: 8
+    maxStacks: 8
+    stackRule: 3
+    parameterNames:
+    - poisonedEnemiesRequired
+    - holdSeconds
+    - cooldownSeconds
+    - softCapPercent
+    - overflowEfficiencyPercent
+    - overflowStackPercent
+    parameterValues:
+    - 5
+    - 3
+    - 8
+    - 24
+    - 15
+    - 0.45

@@ -1,5 +1,49 @@
 # Changelog — Competitive Survival Merge Defense
 
+## Milestone 2 — Complete delivery document
+
+- Full M2 summary (Phases 1–5 + hub deck GUI + Dragon animation): [`Assets/Documentation/M2_CompleteDelivery.md`](Assets/Documentation/M2_CompleteDelivery.md)
+
+## Milestone 2 — Phase 5 (Account L10 / L20 unlock gating)
+
+- Persisted account level: `SaveKeys.AccountLevel` + `AccountProgressService` (Get/Set).
+- Thresholds on `GameBalanceConfig`: L10 @ 10, L20 @ 20; `debugForceAllAbilityTiers` bypasses gates for playtest.
+- `UnitAbilityRuntime` binds L10/L20 from account level (ability scripts unchanged via `IsTierActive`).
+- QA: **Tools → Account → Set Level 1 / 10 / 20** (+ custom); hub header shows **Account Lv X**.
+- Validator: **Game → Foundation → Validate Game Content** → Phase 5 section.
+- Docs / checklist: `Assets/Content/Units/README.md`.
+
+## Dragon unit + shared sprite animation
+
+- Shared tower visuals: `UnitAnimationClip` / `UnitAnimationSet` / `UnitVisualAnimator` (Idle, Attack, Death, Hit, Cast, Special). Prefabs without the animator stay static.
+- `Tower` fires `AttackStarted` and plays Attack clip on shot; skips scale breathing when a visual animator is present.
+- **Dragon** (Fire Mage combat clone): Editor setup `Tools → Units → Setup Dragon From Fire Mage` builds prefabs, fireball, `Dragon_Data` (`unit_dragon`), animation set, catalog entry.
+- Docs: `Assets/Content/Units/README.md` — how to preview in Deck Builder → Battle.
+
+## Milestone 2 — Phase 4 (Freeze / Burn / Mark / Shield status framework)
+
+- Enemy statuses: dedicated **Burn**, **Freeze**, **Mark** (+ chill stacks) with `GameplayEvents` apply/expire.
+- Status UI: **B / F / M** icons + pooled auras; theme colors on `EnemyCombatFeedbackTheme`.
+- Abilities rewired: Fire Mage → Burn; Frost Witch → Freeze + shatter; Shadow Assassin → enemy-owned Mark.
+- Ally **TowerShieldRuntime** (Priestess) consumes hits on enemy contact; refreshes on interval.
+- **Radiant Cleanse** clears enemy Slow/Poison/Burn/Stun/Freeze/Mark/Chill via `StatusCleanseUtility`.
+- Validator: **Game → Foundation → Validate Game Content** checks Phase 4 theme/VFX/API surface.
+
+## Milestone 2 — Phase 3 (unit L1/L10/L20 behaviors from SO)
+
+- Shared runtime: `UnitAbilityRuntime` + L20 stack tracker on spawn/merge (Option A — all tiers active).
+- All **11** units read L1 / L10 / L20 from `UnitData.GetTier` (Priority A combat + Priority B support).
+- Validator: each ML prefab hosts the unit ability script; L20 `stackRule` must be `InfiniteInMatch`.
+- Status polish completed in Phase 4.
+
+## Milestone 2 — Phase 2 (Unit data architecture)
+
+- **Unit stats from SO + merge formula:** `UnitData` owns base damage / attack interval / range / crit; spawn & merge apply via `UnitCombatStatsResolver` (`interval = max(base / mergeMultiplier, minInterval)`).
+- Balance **v0.2** imported for all **11** units (NamingMap `unitId`s, merge multipliers `1.0–8.5`, target priorities).
+- **Targeting from data:** `Tower` uses `UnitTargetPriority` (Default / Nearest / HP / Boss→Elite→HP); `Enemy.IsElite` + tier support.
+- **L1 / L10 / L20 ability slots** populated as tunable data (`GetTier` / `GetAbilityTier`).
+- Validator: **Game → Foundation → Validate Game Content** now checks UnitData Phase 2 fields; **Smoke Unit Merge Ladder** logs ML1–ML6 intervals.
+
 ## Hub Deck Builder (Main_UI loadout)
 
 - Deck selection moved from BattleScene to **Main Menu**: Edit opens Deck Builder on `Main_UI`.

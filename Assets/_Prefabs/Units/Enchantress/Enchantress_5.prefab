@@ -5180,6 +5180,8 @@ MonoBehaviour:
   criticalChance: 0.12
   criticalDamageMultiplier: 1.65
   fullAreaTargeting: 1
+  targetPriority: 0
+  canReceiveAlliedDamageBuffs: 1
   multiTarget: 0
   maxTargets: 1
   firePoint: {fileID: 5969733890881672437}
@@ -5189,6 +5191,11 @@ MonoBehaviour:
     m_Bits: 8
   damageType: 0
   elementColor: {r: 0.38, g: 1, b: 0.24, a: 1}
+  runtimeDamageMultiplier: 1
+  runtimeActiveDamageBuffSources: 0
+  runtimeBaseDamage: 0
+  runtimeCurrentDamage: 0
+  runtimeLastProjectileDamage: 0
 --- !u!114 &1762574443636792892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5302,14 +5309,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NatureBlessingBuffAbility
   cooldownDuration: 12
   startReady: 1
-  buffRadius: 2.5
-  maximumBuffedTowers: 4
-  damageMultiplier: 1.25
-  scanInterval: 1
-  allowBuffStacking: 0
-  towerLayer:
-    serializedVersion: 2
-    m_Bits: 0
+  fallbackDamageBonusPercent: 10
+  fallbackAttackSpeedBonusPercent: 6
+  occupiedTilesRequired: 3
   auraSprite: {fileID: -4169142952817085632, guid: bdb6be042a38ec845a828031f9e54c08, type: 3}
   auraColor: {r: 0.38, g: 1, b: 0.24, a: 0.82}
   auraScale: 1.35

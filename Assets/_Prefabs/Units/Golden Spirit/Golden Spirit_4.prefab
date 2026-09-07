@@ -398,6 +398,7 @@ MonoBehaviour:
   criticalChance: 0.12
   criticalDamageMultiplier: 1.65
   fullAreaTargeting: 1
+  targetPriority: 0
   canReceiveAlliedDamageBuffs: 0
   multiTarget: 0
   maxTargets: 1
@@ -408,6 +409,11 @@ MonoBehaviour:
     m_Bits: 8
   damageType: 0
   elementColor: {r: 1, g: 0.76, b: 0.12, a: 1}
+  runtimeDamageMultiplier: 1
+  runtimeActiveDamageBuffSources: 0
+  runtimeBaseDamage: 0
+  runtimeCurrentDamage: 0
+  runtimeLastProjectileDamage: 0
 --- !u!114 &-217024045820899015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -521,15 +527,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GoldSpiritAbility
   cooldownDuration: 12
   startReady: 1
-  manaPerTick: 10
-  tickInterval: 5
-  manaByMergeLevel:
-  - 10
-  - 20
-  - 30
-  - 40
-  - 50
-  - 60
+  manaPerTick: 5
+  tickInterval: 12
+  manaByMergeLevel: 050000000a0000001200000020000000320000004b000000
   mergeLevelMultiplier: 1
   maximumMana: 0
   manaOrbPrefab: {fileID: 4136104774234606039, guid: 1e31fa28208b57b458321e9e7c518904, type: 3}

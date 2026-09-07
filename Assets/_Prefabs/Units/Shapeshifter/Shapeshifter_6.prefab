@@ -5052,6 +5052,8 @@ MonoBehaviour:
   criticalChance: 0.12
   criticalDamageMultiplier: 1.65
   fullAreaTargeting: 1
+  targetPriority: 0
+  canReceiveAlliedDamageBuffs: 1
   multiTarget: 1
   maxTargets: 3
   firePoint: {fileID: 5969733890881672437}
@@ -5061,6 +5063,11 @@ MonoBehaviour:
     m_Bits: 8
   damageType: 0
   elementColor: {r: 0.78, g: 0.38, b: 1, a: 1}
+  runtimeDamageMultiplier: 1
+  runtimeActiveDamageBuffSources: 0
+  runtimeBaseDamage: 0
+  runtimeCurrentDamage: 0
+  runtimeLastProjectileDamage: 0
 --- !u!114 &1762574443636792892
 MonoBehaviour:
   m_ObjectHideFlags: 0

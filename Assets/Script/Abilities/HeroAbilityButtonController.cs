@@ -8,40 +8,66 @@ using UnityEngine.UI;
 public sealed class HeroAbilityButtonController : MonoBehaviour
 {
     [Header("Option A — Product lock")]
-    [Tooltip("NON-PRODUCT. When false (default), Ability/Ability_2 buttons do not bind to the selected tower. Milestone 2 will bind global actives from loadout.")]
+    [Tooltip("DEV ONLY. When true, Ability buttons bind to the selected tower. Product builds always use saved global actives.")]
     [SerializeField] private bool enablePrototypeTowerBinding = false;
 
-    [SerializeField] private string[] existingButtonObjectNames = { "Ability", "Ability_2" };
+    [Header("Ability Slots (Inspector)")]
+    [Tooltip("Drag Abilities_1 and Abilities_2 roots here (with Ability_Image / Ability_Level / Unity_Tag_BackGround).")]
+    [SerializeField] private DeckCardView[] abilitySlotViews;
+
+    [SerializeField] private string[] existingButtonObjectNames = { "Abilities_1", "Abilities_2" };
+
+    [Header("Shared Visuals (Inspector)")]
+    [SerializeField] private DeckCardVisualSettings visualSettings;
+    [SerializeField] private Sprite tagFrameSprite;
+    [SerializeField, Min(1)] private int defaultAbilityLevel = 1;
+    [SerializeField] private string targetingHintText = "TAP";
 
     [Header("Cooldown Presentation")]
     [SerializeField] private Color unavailableColor = new Color(0.28f, 0.28f, 0.28f, 0.72f);
     [SerializeField] private Color coolingColor = new Color(0.4f, 0.4f, 0.4f, 1f);
+    [SerializeField] private Color targetingTint = new Color(0.55f, 0.85f, 1f, 1f);
     [SerializeField, Range(0f, 1f)] private float chargeFillAlpha = 0.82f;
     [SerializeField, Range(0f, 1f)] private float readyGlowAlpha = 0.38f;
     [SerializeField, Min(0f)] private float readyGlowPulseSpeed = 4.5f;
     [SerializeField, Range(1f, 1.3f)] private float readyGlowScale = 1.09f;
 
     private readonly List<Button> buttons = new List<Button>(2);
-    private readonly List<Image> images = new List<Image>(2);
+    private readonly List<DeckCardView> slots = new List<DeckCardView>(2);
+    private readonly List<Image> portraits = new List<Image>(2);
     private readonly List<Image> chargeFills = new List<Image>(2);
     private readonly List<Image> readyGlows = new List<Image>(2);
     private readonly List<TextMeshProUGUI> cooldownLabels = new List<TextMeshProUGUI>(2);
-    private readonly List<Sprite> originalSprites = new List<Sprite>(2);
     private readonly List<TowerAbilityBase> bindings = new List<TowerAbilityBase>(2);
     private readonly List<UnityAction> listeners = new List<UnityAction>(2);
+    private bool globalCastSubscribed;
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void Bootstrap()
+    private bool UsePrototypeTowerBinding
     {
-        // Keep a controller present so buttons stay in a safe non-product state until M2 global cast.
-        if (FindFirstObjectByType<HeroAbilityButtonController>() == null)
-            new GameObject("Hero Ability Button Controller", typeof(HeroAbilityButtonController));
+        get
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            return enablePrototypeTowerBinding;
+#else
+            return false;
+#endif
+        }
+    }
+
+    private void Awake()
+    {
+        if (visualSettings == null)
+            visualSettings = Resources.Load<DeckCardVisualSettings>("DeckCardVisualSettings");
+
+        if (tagFrameSprite == null && visualSettings != null)
+            tagFrameSprite = visualSettings.tagFrameSprite;
     }
 
     private void OnEnable()
     {
         TowerBoardCell.BoardChanged += RefreshBindings;
         BoardTowerInputController.AbilitySelectionChanged += HandleSelectionChanged;
+        GlobalActiveCastTargetingController.TargetingChanged += HandleTargetingChanged;
         SceneManager.sceneLoaded += HandleSceneLoaded;
         SceneManager.sceneUnloaded += HandleSceneUnloaded;
     }
@@ -50,8 +76,9 @@ public sealed class HeroAbilityButtonController : MonoBehaviour
     {
         ResolveExistingButtons();
         RefreshBindings();
-        if (!enablePrototypeTowerBinding)
-            Debug.Log("[Option A] HeroAbilityButtonController: prototype tower-binding DISABLED. HUD actives await global loadout (M2).");
+        SubscribeGlobalCastService();
+        if (!UsePrototypeTowerBinding)
+            Debug.Log("[Option A] HeroAbilityButtonController: bound to saved global actives.");
     }
 
     private void Update()
@@ -59,7 +86,7 @@ public sealed class HeroAbilityButtonController : MonoBehaviour
         if (!HasValidUiSlots())
             return;
 
-        if (!enablePrototypeTowerBinding)
+        if (!UsePrototypeTowerBinding)
         {
             for (int i = 0; i < buttons.Count; i++)
                 UpdateSlotVisual(i);
@@ -81,8 +108,10 @@ public sealed class HeroAbilityButtonController : MonoBehaviour
     {
         TowerBoardCell.BoardChanged -= RefreshBindings;
         BoardTowerInputController.AbilitySelectionChanged -= HandleSelectionChanged;
+        GlobalActiveCastTargetingController.TargetingChanged -= HandleTargetingChanged;
         SceneManager.sceneLoaded -= HandleSceneLoaded;
         SceneManager.sceneUnloaded -= HandleSceneUnloaded;
+        UnsubscribeGlobalCastService();
         RemoveButtonListeners();
     }
 
@@ -95,11 +124,14 @@ public sealed class HeroAbilityButtonController : MonoBehaviour
     {
         ResolveExistingButtons();
         RefreshBindings();
+        SubscribeGlobalCastService();
     }
 
     private void HandleSceneUnloaded(Scene scene)
     {
-        // Battle/Hub UI Images are destroyed with their scene — drop stale refs immediately.
+        if (GlobalActiveCastTargetingController.IsTargetingActive)
+            GlobalActiveCastTargetingController.Instance.CancelTargeting("Scene unloaded.");
+
         ClearResolvedButtons();
     }
 
@@ -107,24 +139,23 @@ public sealed class HeroAbilityButtonController : MonoBehaviour
     {
         RemoveButtonListeners();
         buttons.Clear();
-        images.Clear();
+        slots.Clear();
+        portraits.Clear();
         chargeFills.Clear();
         readyGlows.Clear();
         cooldownLabels.Clear();
-        originalSprites.Clear();
         bindings.Clear();
         listeners.Clear();
     }
 
     private bool HasValidUiSlots()
     {
-        if (buttons.Count == 0 || images.Count == 0)
+        if (buttons.Count == 0 || slots.Count == 0 || portraits.Count == 0)
             return false;
 
-        // Unity fake-null: destroyed UI after additive unload.
-        for (int i = 0; i < images.Count; i++)
+        for (int i = 0; i < slots.Count; i++)
         {
-            if (images[i] == null || buttons[i] == null)
+            if (slots[i] == null || portraits[i] == null || buttons[i] == null)
             {
                 ClearResolvedButtons();
                 return false;
@@ -137,31 +168,81 @@ public sealed class HeroAbilityButtonController : MonoBehaviour
     private void ResolveExistingButtons()
     {
         ClearResolvedButtons();
+        ApplySharedVisuals();
 
-        Image[] sceneImages = FindObjectsByType<Image>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        for (int nameIndex = 0; nameIndex < existingButtonObjectNames.Length; nameIndex++)
+        if (abilitySlotViews != null && abilitySlotViews.Length > 0)
         {
-            Image found = FindNamedImage(sceneImages, existingButtonObjectNames[nameIndex]);
-            if (found == null)
+            int limit = Mathf.Min(abilitySlotViews.Length, GlobalActiveCastService.MaxSlots);
+            for (int i = 0; i < limit; i++)
+                RegisterAbilitySlot(abilitySlotViews[i]);
+            return;
+        }
+
+        Image[] sceneImages = FindObjectsByType<Image>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        int maxNames = Mathf.Min(existingButtonObjectNames.Length, GlobalActiveCastService.MaxSlots);
+        for (int nameIndex = 0; nameIndex < maxNames; nameIndex++)
+        {
+            Image frame = FindNamedImage(sceneImages, existingButtonObjectNames[nameIndex]);
+            if (frame == null)
                 continue;
 
-            Button button = found.GetComponent<Button>();
-            if (button == null)
-                button = found.gameObject.AddComponent<Button>();
+            DeckCardView slotView = frame.GetComponent<DeckCardView>();
+            if (slotView == null)
+                slotView = frame.gameObject.AddComponent<DeckCardView>();
 
-            button.targetGraphic = found;
-            int slot = buttons.Count;
-            UnityAction listener = () => HandlePressed(slot);
-            button.onClick.AddListener(listener);
+            slotView.ApplyVisualSettings(visualSettings);
+            slotView.ApplyTagFrameSprite(tagFrameSprite);
+            RegisterAbilitySlot(slotView);
+        }
+    }
 
-            buttons.Add(button);
-            images.Add(found);
-            originalSprites.Add(found.sprite);
-            listeners.Add(listener);
-            bindings.Add(null);
-            readyGlows.Add(EnsureOverlayImage(found.rectTransform, "Ready Glow"));
-            chargeFills.Add(EnsureOverlayImage(found.rectTransform, "Cooldown Charge"));
-            cooldownLabels.Add(EnsureCooldownLabel(found.rectTransform));
+    private void RegisterAbilitySlot(DeckCardView slotView)
+    {
+        if (slotView == null)
+            return;
+
+        slotView.ApplyVisualSettings(visualSettings);
+        slotView.ApplyTagFrameSprite(tagFrameSprite);
+
+        Image frame = slotView.FrameImage;
+        if (frame == null)
+            return;
+
+        Button button = frame.GetComponent<Button>();
+        if (button == null)
+            button = frame.gameObject.AddComponent<Button>();
+
+        button.targetGraphic = frame;
+        int slot = buttons.Count;
+        UnityAction listener = () => HandlePressed(slot);
+        button.onClick.AddListener(listener);
+
+        Image portrait = slotView.PortraitImage;
+        if (portrait == null)
+            return;
+
+        buttons.Add(button);
+        slots.Add(slotView);
+        portraits.Add(portrait);
+        listeners.Add(listener);
+        bindings.Add(null);
+        readyGlows.Add(EnsureOverlayImage(portrait.rectTransform, "Ready Glow"));
+        chargeFills.Add(EnsureOverlayImage(portrait.rectTransform, "Cooldown Charge"));
+        cooldownLabels.Add(EnsureCooldownLabel(portrait.rectTransform));
+    }
+
+    private void ApplySharedVisuals()
+    {
+        if (abilitySlotViews == null)
+            return;
+
+        foreach (DeckCardView slotView in abilitySlotViews)
+        {
+            if (slotView == null)
+                continue;
+
+            slotView.ApplyVisualSettings(visualSettings);
+            slotView.ApplyTagFrameSprite(tagFrameSprite);
         }
     }
 
@@ -170,13 +251,15 @@ public sealed class HeroAbilityButtonController : MonoBehaviour
         if (buttons.Count == 0)
             return;
 
-        if (!enablePrototypeTowerBinding)
+        if (!UsePrototypeTowerBinding)
         {
             for (int slot = 0; slot < buttons.Count; slot++)
             {
                 bindings[slot] = null;
                 UpdateSlotVisual(slot, true);
             }
+
+            SubscribeGlobalCastService();
             return;
         }
 
@@ -208,17 +291,27 @@ public sealed class HeroAbilityButtonController : MonoBehaviour
 
     private void UpdateSlotVisual(int index, bool force = false)
     {
-        if (index < 0 || index >= buttons.Count || index >= images.Count)
+        if (index < 0 || index >= buttons.Count || index >= slots.Count || index >= portraits.Count)
             return;
 
-        Image baseImage = images[index];
+        DeckCardView slotView = slots[index];
+        Image portrait = portraits[index];
         Image charge = index < chargeFills.Count ? chargeFills[index] : null;
         Image glow = index < readyGlows.Count ? readyGlows[index] : null;
         TextMeshProUGUI label = index < cooldownLabels.Count ? cooldownLabels[index] : null;
         Button button = buttons[index];
-        if (baseImage == null || charge == null || glow == null || label == null || button == null)
+        if (slotView == null || portrait == null || charge == null || glow == null || label == null || button == null)
         {
             ClearResolvedButtons();
+            return;
+        }
+
+        slotView.ApplyVisualSettings(visualSettings);
+        slotView.ApplyTagFrameSprite(tagFrameSprite);
+
+        if (!UsePrototypeTowerBinding)
+        {
+            UpdateGlobalSlotVisual(index, slotView, portrait, charge, glow, label, button);
             return;
         }
 
@@ -227,43 +320,175 @@ public sealed class HeroAbilityButtonController : MonoBehaviour
         bool ready = BattleFlowState.IsGameplayActive && bound && ability.IsReady;
         float progress = bound ? ability.CooldownProgress : 0f;
         Color abilityColor = bound ? ability.AbilityColor : Color.white;
-        Sprite displaySprite = originalSprites[index] != null
-            ? originalSprites[index]
-            : bound ? ability.AbilityIcon : null;
+        Sprite displaySprite = bound ? ability.AbilityIcon : null;
 
-        baseImage.sprite = displaySprite;
-        baseImage.color = !bound ? unavailableColor : ready ? Color.white : coolingColor;
+        if (bound)
+        {
+            slotView.BindPortrait(displaySprite, defaultAbilityLevel, visualSettings != null ? visualSettings.abilityCategoryTag : null);
+            slotView.ApplyTagFrameSprite(tagFrameSprite);
+        }
+        else
+            slotView.SetEmpty();
 
+        portrait.color = !bound ? unavailableColor : ready ? Color.white : coolingColor;
+
+        ApplyCooldownPresentation(charge, glow, label, displaySprite, abilityColor, bound, ready, false, progress,
+            bound ? ability.CooldownRemaining : 0f);
+
+        button.interactable = ready;
+    }
+
+    private void UpdateGlobalSlotVisual(
+        int index,
+        DeckCardView slotView,
+        Image portrait,
+        Image charge,
+        Image glow,
+        TextMeshProUGUI label,
+        Button button)
+    {
+        GlobalActiveCastService castService = GlobalActiveCastService.Instance;
+        ActiveAbilityDefinition definition = castService != null ? castService.GetActive(index) : null;
+        bool bound = definition != null;
+        bool implemented = bound && definition.implemented;
+        bool awaitingTarget = GlobalActiveCastTargetingController.IsTargetingActive &&
+                             GlobalActiveCastTargetingController.Instance.PendingSlot == index;
+        bool ready = implemented && castService != null &&
+                     BattleFlowState.IsGameplayActive && castService.IsReady(index);
+        float progress = bound && castService != null ? castService.GetCooldownProgress(index) : 0f;
+        float cooldownRemaining = bound && castService != null ? castService.GetCooldownRemaining(index) : 0f;
+        Color abilityColor = awaitingTarget ? targetingTint : Color.white;
+        Sprite displaySprite = definition != null ? definition.icon : null;
+
+        if (bound)
+        {
+            slotView.BindAbility(definition, defaultAbilityLevel);
+            slotView.ApplyTagFrameSprite(tagFrameSprite);
+        }
+        else
+            slotView.SetEmpty();
+
+        // Empty / unimplemented slots stay grey; ready and targeting stay bright.
+        if (!bound)
+            portrait.color = emptyPortraitColor();
+        else if (!implemented)
+            portrait.color = unavailableColor;
+        else if (awaitingTarget || ready)
+            portrait.color = Color.white;
+        else
+            portrait.color = coolingColor;
+
+        ApplyCooldownPresentation(
+            charge,
+            glow,
+            label,
+            displaySprite,
+            abilityColor,
+            bound && implemented,
+            ready,
+            awaitingTarget,
+            progress,
+            cooldownRemaining);
+
+        // Keep pending slot clickable so the player can cancel targeting.
+        button.interactable = ready || awaitingTarget;
+    }
+
+    private static Color emptyPortraitColor()
+    {
+        return new Color(1f, 1f, 1f, 0.18f);
+    }
+
+    private void ApplyCooldownPresentation(
+        Image charge,
+        Image glow,
+        TextMeshProUGUI cooldownLabel,
+        Sprite displaySprite,
+        Color abilityColor,
+        bool bound,
+        bool ready,
+        bool awaitingTarget,
+        float progress,
+        float cooldownRemaining)
+    {
         charge.sprite = displaySprite;
         charge.type = Image.Type.Filled;
         charge.fillMethod = Image.FillMethod.Radial360;
         charge.fillOrigin = (int)Image.Origin360.Top;
         charge.fillClockwise = true;
-        charge.fillAmount = progress;
-        charge.color = WithAlpha(Color.Lerp(Color.white, abilityColor, 0.52f), bound ? chargeFillAlpha : 0f);
-        charge.enabled = bound && displaySprite != null;
+        charge.fillAmount = awaitingTarget ? 1f : progress;
+        charge.color = WithAlpha(
+            Color.Lerp(Color.white, abilityColor, awaitingTarget ? 0.75f : 0.52f),
+            bound && !awaitingTarget ? chargeFillAlpha : awaitingTarget ? 0.35f : 0f);
+        charge.enabled = bound && displaySprite != null && !awaitingTarget;
 
         glow.sprite = displaySprite;
-        glow.enabled = ready && displaySprite != null;
+        glow.enabled = (ready || awaitingTarget) && displaySprite != null;
         if (glow.enabled)
         {
             float pulse = 0.5f + Mathf.Sin(Time.unscaledTime * readyGlowPulseSpeed) * 0.5f;
-            glow.color = WithAlpha(Color.Lerp(Color.white, abilityColor, 0.58f), readyGlowAlpha * Mathf.Lerp(0.55f, 1f, pulse));
+            float alpha = awaitingTarget
+                ? readyGlowAlpha * Mathf.Lerp(0.75f, 1f, pulse)
+                : readyGlowAlpha * Mathf.Lerp(0.55f, 1f, pulse);
+            glow.color = WithAlpha(Color.Lerp(Color.white, abilityColor, awaitingTarget ? 0.8f : 0.58f), alpha);
             glow.rectTransform.localScale = Vector3.one * Mathf.Lerp(1.02f, readyGlowScale, pulse);
         }
 
-        label.gameObject.SetActive(bound && !ready);
-        if (bound && !ready)
-            label.SetText("{0:0}", Mathf.Ceil(ability.CooldownRemaining));
-
-        button.interactable = ready;
-        button.gameObject.name = existingButtonObjectNames[Mathf.Min(index, existingButtonObjectNames.Length - 1)];
+        bool showCooldown = bound && !ready && !awaitingTarget;
+        bool showTargetHint = awaitingTarget;
+        cooldownLabel.gameObject.SetActive(showCooldown || showTargetHint);
+        if (showTargetHint)
+            cooldownLabel.SetText(string.IsNullOrEmpty(targetingHintText) ? "TAP" : targetingHintText);
+        else if (showCooldown)
+            cooldownLabel.SetText("{0:0}", Mathf.Ceil(cooldownRemaining));
     }
 
     private void HandlePressed(int index)
     {
-        if (!enablePrototypeTowerBinding)
+        if (!UsePrototypeTowerBinding)
+        {
+            GlobalActiveCastService castService = GlobalActiveCastService.Instance;
+            if (castService == null)
+                return;
+
+            ActiveAbilityDefinition definition = castService.GetActive(index);
+            if (definition == null || !definition.implemented)
+                return;
+
+            if (!castService.IsReady(index))
+                return;
+
+            GlobalActiveCastTargetingController targeting = GlobalActiveCastTargetingController.EnsureExists();
+
+            if (GlobalActiveCastTargeting.RequiresPlayerTarget(definition))
+            {
+                if (targeting.IsTargeting && targeting.PendingSlot == index)
+                {
+                    targeting.CancelTargeting("Retoggled from HUD.");
+                    UpdateSlotVisual(index, true);
+                    return;
+                }
+
+                if (targeting.BeginTargeting(index, definition))
+                {
+                    GameAudioManager.PlayButtonConfirm();
+                    UpdateSlotVisual(index, true);
+                }
+
+                return;
+            }
+
+            if (targeting.IsTargeting)
+                targeting.CancelTargeting("Instant cast selected.");
+
+            GlobalActiveCastContext context = GlobalActiveCastTargeting.ResolveCastContext(definition);
+            if (!castService.TryCast(index, context))
+                return;
+
+            GameAudioManager.PlayButtonConfirm();
+            UpdateSlotVisual(index, true);
             return;
+        }
 
         if (index < 0 || index >= bindings.Count)
             return;
@@ -274,6 +499,15 @@ public sealed class HeroAbilityButtonController : MonoBehaviour
 
         GameAudioManager.PlayButtonConfirm();
         UpdateSlotVisual(index, true);
+    }
+
+    private void HandleTargetingChanged()
+    {
+        if (UsePrototypeTowerBinding || !HasValidUiSlots())
+            return;
+
+        for (int i = 0; i < buttons.Count; i++)
+            UpdateSlotVisual(i, true);
     }
 
     private bool HasAnyBinding()
@@ -295,6 +529,40 @@ public sealed class HeroAbilityButtonController : MonoBehaviour
         }
     }
 
+    private void SubscribeGlobalCastService()
+    {
+        if (UsePrototypeTowerBinding)
+            return;
+
+        GlobalActiveCastService castService = GlobalActiveCastService.Instance;
+        if (castService == null || globalCastSubscribed)
+            return;
+
+        castService.SlotStateChanged += HandleGlobalCastStateChanged;
+        globalCastSubscribed = true;
+    }
+
+    private void UnsubscribeGlobalCastService()
+    {
+        if (!globalCastSubscribed)
+            return;
+
+        GlobalActiveCastService castService = GlobalActiveCastService.Instance;
+        if (castService != null)
+            castService.SlotStateChanged -= HandleGlobalCastStateChanged;
+
+        globalCastSubscribed = false;
+    }
+
+    private void HandleGlobalCastStateChanged()
+    {
+        if (UsePrototypeTowerBinding || !HasValidUiSlots())
+            return;
+
+        for (int i = 0; i < buttons.Count; i++)
+            UpdateSlotVisual(i, true);
+    }
+
     private static Image FindNamedImage(Image[] imagesInScene, string objectName)
     {
         for (int i = 0; i < imagesInScene.Length; i++)
@@ -303,6 +571,7 @@ public sealed class HeroAbilityButtonController : MonoBehaviour
             if (image != null && image.gameObject.name == objectName)
                 return image;
         }
+
         return null;
     }
 
@@ -328,7 +597,7 @@ public sealed class HeroAbilityButtonController : MonoBehaviour
         rect.offsetMax = Vector2.zero;
         rect.localRotation = Quaternion.identity;
         image.raycastTarget = false;
-        image.preserveAspect = false;
+        image.preserveAspect = true;
         return image;
     }
 
@@ -354,7 +623,7 @@ public sealed class HeroAbilityButtonController : MonoBehaviour
         rect.offsetMax = Vector2.zero;
         label.alignment = TextAlignmentOptions.Center;
         label.fontStyle = FontStyles.Bold;
-        label.fontSize = 38f;
+        label.fontSize = 24f;
         label.color = Color.white;
         label.raycastTarget = false;
         label.textWrappingMode = TextWrappingModes.NoWrap;

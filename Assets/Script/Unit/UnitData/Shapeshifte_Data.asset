@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnitData
   unitId: unit_shapeshifter
   unitName: Shapeshifter
-  tagIcon: {fileID: 21300000, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
+  tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
   icon: {fileID: -4548189851348124799, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 0603fb5c630e44448be8a6ac34932032, type: 3}
   levelIcons:
@@ -27,6 +27,68 @@ MonoBehaviour:
   - {fileID: 3444463731680135898, guid: f95f47da6e1b76e40a9f4a5e4688700e, type: 3}
   - {fileID: 3444463731680135898, guid: 6bf1ef460fa90fb49bc3edc1cbe879d7, type: 3}
   manaCost: 50
-  attackDamage: 12
-  attackSpeed: 0.9
-  attackRange: 3.5
+  attackDamage: 6
+  attackSpeed: 0.8000
+  attackRange: 99
+  baseDamage: 6
+  baseAttackInterval: 1.25
+  baseAttackRange: 99
+  criticalChance: 0.12
+  criticalDamageMultiplier: 1.65
+  minAttackInterval: 0.12
+  mergeSpeedMultipliers:
+  - 1
+  - 1.9
+  - 3.2
+  - 4.8
+  - 6.5
+  - 8.5
+  targetPriority: 1
+  abilityL1:
+    id: shapeshifter_l1_adaptive_form
+    displayName: Adaptive Form
+    description: Drag onto same-ML allied non-Shapeshifter to permanently copy at reduced efficiency.
+    power: 85
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - baseCopyEfficiencyPercent
+    - sameLevelOnly
+    parameterValues:
+    - 85
+    - 1
+  abilityL10:
+    id: shapeshifter_l10_refined_echo
+    displayName: Refined Echo
+    description: After transforming, temporary attack-speed bonus.
+    power: 15
+    radius: 0
+    durationSeconds: 8
+    cooldownSeconds: 0
+    maxStacks: 0
+    stackRule: 0
+    parameterNames:
+    - attackSpeedBonusPercent
+    - durationSeconds
+    parameterValues:
+    - 15
+    - 8
+  abilityL20:
+    id: shapeshifter_l20_master_of_adaptation
+    displayName: Master of Adaptation
+    description: Repeated transformations raise copy efficiency toward soft cap; overflow extends Refined Echo.
+    power: 2
+    radius: 0
+    durationSeconds: 0
+    cooldownSeconds: 0
+    maxStacks: 5
+    stackRule: 3
+    parameterNames:
+    - softCapEfficiencyPercent
+    - overflowRefinedEchoSeconds
+    parameterValues:
+    - 95
+    - 0.25

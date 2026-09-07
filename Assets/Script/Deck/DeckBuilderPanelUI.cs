@@ -26,6 +26,7 @@ public sealed class DeckBuilderPanelUI : MonoBehaviour
     [SerializeField] private DeckCollectionListUI collectionList;
     [SerializeField] private DeckCardView collectionCardPrefab;
     [SerializeField] private Transform collectionContent;
+    public DeckCardVisualSettings cardVisualSettings;
 
     [Header("Filters")]
     [SerializeField] private Button filterAllButton;
@@ -171,7 +172,7 @@ public sealed class DeckBuilderPanelUI : MonoBehaviour
             Transform chosenRoot = transform.Find("Choosen_Deck");
             if (chosenRoot == null)
                 chosenRoot = FindChildTransform(transform, "Choosen_Deck");
-            chosenSlots.Initialize(service, chosenRoot);
+            chosenSlots.Initialize(service, chosenRoot, cardVisualSettings);
             chosenSlots.UnitSlotClicked -= OnUnitSlotClicked;
             chosenSlots.AbilitySlotClicked -= OnAbilitySlotClicked;
             chosenSlots.RelicSlotClicked -= OnRelicSlotClicked;
@@ -184,7 +185,7 @@ public sealed class DeckBuilderPanelUI : MonoBehaviour
 
         if (collectionList != null)
         {
-            collectionList.Initialize(service, collectionContent, collectionCardPrefab);
+            collectionList.Initialize(service, collectionContent, collectionCardPrefab, cardVisualSettings);
             collectionList.UnitClicked -= OnUnitCardClicked;
             collectionList.AbilityClicked -= OnAbilityCardClicked;
             collectionList.RelicClicked -= OnRelicCardClicked;

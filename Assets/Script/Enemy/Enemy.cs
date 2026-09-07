@@ -18,6 +18,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int manaReward = 5;
     [SerializeField] private int leakDamage = 1;
     [SerializeField] private bool isBoss = false;
+    [Tooltip("Used when isBoss is false. Boss prefabs should keep isBoss checked.")]
+    [SerializeField] private EnemyTier tier = EnemyTier.Normal;
 
     [Header("Stun Resistance")]
     [Tooltip("Minimum recovery window after a normal enemy's stun ends.")]
@@ -26,6 +28,14 @@ public class Enemy : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float bossStunDurationMultiplier = 0.35f;
     [Tooltip("Minimum recovery window after a boss stun ends.")]
     [SerializeField, Min(0f)] private float bossStunImmunityDuration = 2.5f;
+
+    [Header("Freeze Resistance")]
+    [Tooltip("Minimum recovery window after a normal enemy's freeze ends.")]
+    [SerializeField, Min(0f)] private float freezeImmunityDuration = 0.75f;
+    [Tooltip("Boss freeze duration is multiplied by this value.")]
+    [SerializeField, Range(0f, 1f)] private float bossFreezeDurationMultiplier = 0.35f;
+    [Tooltip("Minimum recovery window after a boss freeze ends.")]
+    [SerializeField, Min(0f)] private float bossFreezeImmunityDuration = 2.5f;
 
     [Header("Route Switching")]
     [SerializeField] private bool canSwitchRoute = true;
@@ -47,6 +57,15 @@ public class Enemy : MonoBehaviour
     private float nextPoisonTickTime;
     private float stunEndTime;
     private float stunImmunityEndTime;
+    private float burnTickDamage;
+    private float burnTickInterval;
+    private float burnEndTime;
+    private float nextBurnTickTime;
+    private float freezeEndTime;
+    private float freezeImmunityEndTime;
+    private float markEndTime;
+    private bool markActive;
+    private int chillStacks;
     private float baseMaxHealth;
     private float baseMoveSpeed;
     private int baseManaReward;
@@ -71,15 +90,32 @@ public class Enemy : MonoBehaviour
     public float CurrentHealth => currentHealth;
     public int ManaReward => manaReward;
     public int LeakDamage => leakDamage;
-    public bool IsBoss => isBoss;
+    public bool IsBoss => isBoss || tier == EnemyTier.Boss;
+    public bool IsElite => !IsBoss && tier == EnemyTier.Elite;
+    public EnemyTier Tier => IsBoss ? EnemyTier.Boss : tier;
     public bool IsTargetable => !isDead && isActiveAndEnabled && currentRoute != null;
+
+    public void SetEnemyTier(EnemyTier enemyTier)
+    {
+        tier = enemyTier;
+        isBoss = enemyTier == EnemyTier.Boss;
+    }
     public bool IsSlowed => !isDead && Time.time < slowEndTime;
     public bool IsPoisoned => !isDead && Time.time < poisonEndTime;
+    public bool IsBurning => !isDead && Time.time < burnEndTime;
     public bool IsStunned => !isDead && Time.time < stunEndTime;
+    public bool IsFrozen => !isDead && Time.time < freezeEndTime;
+    public bool IsImmobilized => IsStunned || IsFrozen;
+    public bool IsMarked => !isDead && markActive && (markEndTime < 0f || Time.time < markEndTime);
+    public int ChillStacks => isDead ? 0 : Mathf.Max(0, chillStacks);
     public bool IsStunImmune => !isDead && Time.time < stunImmunityEndTime;
+    public bool IsFreezeImmune => !isDead && Time.time < freezeImmunityEndTime;
     public bool CanReceiveStun => CanReceiveStunNow();
+    public bool CanReceiveFreeze => CanReceiveFreezeNow();
     public float RemainingStunDuration => Mathf.Max(0f, stunEndTime - Time.time);
+    public float RemainingFreezeDuration => Mathf.Max(0f, freezeEndTime - Time.time);
     public float StunImmunityRemaining => Mathf.Max(0f, stunImmunityEndTime - Mathf.Max(Time.time, stunEndTime));
+    public float FreezeImmunityRemaining => Mathf.Max(0f, freezeImmunityEndTime - Mathf.Max(Time.time, freezeEndTime));
     public float CurrentMoveSpeed => currentMoveSpeed;
     public float RemainingRouteDistance
     {
@@ -213,7 +249,7 @@ public class Enemy : MonoBehaviour
 
     public void SwitchRoute(EnemyRoute newRoute)
     {
-        if (IsStunned || newRoute == null || newRoute == currentRoute)
+        if (IsImmobilized || newRoute == null || newRoute == currentRoute)
             return;
 
         currentRoute = newRoute;
@@ -233,9 +269,12 @@ public class Enemy : MonoBehaviour
 
         UpdateSlow();
         UpdatePoison();
+        UpdateBurn();
         UpdateStun();
+        UpdateFreeze();
+        UpdateMark();
 
-        if (isDead || IsStunned)
+        if (isDead || IsImmobilized)
             return;
 
         if (canSwitchRoute)
@@ -435,6 +474,33 @@ public class Enemy : MonoBehaviour
         GameplayEvents.RaiseStatusApplied(this, GameplayEvents.StatusPoison);
     }
 
+    /// <summary>
+    /// Fire DoT channel (Phase 4). Refresh rules match poison but deal Fire damage.
+    /// </summary>
+    public void ApplyBurn(float tickDamage, float duration, float tickInterval)
+    {
+        ApplyBurn(tickDamage, duration, tickInterval, null);
+    }
+
+    public void ApplyBurn(float tickDamage, float duration, float tickInterval, Sprite statusIcon)
+    {
+        if (isDead || tickDamage <= 0f || duration <= 0f || tickInterval <= 0f)
+            return;
+
+        bool wasBurning = IsBurning;
+        burnTickDamage = wasBurning ? Mathf.Max(burnTickDamage, tickDamage) : tickDamage;
+        burnTickInterval = wasBurning ? Mathf.Min(burnTickInterval, tickInterval) : tickInterval;
+        burnEndTime = Time.time + duration;
+
+        if (!wasBurning)
+            nextBurnTickTime = Time.time + burnTickInterval;
+        else
+            nextBurnTickTime = Mathf.Min(nextBurnTickTime, Time.time + burnTickInterval);
+
+        combatFeedback?.ShowStatus(EnemyStatusType.Burn, duration, statusIcon);
+        GameplayEvents.RaiseStatusApplied(this, GameplayEvents.StatusBurn);
+    }
+
     public bool TryApplyStun(float duration, Sprite statusIcon = null)
     {
         if (duration <= 0f || !CanReceiveStunNow())
@@ -458,9 +524,155 @@ public class Enemy : MonoBehaviour
         TryApplyStun(duration, statusIcon);
     }
 
+    /// <summary>
+    /// Root/stop movement. Independent from stun immunity (see <see cref="EnemyStatusRules.FreezeVsStun"/>).
+    /// </summary>
+    public bool TryApplyFreeze(float duration, Sprite statusIcon = null)
+    {
+        if (duration <= 0f || !CanReceiveFreezeNow())
+            return false;
+
+        float durationMultiplier = IsBoss ? bossFreezeDurationMultiplier : 1f;
+        float effectiveDuration = duration * Mathf.Clamp01(durationMultiplier);
+        if (effectiveDuration <= 0f)
+            return false;
+
+        float immunityDuration = IsBoss ? bossFreezeImmunityDuration : freezeImmunityDuration;
+        freezeEndTime = Time.time + effectiveDuration;
+        freezeImmunityEndTime = freezeEndTime + Mathf.Max(0f, immunityDuration);
+        combatFeedback?.ShowStatus(EnemyStatusType.Freeze, effectiveDuration, statusIcon);
+        GameplayEvents.RaiseStatusApplied(this, GameplayEvents.StatusFreeze);
+        return true;
+    }
+
+    public void ApplyFreeze(float duration, Sprite statusIcon = null)
+    {
+        TryApplyFreeze(duration, statusIcon);
+    }
+
+    /// <param name="durationSeconds">
+    /// Duration of the mark. Pass a negative value for until-death / until <see cref="ClearMark"/>.
+    /// </param>
+    public void ApplyMark(float durationSeconds = -1f, Sprite statusIcon = null)
+    {
+        if (isDead)
+            return;
+
+        markActive = true;
+        markEndTime = durationSeconds < 0f ? -1f : Time.time + durationSeconds;
+        float feedbackDuration = durationSeconds < 0f ? 999f : durationSeconds;
+        combatFeedback?.ShowStatus(EnemyStatusType.Mark, feedbackDuration, statusIcon);
+        GameplayEvents.RaiseStatusApplied(this, GameplayEvents.StatusMark);
+    }
+
+    public void ClearMark()
+    {
+        if (!markActive)
+            return;
+
+        markActive = false;
+        markEndTime = 0f;
+        combatFeedback?.HideStatus(EnemyStatusType.Mark);
+        GameplayEvents.RaiseStatusExpired(this, GameplayEvents.StatusMark);
+    }
+
+    public int AddChillStack(int amount = 1, int softCap = 0)
+    {
+        if (isDead || amount <= 0)
+            return ChillStacks;
+
+        chillStacks += amount;
+        if (softCap > 0)
+            chillStacks = Mathf.Min(chillStacks, softCap);
+        return chillStacks;
+    }
+
+    public void ClearChillStacks()
+    {
+        chillStacks = 0;
+    }
+
+    /// <summary>
+    /// Strips selected statuses immediately (Radiant Cleanse / Fairy cleanse). Returns how many were active.
+    /// </summary>
+    public int ClearStatuses(EnemyStatusClearFlags flags)
+    {
+        if (isDead || flags == EnemyStatusClearFlags.None)
+            return 0;
+
+        int cleared = 0;
+
+        if ((flags & EnemyStatusClearFlags.Slow) != 0 && IsSlowed)
+        {
+            slowEndTime = 0f;
+            activeSlowPercent = 0f;
+            currentMoveSpeed = moveSpeed;
+            combatFeedback?.HideStatus(EnemyStatusType.Slow);
+            GameplayEvents.RaiseStatusExpired(this, GameplayEvents.StatusSlow);
+            cleared++;
+        }
+
+        if ((flags & EnemyStatusClearFlags.Poison) != 0 && IsPoisoned)
+        {
+            poisonEndTime = 0f;
+            poisonTickDamage = 0f;
+            poisonTickInterval = 0f;
+            nextPoisonTickTime = 0f;
+            combatFeedback?.HideStatus(EnemyStatusType.Poison);
+            GameplayEvents.RaiseStatusExpired(this, GameplayEvents.StatusPoison);
+            cleared++;
+        }
+
+        if ((flags & EnemyStatusClearFlags.Burn) != 0 && IsBurning)
+        {
+            burnEndTime = 0f;
+            burnTickDamage = 0f;
+            burnTickInterval = 0f;
+            nextBurnTickTime = 0f;
+            combatFeedback?.HideStatus(EnemyStatusType.Burn);
+            GameplayEvents.RaiseStatusExpired(this, GameplayEvents.StatusBurn);
+            cleared++;
+        }
+
+        if ((flags & EnemyStatusClearFlags.Stun) != 0 && IsStunned)
+        {
+            stunEndTime = 0f;
+            combatFeedback?.HideStatus(EnemyStatusType.Stun);
+            GameplayEvents.RaiseStatusExpired(this, GameplayEvents.StatusStun);
+            cleared++;
+        }
+
+        if ((flags & EnemyStatusClearFlags.Freeze) != 0 && IsFrozen)
+        {
+            freezeEndTime = 0f;
+            combatFeedback?.HideStatus(EnemyStatusType.Freeze);
+            GameplayEvents.RaiseStatusExpired(this, GameplayEvents.StatusFreeze);
+            cleared++;
+        }
+
+        if ((flags & EnemyStatusClearFlags.Mark) != 0 && markActive)
+        {
+            ClearMark();
+            cleared++;
+        }
+
+        if ((flags & EnemyStatusClearFlags.Chill) != 0 && chillStacks > 0)
+        {
+            ClearChillStacks();
+            cleared++;
+        }
+
+        return cleared;
+    }
+
     protected virtual bool CanReceiveStunNow()
     {
         return !isDead && isActiveAndEnabled && Time.time >= stunImmunityEndTime;
+    }
+
+    protected virtual bool CanReceiveFreezeNow()
+    {
+        return !isDead && isActiveAndEnabled && Time.time >= freezeImmunityEndTime;
     }
 
     private void UpdateSlow()
@@ -471,6 +683,7 @@ public class Enemy : MonoBehaviour
         slowEndTime = 0f;
         activeSlowPercent = 0f;
         currentMoveSpeed = moveSpeed;
+        GameplayEvents.RaiseStatusExpired(this, GameplayEvents.StatusSlow);
     }
 
     private void UpdatePoison()
@@ -490,13 +703,56 @@ public class Enemy : MonoBehaviour
             poisonTickDamage = 0f;
             poisonTickInterval = 0f;
             nextPoisonTickTime = 0f;
+            GameplayEvents.RaiseStatusExpired(this, GameplayEvents.StatusPoison);
+        }
+    }
+
+    private void UpdateBurn()
+    {
+        if (burnEndTime <= 0f)
+            return;
+
+        while (!isDead && nextBurnTickTime <= burnEndTime && Time.time >= nextBurnTickTime)
+        {
+            nextBurnTickTime += burnTickInterval;
+            TakeDamage(burnTickDamage, EnemyDamageType.Fire);
+        }
+
+        if (Time.time >= burnEndTime)
+        {
+            burnEndTime = 0f;
+            burnTickDamage = 0f;
+            burnTickInterval = 0f;
+            nextBurnTickTime = 0f;
+            GameplayEvents.RaiseStatusExpired(this, GameplayEvents.StatusBurn);
         }
     }
 
     private void UpdateStun()
     {
         if (stunEndTime > 0f && Time.time >= stunEndTime)
+        {
             stunEndTime = 0f;
+            GameplayEvents.RaiseStatusExpired(this, GameplayEvents.StatusStun);
+        }
+    }
+
+    private void UpdateFreeze()
+    {
+        if (freezeEndTime > 0f && Time.time >= freezeEndTime)
+        {
+            freezeEndTime = 0f;
+            GameplayEvents.RaiseStatusExpired(this, GameplayEvents.StatusFreeze);
+        }
+    }
+
+    private void UpdateMark()
+    {
+        if (!markActive || markEndTime < 0f)
+            return;
+
+        if (Time.time >= markEndTime)
+            ClearMark();
     }
 
     public void ShowStatusIndicator(EnemyStatusType statusType, float duration)
@@ -511,6 +767,8 @@ public class Enemy : MonoBehaviour
             return;
 
         isDead = true;
+        if (markActive)
+            ClearMark();
         combatFeedback?.PlayDeath();
 
         if (manaReward > 0)
@@ -559,5 +817,8 @@ public class Enemy : MonoBehaviour
         stunImmunityDuration = Mathf.Max(0f, stunImmunityDuration);
         bossStunDurationMultiplier = Mathf.Clamp01(bossStunDurationMultiplier);
         bossStunImmunityDuration = Mathf.Max(0f, bossStunImmunityDuration);
+        freezeImmunityDuration = Mathf.Max(0f, freezeImmunityDuration);
+        bossFreezeDurationMultiplier = Mathf.Clamp01(bossFreezeDurationMultiplier);
+        bossFreezeImmunityDuration = Mathf.Max(0f, bossFreezeImmunityDuration);
     }
 }

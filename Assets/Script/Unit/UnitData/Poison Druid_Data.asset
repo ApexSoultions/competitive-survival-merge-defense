@@ -15,10 +15,10 @@ MonoBehaviour:
   unitId: unit_poison_druid
   unitName: Plague Doctor
   tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
-  icon: {fileID: -6548289768654288691, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  icon: {fileID: -8848249794161074486, guid: 3013ac92200a0fd4abacdf494b8471bc, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 390aac486c87448429418b40a4b7047c, type: 3}
   levelIcons:
-  - {fileID: -6548289768654288691, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  - {fileID: -8848249794161074486, guid: 3013ac92200a0fd4abacdf494b8471bc, type: 3}
   levelPrefabs:
   - {fileID: 3444463731680135898, guid: 390aac486c87448429418b40a4b7047c, type: 3}
   - {fileID: 3444463731680135898, guid: 5006af6d5a7fd7b4abeb8317c9c8c9cd, type: 3}
@@ -79,7 +79,8 @@ MonoBehaviour:
   abilityL20:
     id: poison_druid_l20_growing_epidemic
     displayName: Growing Epidemic
-    description: 5 poisoned enemies for 3 continuous seconds grants permanent Poison damage.
+    description: 5 poisoned enemies for 3 continuous seconds grants permanent Poison
+      damage.
     power: 3
     radius: 0
     durationSeconds: 3

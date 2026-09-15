@@ -47,22 +47,51 @@ public class ManaHudUI : MonoBehaviour
             manaText.text = newMana.ToString();
     }
 
+    /// <summary>
+    /// World position for mana orb VFX — ManaPanel center on the gameplay plane.
+    /// Returns <paramref name="fallback"/> if the HUD projects outside the bottom-left screen region.
+    /// </summary>
     public Vector3 GetManaVfxWorldPosition(Vector3 fallback)
     {
-        if (manaText == null)
+        RectTransform panel = transform as RectTransform;
+        if (panel == null && manaText != null)
+            panel = manaText.rectTransform;
+        if (panel == null)
             return fallback;
 
-        Canvas canvas = manaText.GetComponentInParent<Canvas>();
-        Camera camera = Camera.main;
-        if (canvas != null && canvas.renderMode == RenderMode.ScreenSpaceOverlay && camera != null)
-        {
-            Vector3 screenPosition = manaText.rectTransform.position;
-            screenPosition.z = Mathf.Abs(camera.transform.position.z);
-            Vector3 world = camera.ScreenToWorldPoint(screenPosition);
-            world.z = fallback.z;
-            return world;
-        }
+        if (!TryGetHudScreenCenter(panel, out Vector2 screenCenter))
+            return fallback;
 
-        return manaText.transform.position;
+        // Mana counter is bottom-left footer — reject wrong-side / off-map projections.
+        if (screenCenter.x > Screen.width * 0.45f || screenCenter.y > Screen.height * 0.45f)
+            return fallback;
+
+        Vector3 world = CanvasMapSpace.ScreenToGameplayWorld(screenCenter);
+        if (!IsFinite(world))
+            return fallback;
+
+        world.z = fallback.z;
+        return world;
+    }
+
+    private static bool TryGetHudScreenCenter(RectTransform panel, out Vector2 screenCenter)
+    {
+        screenCenter = default;
+        Camera camera = Camera.main;
+        if (panel == null || camera == null)
+            return false;
+
+        Vector3[] corners = new Vector3[4];
+        panel.GetWorldCorners(corners);
+
+        Vector2 a = RectTransformUtility.WorldToScreenPoint(camera, corners[0]);
+        Vector2 b = RectTransformUtility.WorldToScreenPoint(camera, corners[2]);
+        screenCenter = (a + b) * 0.5f;
+        return float.IsFinite(screenCenter.x) && float.IsFinite(screenCenter.y);
+    }
+
+    private static bool IsFinite(Vector3 value)
+    {
+        return float.IsFinite(value.x) && float.IsFinite(value.y) && float.IsFinite(value.z);
     }
 }

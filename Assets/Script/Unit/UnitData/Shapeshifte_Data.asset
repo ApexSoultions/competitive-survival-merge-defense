@@ -15,10 +15,10 @@ MonoBehaviour:
   unitId: unit_shapeshifter
   unitName: Shapeshifter
   tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
-  icon: {fileID: -4548189851348124799, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  icon: {fileID: -6146044945944285302, guid: 548d9a42e616ff84a868623a098b34ea, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 0603fb5c630e44448be8a6ac34932032, type: 3}
   levelIcons:
-  - {fileID: -4548189851348124799, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  - {fileID: -6146044945944285302, guid: 548d9a42e616ff84a868623a098b34ea, type: 3}
   levelPrefabs:
   - {fileID: 3444463731680135898, guid: 0603fb5c630e44448be8a6ac34932032, type: 3}
   - {fileID: 3444463731680135898, guid: ee9f893e6aeefe449991143897f0b51e, type: 3}
@@ -28,7 +28,7 @@ MonoBehaviour:
   - {fileID: 3444463731680135898, guid: 6bf1ef460fa90fb49bc3edc1cbe879d7, type: 3}
   manaCost: 50
   attackDamage: 6
-  attackSpeed: 0.8000
+  attackSpeed: 0.8
   attackRange: 99
   baseDamage: 6
   baseAttackInterval: 1.25
@@ -47,7 +47,8 @@ MonoBehaviour:
   abilityL1:
     id: shapeshifter_l1_adaptive_form
     displayName: Adaptive Form
-    description: Drag onto same-ML allied non-Shapeshifter to permanently copy at reduced efficiency.
+    description: Drag onto same-ML allied non-Shapeshifter to permanently copy at
+      reduced efficiency.
     power: 85
     radius: 0
     durationSeconds: 0
@@ -79,7 +80,8 @@ MonoBehaviour:
   abilityL20:
     id: shapeshifter_l20_master_of_adaptation
     displayName: Master of Adaptation
-    description: Repeated transformations raise copy efficiency toward soft cap; overflow extends Refined Echo.
+    description: Repeated transformations raise copy efficiency toward soft cap;
+      overflow extends Refined Echo.
     power: 2
     radius: 0
     durationSeconds: 0

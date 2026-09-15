@@ -83,9 +83,7 @@ public sealed class LightFairyAbility : TowerAbilityBase
             return false;
         }
 
-        // Sheet: cannot bless another Light Fairy.
-        if (target.GetComponent<LightFairyAbility>() != null)
-            return false;
+        // Client: Fairy may bless another Fairy (same merge level, below max).
 
         int maxTargetLevel = UnitData.MaximumLevel - 1;
         if (AbilityRuntime != null && AbilityRuntime.IsTierActive(UnitAbilityTier.L1))

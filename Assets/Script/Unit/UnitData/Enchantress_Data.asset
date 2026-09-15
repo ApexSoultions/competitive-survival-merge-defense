@@ -15,10 +15,10 @@ MonoBehaviour:
   unitId: unit_enchanter
   unitName: Enchantress
   tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
-  icon: {fileID: -2292151009730567627, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  icon: {fileID: 3703249356803325969, guid: 2505a72ded1d75f42b228ca363128ff1, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 6730feba00bb8a7419895862d92f97a2, type: 3}
   levelIcons:
-  - {fileID: -2292151009730567627, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  - {fileID: 3703249356803325969, guid: 2505a72ded1d75f42b228ca363128ff1, type: 3}
   levelPrefabs:
   - {fileID: 3444463731680135898, guid: 6730feba00bb8a7419895862d92f97a2, type: 3}
   - {fileID: 3444463731680135898, guid: 961a16cdaacec38458e0fb4fe305a829, type: 3}
@@ -47,7 +47,8 @@ MonoBehaviour:
   abilityL1:
     id: enchanter_l1_rune_grid
     displayName: Rune Grid
-    description: Creates Rune Tiles on adjacent spaces; allies on tiles gain bonus damage.
+    description: Creates Rune Tiles on adjacent spaces; allies on tiles gain bonus
+      damage.
     power: 10
     radius: 4
     durationSeconds: 0
@@ -63,7 +64,8 @@ MonoBehaviour:
   abilityL10:
     id: enchanter_l10_resonant_formation
     displayName: Resonant Formation
-    description: If at least 3 Rune Tiles are occupied, units on tiles gain attack-speed bonus.
+    description: If at least 3 Rune Tiles are occupied, units on tiles gain attack-speed
+      bonus.
     power: 6
     radius: 0
     durationSeconds: 0

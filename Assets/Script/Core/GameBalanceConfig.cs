@@ -25,21 +25,23 @@ public class GameBalanceConfig : ScriptableObject
     [Range(1, 6)] public int deckUnitSlots = 6;
     [Range(1, 2)] public int globalActiveSlots = 2;
 
-    [Header("Phase 5 — Account ability unlocks")]
-    [Tooltip("Account level required for unit L10 abilities. L1 is always on.")]
+    [Header("Unit ability unlocks (per-unit collection level)")]
+    [Tooltip("Unit collection level required for that unit's L10 ability. L1 is always on.")]
     [Min(1)] public int l10UnlockAccountLevel = 10;
-    [Tooltip("Account level required for unit L20 abilities.")]
+    [Tooltip("Unit collection level required for that unit's L20 ability.")]
     [Min(1)] public int l20UnlockAccountLevel = 20;
-    [Tooltip("DEV: when true, all L1/L10/L20 tiers stay active (pre-Phase-5 behavior). Turn off to test real gating.")]
+    [Tooltip("DEV: when true, all L1/L10/L20 tiers stay active. Turn off to test real per-unit gating.")]
     public bool debugForceAllAbilityTiers = true;
+    [Tooltip("DEV: show in-game Ability Test panel (Hub/Battle) so client can set unit levels and test L20 stacks.")]
+    public bool showAbilityTestPanel = true;
 
-    public bool IsL10Unlocked(int accountLevel)
+    public bool IsL10Unlocked(int unitCollectionLevel)
     {
-        return accountLevel >= Mathf.Max(1, l10UnlockAccountLevel);
+        return unitCollectionLevel >= Mathf.Max(1, l10UnlockAccountLevel);
     }
 
-    public bool IsL20Unlocked(int accountLevel)
+    public bool IsL20Unlocked(int unitCollectionLevel)
     {
-        return accountLevel >= Mathf.Max(1, l20UnlockAccountLevel);
+        return unitCollectionLevel >= Mathf.Max(1, l20UnlockAccountLevel);
     }
 }

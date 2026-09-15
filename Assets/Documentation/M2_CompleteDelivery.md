@@ -17,7 +17,7 @@ This document summarizes **everything delivered in Milestone 2**, including numb
 | Unit combat from ScriptableObjects | Done — stats + L1/L10/L20 tiers on `UnitData` |
 | All roster unit behaviors | Done — 11 base units + Dragon |
 | Status framework (Burn / Freeze / Mark / Shield / Cleanse) | Done |
-| Account unlock for L10 / L20 | Done — shared account level gates |
+| Per-unit unlock for L10 / L20 | Done — each unit level 1–50 gates that unit |
 | Hub main menu + deck building GUI | Done — loadout on `Main_UI` |
 | Dragon unit with shared sprite animation | Done — extensible anim system |
 
@@ -31,7 +31,7 @@ This document summarizes **everything delivered in Milestone 2**, including numb
 | **2** | Unit data / SO combat stats + targeting | Complete |
 | **3** | All units L1 / L10 / L20 behaviors from SO | Complete |
 | **4** | Burn / Freeze / Mark / Shield / Cleanse | Complete |
-| **5** | Account unlock gating for L10 / L20 | Complete |
+| **5** | Per-unit unlock gating for L10 / L20 | Complete (client MVP) |
 | **6** | APK + formal docs/QA pack | In progress / developer APK |
 
 ---
@@ -84,9 +84,9 @@ This document summarizes **everything delivered in Milestone 2**, including numb
 **Merge rules (Option B, client)**
 
 - Same-type same-level merge → **random deck unit at +1**
-- Cannot merge into Light Fairy (including Fairy→Fairy)
-- Fairy → other → bless (target type +1)
-- Shapeshifter → other → copy; Shapeshifter → Shapeshifter → random merge
+- Fairy → ally (including Fairy) → bless (target merge level +1; Fairy consumed)
+- Shapeshifter → other (including Fairy) → copy; Shapeshifter → Shapeshifter → random merge
+- Other units still cannot random-merge onto Light Fairy
 
 **Key paths:** `Assets/Script/Abilities/UnitAbilityRuntime.cs`, unit ability scripts under `Assets/Script/Abilities/`, `Assets/Script/Merge/MergeManager.cs`
 
@@ -100,7 +100,7 @@ This document summarizes **everything delivered in Milestone 2**, including numb
 |--------|------|--------|
 | Slow | **S** | Frost Witch L1, Frost Nova |
 | Poison | **P** | Existing poison path |
-| Stun | **!** | Stone Guardian path |
+| Stun | **!** | Stone Guardian Crushing Blow (on-hit) |
 | Burn | **B** | Fire Mage L10 (and Dragon) |
 | Freeze | **F** | Frost Witch L10 chill → freeze + shatter |
 | Mark | **M** | Magic Archer / Shadow Assassin |
@@ -115,25 +115,25 @@ See play table in `Assets/Content/Units/README.md` (Phase 4 checklist).
 
 ---
 
-## 7. Phase 5 — Account L10 / L20 unlock gating
+## 7. Phase 5 — Per-unit L10 / L20 unlock gating
 
 **What shipped**
 
-- Persisted account level: `SaveKeys.AccountLevel` + `AccountProgressService`.
-- Thresholds on `GameBalanceConfig`: L10 @ **10**, L20 @ **20**.
+- Persisted per-unit levels: `SaveKeys.UnitLevels` + `UnitProgressService` (1–50).
+- Thresholds on `GameBalanceConfig`: L10 @ **10**, L20 @ **20** (per that unit’s level).
 - `debugForceAllAbilityTiers` — when **ON**, all tiers active (client demo); when **OFF**, real gating.
-- `UnitAbilityRuntime` sets `IsL10Active` / `IsL20Active` on bind.
-- QA: **Tools → Account → Set Level 1 / 10 / 20**
-- Hub header can show the **numeric** level via `HubHeaderView` (assign TMP to purple badge).
+- `UnitAbilityRuntime` sets `IsL10Active` / `IsL20Active` from the tower’s `unitId` level on bind.
+- QA: **DEV Abilities** in-game panel (`showAbilityTestPanel`) + **Tools → Units → Set Unit Level…**
+- Hub header does **not** show account level as MVP player level.
 
-| Account | L10 | L20 |
-|---------|-----|-----|
+| Unit level | L10 | L20 |
+|------------|-----|-----|
 | 1–9 | Off | Off |
 | 10–19 | On | Off |
-| 20+ | On | On |
+| 20–50 | On | On |
 
 **Client demo tip:** leave **Debug Force All Ability Tiers = ON**.  
-**Shipping / progression demo:** force **OFF** + set account level.
+**Shipping / stack testing:** force **OFF** + set unit level 20.
 
 ---
 
@@ -145,7 +145,7 @@ Integrated client GUI / screens for the hub loadout flow on **`Main_UI`**.
 
 - Footer tabs: Shop / Team / Battle / Clan / Event (`HubFooterTabController` + sprites).
 - Screens: `Battle_Screen`, `Deck_Building`; Edit opens deck builder.
-- Header: currencies + profile; account level number via `HubHeaderView`.
+- Header: currencies + profile; account level badge unused in MVP (`HubHeaderView` shows —).
 - Orchestration: `HubScreenNavigator`, `HubBattleLauncher`, `HubModalRouter`, `MainMenuUI` thin shell.
 - Safe area / mobile layout via `MobileCanvasAdapter` where present.
 
@@ -218,7 +218,7 @@ Integrated client GUI / screens for the hub loadout flow on **`Main_UI`**.
 | **Game → Foundation → Smoke Unit Merge Ladder** | ML1–ML6 intervals |
 | **Game → Foundation → Validate Android Player Settings** | Android baseline |
 | **Tools → Prototype → Validate Gameplay Content** | Prefabs / abilities / projectiles |
-| **Tools → Account → Set Level 1 / 10 / 20** | Phase 5 QA |
+| **Tools → Units → Set Unit Level…** | Per-unit L10/L20 QA |
 
 Play checklists: `Assets/Content/Units/README.md`, `Assets/Content/Abilities/README.md`
 
@@ -243,8 +243,8 @@ Play checklists: `Assets/Content/Units/README.md`, `Assets/Content/Abilities/REA
 | Item | Notes |
 |------|--------|
 | Phase 6 APK | Developer builds `Build_Apk/MergeDefense_M2.apk` (not in git) |
-| Full XP / rewards → account level | Level is persisted; match XP curve not fully meta-polished |
-| Hub level badge wiring | Code writes the number; assign TMP on purple badge in Inspector if empty |
+| Full XP / rewards → unit levels 1–50 | Levels persist + Tools set for MVP; match XP later |
+| Hub level badge | Unused in MVP (shows —); unlocks are per-unit |
 | Shop / Clan / Event tabs | “Coming soon” placeholders |
 | Burn Effect SetParent race | Occasional console error when enemy enables/disables; non-blocking for gating |
 | Milestone 3+ | Enemies / waves / meta economy expansion |
@@ -257,7 +257,7 @@ Play checklists: `Assets/Content/Units/README.md`, `Assets/Content/Abilities/REA
 2. Save a deck with Fire Mage / Frost Witch / Dragon + 2 actives.  
 3. Battle: summon, merge (Option B), cast Meteor / Frost Nova.  
 4. Show Burn **B**, Freeze **F**, Slow **S**.  
-5. (Optional) Force-all **off**, Tools → Account Level 1 vs 20 → show L10/L20 difference.  
+5. (Optional) Force-all **off**, Tools → Units → Set Unit Level 1 vs 20 → show L10/L20 difference.  
 6. Dragon: idle + attack animation + fireball.
 
 ---

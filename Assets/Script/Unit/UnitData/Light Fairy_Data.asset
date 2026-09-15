@@ -15,10 +15,10 @@ MonoBehaviour:
   unitId: unit_light_fairy
   unitName: Light Fairy
   tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
-  icon: {fileID: 4164213114258598589, guid: 957bf6712d387e54bac97a7896c6f1cf, type: 3}
+  icon: {fileID: 1283988477320149257, guid: 588f511c95d662b43bde4087053798dd, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 6c3153cb332c94b4f843877c3064fabf, type: 3}
   levelIcons:
-  - {fileID: 4164213114258598589, guid: 957bf6712d387e54bac97a7896c6f1cf, type: 3}
+  - {fileID: 1283988477320149257, guid: 588f511c95d662b43bde4087053798dd, type: 3}
   levelPrefabs:
   - {fileID: 3444463731680135898, guid: 6c3153cb332c94b4f843877c3064fabf, type: 3}
   - {fileID: 3444463731680135898, guid: e3d3a8c2f8e961d43abc969516406ad0, type: 3}
@@ -77,7 +77,8 @@ MonoBehaviour:
   abilityL20:
     id: light_fairy_l20_guiding_light
     displayName: Guiding Light
-    description: Each successful Radiant Blessing permanently increases future mana refunds.
+    description: Each successful Radiant Blessing permanently increases future mana
+      refunds.
     power: 2
     radius: 0
     durationSeconds: 0

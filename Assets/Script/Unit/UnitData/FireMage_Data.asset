@@ -63,7 +63,8 @@ MonoBehaviour:
   abilityL10:
     id: fire_mage_l10_burning_trail
     displayName: Burning Trail
-    description: Enemies hit by Flame Burst burn for 15% attack damage/sec for 3s (refresh).
+    description: Enemies hit by Flame Burst burn for 15% attack damage/sec for 3s
+      (refresh).
     power: 15
     radius: 0
     durationSeconds: 3
@@ -77,7 +78,8 @@ MonoBehaviour:
   abilityL20:
     id: fire_mage_l20_rising_heat
     displayName: Rising Heat
-    description: When one attack damages at least 3 enemies, permanently gain attack speed.
+    description: When one attack damages at least 3 enemies, permanently gain attack
+      speed.
     power: 2
     radius: 0
     durationSeconds: 0

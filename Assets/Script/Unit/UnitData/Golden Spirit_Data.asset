@@ -15,10 +15,10 @@ MonoBehaviour:
   unitId: unit_gold_spirit
   unitName: Golden Spirit
   tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
-  icon: {fileID: -2086051523239133244, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  icon: {fileID: -7031235519829474732, guid: b34e223895efa6048b90a817bc3e8de3, type: 3}
   prefab: {fileID: 3444463731680135898, guid: bdc1c8843ef7f1d4a9ee75b0a5c10e69, type: 3}
   levelIcons:
-  - {fileID: -2086051523239133244, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  - {fileID: -7031235519829474732, guid: b34e223895efa6048b90a817bc3e8de3, type: 3}
   levelPrefabs:
   - {fileID: 3444463731680135898, guid: bdc1c8843ef7f1d4a9ee75b0a5c10e69, type: 3}
   - {fileID: 3444463731680135898, guid: 9125060ba22312749894679e35d16f49, type: 3}
@@ -28,10 +28,10 @@ MonoBehaviour:
   - {fileID: 3444463731680135898, guid: 6aa610d283ffab84ab81b608addcedde, type: 3}
   manaCost: 50
   attackDamage: 3
-  attackSpeed: 0.5000
+  attackSpeed: 0.5
   attackRange: 99
   baseDamage: 3
-  baseAttackInterval: 2.0
+  baseAttackInterval: 2
   baseAttackRange: 99
   criticalChance: 0.12
   criticalDamageMultiplier: 1.65
@@ -89,7 +89,8 @@ MonoBehaviour:
   abilityL20:
     id: gold_spirit_l20_golden_legacy
     displayName: Golden Legacy
-    description: Each defeated Boss permanently improves Treasure Pulse mana for all Gold Spirits.
+    description: Each defeated Boss permanently improves Treasure Pulse mana for
+      all Gold Spirits.
     power: 8
     radius: 0
     durationSeconds: 0

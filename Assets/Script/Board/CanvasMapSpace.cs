@@ -145,7 +145,10 @@ public static class CanvasMapSpace
         ConfigureMapCanvasForGameplay();
         ForceCanvasUpdateOncePerFrame();
 
-        Camera canvasCamera = GetCanvasCamera(sourceCanvas);
+        // Nested override-sorting canvases default to Overlay while still living in SSC world space.
+        // Always project through the root canvas camera so HUD widgets (mana, etc.) land on the gameplay plane.
+        Canvas rootCanvas = sourceCanvas.rootCanvas != null ? sourceCanvas.rootCanvas : sourceCanvas;
+        Camera canvasCamera = GetCanvasCamera(rootCanvas);
 
         Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(canvasCamera, source.position);
 

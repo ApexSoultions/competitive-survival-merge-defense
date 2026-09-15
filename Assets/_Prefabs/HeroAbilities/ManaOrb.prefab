@@ -225,6 +225,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ManaOrbVfx
   travelDuration: 0.65
-  arcHeight: 1.1
+  arcHeight: 0.28
   orbColor: {r: 1, g: 0.78, b: 0.12, a: 1}
   useTrailRenderer: 0

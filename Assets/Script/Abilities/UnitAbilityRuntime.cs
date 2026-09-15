@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Per-tower host for unit ability tiers. Reads L1/L10/L20 from <see cref="UnitData"/>.
-/// Phase 5: L10/L20 gated by <see cref="AccountProgressService"/> + <see cref="GameBalanceConfig"/>.
+/// L10/L20 gated by that unit's collection level (<see cref="UnitProgressService"/>) + <see cref="GameBalanceConfig"/>.
 /// </summary>
 [DisallowMultipleComponent]
 public sealed class UnitAbilityRuntime : MonoBehaviour
@@ -23,8 +23,29 @@ public sealed class UnitAbilityRuntime : MonoBehaviour
     public void Bind(BoardTower owner)
     {
         boardTower = owner;
-        ApplyAccountTierGating();
+        ApplyUnitTierGating();
         ConfigureL20StacksFromData();
+    }
+
+    /// <summary>Re-read collection level / force-all and update L10/L20 flags (keeps current L20 stacks).</summary>
+    public void RefreshGating()
+    {
+        ApplyUnitTierGating();
+    }
+
+    /// <summary>Refresh gating on every live <see cref="UnitAbilityRuntime"/>.</summary>
+    public static void RefreshAllOnBoard()
+    {
+        UnitAbilityRuntime[] runtimes = Object.FindObjectsByType<UnitAbilityRuntime>(
+            FindObjectsInactive.Exclude,
+            FindObjectsSortMode.None);
+        for (int i = 0; i < runtimes.Length; i++)
+        {
+            if (runtimes[i] != null)
+                runtimes[i].RefreshGating();
+        }
+
+        Debug.Log("[UnitAbilityRuntime] RefreshAllOnBoard count=" + runtimes.Length);
     }
 
     public void TransferStacksFrom(UnitAbilityRuntime source)
@@ -155,28 +176,27 @@ public sealed class UnitAbilityRuntime : MonoBehaviour
         tower.ApplyAttackProfile(profile);
     }
 
-    private void ApplyAccountTierGating()
+    private void ApplyUnitTierGating()
     {
         IsL1Active = true;
 
         GameBalanceConfig balance = ResolveBalance();
-        int accountLevel = AccountProgressService.GetAccountLevel();
+        string unitId = UnitData != null ? UnitData.ResolvedId : string.Empty;
+        int unitLevel = UnitProgressService.GetUnitLevel(unitId);
 
-        if (balance != null && balance.debugForceAllAbilityTiers)
+        if (AbilityTestSession.GetForceAllAbilityTiers(balance))
         {
             IsL10Active = true;
             IsL20Active = true;
             Debug.Log(
-                "[UnitAbilityRuntime] gating forced ON (debugForceAllAbilityTiers) accountLv=" +
-                accountLevel + " L10=1 L20=1 — " +
-                (UnitData != null ? UnitData.ResolvedId : name),
+                "[UnitAbilityRuntime] gating forced ON unitLv=" +
+                unitLevel + " L10=1 L20=1 — " + unitId,
                 this);
             return;
         }
 
         if (balance == null)
         {
-            // Safe fallback: keep prior Option A behavior if balance asset is missing.
             IsL10Active = true;
             IsL20Active = true;
             Debug.LogWarning(
@@ -185,16 +205,16 @@ public sealed class UnitAbilityRuntime : MonoBehaviour
             return;
         }
 
-        IsL10Active = balance.IsL10Unlocked(accountLevel);
-        IsL20Active = balance.IsL20Unlocked(accountLevel);
+        IsL10Active = balance.IsL10Unlocked(unitLevel);
+        IsL20Active = balance.IsL20Unlocked(unitLevel);
 
         Debug.Log(
-            "[UnitAbilityRuntime] accountLv=" + accountLevel +
+            "[UnitAbilityRuntime] unitId=" + unitId +
+            " unitLv=" + unitLevel +
             " needL10=" + balance.l10UnlockAccountLevel +
             " needL20=" + balance.l20UnlockAccountLevel +
             " L10=" + (IsL10Active ? 1 : 0) +
-            " L20=" + (IsL20Active ? 1 : 0) +
-            " — " + (UnitData != null ? UnitData.ResolvedId : name),
+            " L20=" + (IsL20Active ? 1 : 0),
             this);
     }
 

@@ -15,10 +15,10 @@ MonoBehaviour:
   unitId: unit_stone_guardian
   unitName: Stone Guardian
   tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
-  icon: {fileID: 2081609225425774721, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  icon: {fileID: -4878705591515444931, guid: 569f61822010de841902a8ca10b67d2f, type: 3}
   prefab: {fileID: 3444463731680135898, guid: e4529c9cac202b34a84f96f7208b5417, type: 3}
   levelIcons:
-  - {fileID: 2081609225425774721, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  - {fileID: -4878705591515444931, guid: 569f61822010de841902a8ca10b67d2f, type: 3}
   levelPrefabs:
   - {fileID: 3444463731680135898, guid: e4529c9cac202b34a84f96f7208b5417, type: 3}
   - {fileID: 3444463731680135898, guid: 9a3910b511e658e4a9cadf7861fe8c25, type: 3}
@@ -47,19 +47,21 @@ MonoBehaviour:
   abilityL1:
     id: stone_guardian_l1_crushing_blow
     displayName: Crushing Blow
-    description: Bonus damage vs Elites (+30%) and Bosses (+15%).
+    description: On-hit stun; bonus damage vs Elites (+30%) and Bosses (+15%).
     power: 30
     radius: 0
-    durationSeconds: 0
+    durationSeconds: 0.8
     cooldownSeconds: 0
     maxStacks: 0
     stackRule: 0
     parameterNames:
     - eliteBonusPercent
     - bossBonusPercent
+    - stunDurationSeconds
     parameterValues:
     - 30
     - 15
+    - 0.8
   abilityL10:
     id: stone_guardian_l10_armor_fracture
     displayName: Armor Fracture

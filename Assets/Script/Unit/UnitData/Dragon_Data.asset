@@ -15,15 +15,15 @@ MonoBehaviour:
   unitId: unit_dragon
   unitName: Dragon
   tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
-  icon: {fileID: -2185634534687665938, guid: 1598496f569c2ee429485d64ae581141, type: 3}
+  icon: {fileID: -632589112207379440, guid: 3ee2af95205fdae448366b1d0470ab80, type: 3}
   prefab: {fileID: 3444463731680135898, guid: a11c0001d7a90144b8e1f2a3b4c5d601, type: 3}
   levelIcons:
-  - {fileID: -2185634534687665938, guid: 1598496f569c2ee429485d64ae581141, type: 3}
-  - {fileID: -5178189745461699107, guid: ad7c9ea9a417908499813e1e4d0bbc77, type: 3}
-  - {fileID: 2594620442961722465, guid: cd6aaeeff241a19429f78bdb083fed4b, type: 3}
-  - {fileID: 9185701822280707311, guid: 22e740e65e01ede4391d3045cc065c89, type: 3}
-  - {fileID: 2789276564270249472, guid: b11d0bbd1137ca342945e5dc141d8982, type: 3}
-  - {fileID: 5354959931687701289, guid: 3cdffc6d69aa79e4189e86178e803655, type: 3}
+  - {fileID: -632589112207379440, guid: 3ee2af95205fdae448366b1d0470ab80, type: 3}
+  - {fileID: -632589112207379440, guid: 3ee2af95205fdae448366b1d0470ab80, type: 3}
+  - {fileID: -632589112207379440, guid: 3ee2af95205fdae448366b1d0470ab80, type: 3}
+  - {fileID: 7776836235123480419, guid: 6c27dd021432d274f93b70cba11bd6e7, type: 3}
+  - {fileID: 7776836235123480419, guid: 6c27dd021432d274f93b70cba11bd6e7, type: 3}
+  - {fileID: 7776836235123480419, guid: 6c27dd021432d274f93b70cba11bd6e7, type: 3}
   levelPrefabs:
   - {fileID: 3444463731680135898, guid: a11c0001d7a90144b8e1f2a3b4c5d601, type: 3}
   - {fileID: 3444463731680135898, guid: a11c0002d7a90144b8e1f2a3b4c5d602, type: 3}
@@ -68,7 +68,8 @@ MonoBehaviour:
   abilityL10:
     id: dragon_l10_burning_trail
     displayName: Burning Trail
-    description: Enemies hit by Flame Burst burn for 15% attack damage/sec for 3s (refresh).
+    description: Enemies hit by Flame Burst burn for 15% attack damage/sec for 3s
+      (refresh).
     power: 15
     radius: 0
     durationSeconds: 3
@@ -82,7 +83,8 @@ MonoBehaviour:
   abilityL20:
     id: dragon_l20_rising_heat
     displayName: Rising Heat
-    description: When one attack damages at least 3 enemies, permanently gain attack speed.
+    description: When one attack damages at least 3 enemies, permanently gain attack
+      speed.
     power: 2
     radius: 0
     durationSeconds: 0

@@ -113,18 +113,31 @@ public class BattleTopUI : MonoBehaviour
         if (manaText == null)
             return fallback;
 
-        Canvas canvas = manaText.GetComponentInParent<Canvas>();
+        RectTransform panel = manaText.rectTransform;
         Camera camera = Camera.main;
-        if (canvas != null && canvas.renderMode == RenderMode.ScreenSpaceOverlay && camera != null)
-        {
-            Vector3 screenPosition = manaText.rectTransform.position;
-            screenPosition.z = Mathf.Abs(camera.transform.position.z);
-            Vector3 world = camera.ScreenToWorldPoint(screenPosition);
-            world.z = fallback.z;
-            return world;
-        }
+        if (panel == null || camera == null)
+            return fallback;
 
-        return manaText.transform.position;
+        Vector3[] corners = new Vector3[4];
+        panel.GetWorldCorners(corners);
+        Vector2 screenCenter =
+            (RectTransformUtility.WorldToScreenPoint(camera, corners[0]) +
+             RectTransformUtility.WorldToScreenPoint(camera, corners[2])) * 0.5f;
+
+        if (screenCenter.x > Screen.width * 0.45f || screenCenter.y > Screen.height * 0.45f)
+            return fallback;
+
+        Vector3 world = CanvasMapSpace.ScreenToGameplayWorld(screenCenter);
+        if (!IsFinite(world))
+            return fallback;
+
+        world.z = fallback.z;
+        return world;
+    }
+
+    private static bool IsFinite(Vector3 value)
+    {
+        return float.IsFinite(value.x) && float.IsFinite(value.y) && float.IsFinite(value.z);
     }
 
     private void UpdateManaText()

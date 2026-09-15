@@ -67,22 +67,22 @@ public class MergeManager : MonoBehaviour
             return false;
         }
 
-        // Client Option B: nothing can merge into Light Fairy (including Fairy→Fairy).
-        // Fairy may only be dragged onto other units as Radiant Blessing.
+        // Radiant Blessing: Fairy dragged onto an ally (including another Fairy).
+        LightFairyAbility lightFairy = sourceTower.GetComponent<LightFairyAbility>();
+        if (lightFairy != null)
+            return TryUpgradeWithLightFairy(lightFairy, sourceTower, targetTower, sourceCell, targetCell);
+
+        // Shapeshifter copies other units (including Fairy); Shapeshifter→Shapeshifter uses normal merge.
+        ShapeshifterAbility shapeshifter = sourceTower.GetComponent<ShapeshifterAbility>();
+        if (shapeshifter != null && targetTower.GetComponent<ShapeshifterAbility>() == null)
+            return TryCopyShapeshifter(shapeshifter, sourceTower, targetTower, sourceCell);
+
+        // Option B: other units cannot merge into Light Fairy (no random-merge onto Fairy).
         if (targetTower.GetComponent<LightFairyAbility>() != null)
         {
             UnityEngine.Debug.Log("Merge blocked: cannot merge into Light Fairy.");
             return false;
         }
-
-        LightFairyAbility lightFairy = sourceTower.GetComponent<LightFairyAbility>();
-        if (lightFairy != null)
-            return TryUpgradeWithLightFairy(lightFairy, sourceTower, targetTower, sourceCell, targetCell);
-
-        // Shapeshifter copies other units; Shapeshifter→Shapeshifter uses normal random merge.
-        ShapeshifterAbility shapeshifter = sourceTower.GetComponent<ShapeshifterAbility>();
-        if (shapeshifter != null && targetTower.GetComponent<ShapeshifterAbility>() == null)
-            return TryCopyShapeshifter(shapeshifter, sourceTower, targetTower, sourceCell);
 
         if (sourceTower.UnitData != targetTower.UnitData)
         {

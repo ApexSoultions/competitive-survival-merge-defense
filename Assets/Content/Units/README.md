@@ -57,35 +57,41 @@ Extra sheet knobs live in `parameterNames` / `parameterValues` (e.g. `nearbyDama
 - Ability scripts read tiers with `AbilityRuntime.GetParameter` / `GetRadius` / `TryAddL20Stack`.
 - Roster: Fire Mage, Zeus, Frost Witch, Magic Archer, Stone Guardian, Gold Spirit, Poison Druid, Enchantress, Princess, Shapeshifter, Light Fairy, **Dragon**.
 
-## Phase 5 — Account unlock gating (complete)
+## Phase 5 — Per-unit unlock gating (client MVP)
 
-Shared account level (not per-unit XP) gates **L10** and **L20**. L1 is always on.
+Each unit has its own collection level **1–50**. That unit’s level gates **its** L10 / L20. L1 is always on. No account-wide unlock in MVP.
 
-| Account level | L10 | L20 |
-|---------------|-----|-----|
+| Unit level | L10 | L20 |
+|------------|-----|-----|
 | 1–9 | Off | Off |
 | 10–19 | On | Off |
-| 20+ | On | On |
+| 20–50 | On | On |
 
-**Config:** `GameBalanceConfig` → `l10UnlockAccountLevel` / `l20UnlockAccountLevel` / `debugForceAllAbilityTiers`.
+**Config:** `GameBalanceConfig` → `l10UnlockAccountLevel` / `l20UnlockAccountLevel` / `debugForceAllAbilityTiers` / `showAbilityTestPanel`.
 
 | Mode | Setting |
 |------|---------|
-| Client demo of full abilities | **Debug Force All Ability Tiers = ON** |
-| Real unlocks / shipping | **OFF** + set account level |
+| Client demo of full abilities | Force all ON (asset or DEV panel toggle) |
+| Real unlocks / L20 stack testing | Force all **OFF** + set units to **20** |
 
-**QA menus:** **Tools → Account → Set Level 1 / 10 / 20** (re-summon towers after change).  
-**Hub:** header level badge shows the numeric account level via `HubHeaderView`.  
-**Save key:** `ACCOUNT_LEVEL`.
+**In-game QA (preferred for client):** with `showAbilityTestPanel` ON, tap **DEV Abilities** (top-right) in Hub or Battle:
+
+1. Uncheck **Force all L10/L20**
+2. Tap **All 20** (or set one unit to 20)
+3. **Refresh board towers** if units are already summoned
+4. Play → Console `[UnitAbilityRuntime] … L20 stacks=… bonus=…%`
+
+**Editor backup:** **Tools → Units → Set Unit Level…**  
+**Save key:** `UNIT_LEVELS` via `UnitProgressService`.  
+**Hub:** account level badge hidden (`—`); unlocks are per-unit.
 
 ### Phase 5 play checklist
 
-1. Uncheck **Debug Force All Ability Tiers** on `GameBalanceConfig`.
-2. **Tools → Account → Set Level 1** → Battle → summon Fire Mage → Console `L10=0 L20=0` → **no Burn (B)**.
-3. Set Level **10** → re-summon → `L10=1 L20=0` → Burn on; no L20 stack logs.
-4. Set Level **20** → re-summon → `L10=1 L20=1` → L20 stack logs (e.g. Frost Witch `bonus=2%`).
-5. Turn force-all **ON** → all tiers active regardless of account (regression).
-6. **Game → Foundation → Validate Game Content** — Phase 5 section OK (force-all may WARN).
+1. **DEV Abilities** → Force all **OFF** → **All 1** → summon → Console `L10=0 L20=0`.
+2. **All 10** → Refresh → `L10=1 L20=0`.
+3. **All 20** → Refresh → `L10=1 L20=1` → trigger L20 stacks (e.g. Frost Witch) → stack logs.
+4. Force all **ON** → all tiers active regardless of unit level.
+5. **Game → Foundation → Validate Game Content** — Phase 5 / per-unit section OK.
 
 ## Phase 4 — Status framework (complete)
 
@@ -111,8 +117,9 @@ Cleanse: `StatusCleanseUtility` + Radiant Cleanse.
 | 3 | Mark | Magic Archer | Fight Elite/Boss (or force Elite tier) | **M** on target; Archer deals extra vs marked |
 | 4 | Shield consume | Princess + any adjacent DPS | Place Princess next to ally; let enemies walk into ally | Ally `TowerShieldRuntime` hits drop; Sacred Proximity fades when empty; refreshes on timer |
 | 5 | Slow (unchanged) | Frost Witch or **Frost Nova** active | Cast Frost Nova / Witch L1 | **S** icon; enemies move slower |
+| 5b | Stun | Stone Guardian | Summon Guardian; hit enemies | **!** icon; enemy stops briefly (respects stun immunity) |
 | 6 | Radiant Cleanse | Equip **Radiant Cleanse** | Burn/slow some enemies, then cast Cleanse | Debuff icons clear; towers still get pulse/buff |
-| 7 | Regression | Any 2 same ML units | Merge two Fire Mages | Random deck unit +1 (Option B); Fairy→Fairy blocked; Fairy→ally blesses |
+| 7 | Regression | Fairy / Shapeshifter | Shapeshifter→Fairy; Fairy→Fairy; Fairy→ally | Copy Fairy works; Fairy blesses Fairy; Fairy blesses ally; other units still cannot random-merge onto Fairy |
 | 8 | Dragon anim | Dragon | Summon Dragon; wait for shots | Idle loop + attack frames + fireball |
 
 **Icons legend:** S=Slow, P=Poison, !=Stun, B=Burn, F=Freeze, M=Mark (above enemy HP bar).

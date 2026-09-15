@@ -15,10 +15,10 @@ MonoBehaviour:
   unitId: unit_frost_witch
   unitName: Frost Witch
   tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
-  icon: {fileID: 7587040222958975443, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  icon: {fileID: -7058371699446282085, guid: cdd360a0cd4a4a04d94b8c610dd29597, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 0958761f0923b4e48b4e9acd77ee58a7, type: 3}
   levelIcons:
-  - {fileID: 7587040222958975443, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  - {fileID: -7058371699446282085, guid: cdd360a0cd4a4a04d94b8c610dd29597, type: 3}
   levelPrefabs:
   - {fileID: 3444463731680135898, guid: 0958761f0923b4e48b4e9acd77ee58a7, type: 3}
   - {fileID: 3444463731680135898, guid: 4d526f2e204258f49adbe3cf984d995f, type: 3}

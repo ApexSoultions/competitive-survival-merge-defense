@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Stone Guardian: Crushing Blow, Armor Fracture, Trophy of Stone (replaces prototype stun-as-L1).
+/// Stone Guardian: Crushing Blow (bonus dmg + on-hit stun), Armor Fracture, Trophy of Stone.
 /// </summary>
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Tower))]
 public sealed class StoneGolemStunAbility : TowerAbilityBase
 {
+    private const float FallbackStunDurationSeconds = 0.8f;
+
     private struct FractureState
     {
         public float endTime;
@@ -16,6 +18,7 @@ public sealed class StoneGolemStunAbility : TowerAbilityBase
 
     [Header("Feedback")]
     [SerializeField] private Sprite stunStatusSprite;
+    [SerializeField, Min(0.05f)] private float fallbackStunDuration = FallbackStunDurationSeconds;
 
     private int consecutiveTargetId;
     private int consecutiveHits;
@@ -64,6 +67,8 @@ public sealed class StoneGolemStunAbility : TowerAbilityBase
         int id = target.GetInstanceID();
         recentHitTimes[id] = Time.time;
 
+        TryApplyCrushingBlowStun(target);
+
         float bonusPercent = 0f;
 
         if (AbilityRuntime != null && AbilityRuntime.IsTierActive(UnitAbilityTier.L1))
@@ -93,6 +98,27 @@ public sealed class StoneGolemStunAbility : TowerAbilityBase
             if (bonusDamage > 0f)
                 target.TakeDamage(bonusDamage, EnemyDamageType.Physical);
         }
+    }
+
+    private void TryApplyCrushingBlowStun(Enemy target)
+    {
+        // Client expects on-hit stun; apply whenever L1 is active (or always with fallback if no runtime).
+        bool l1Active = AbilityRuntime == null || AbilityRuntime.IsTierActive(UnitAbilityTier.L1);
+        if (!l1Active)
+            return;
+
+        float duration = fallbackStunDuration;
+        if (AbilityRuntime != null && AbilityRuntime.IsTierActive(UnitAbilityTier.L1))
+        {
+            duration = AbilityRuntime.GetParameter(
+                UnitAbilityTier.L1,
+                "stunDurationSeconds",
+                AbilityRuntime.GetDurationSeconds(UnitAbilityTier.L1, fallbackStunDuration));
+            if (duration <= 0f)
+                duration = fallbackStunDuration;
+        }
+
+        target.TryApplyStun(duration, stunStatusSprite);
     }
 
     private void TrackArmorFracture(Enemy target)
@@ -185,5 +211,6 @@ public sealed class StoneGolemStunAbility : TowerAbilityBase
             return;
 
         stunStatusSprite = other.stunStatusSprite;
+        fallbackStunDuration = other.fallbackStunDuration;
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 public sealed class ManaOrbVfx : PooledAbilityVfx
 {
     [SerializeField, Min(0.05f)] private float travelDuration = 0.65f;
-    [SerializeField, Min(0f)] private float arcHeight = 1.1f;
+    [SerializeField, Min(0f)] private float arcHeight = 0.28f;
     [SerializeField] private Color orbColor = new Color(1f, 0.78f, 0.12f, 1f);
     [SerializeField] private bool useTrailRenderer = false;
 
@@ -16,6 +16,9 @@ public sealed class ManaOrbVfx : PooledAbilityVfx
     private Vector3 destination;
     private float age;
     private float startScale = 1f;
+    private Bounds flightBounds;
+    private bool hasFlightBounds;
+    private bool listeningForBattleEnd;
 
     private void Awake()
     {
@@ -55,6 +58,14 @@ public sealed class ManaOrbVfx : PooledAbilityVfx
             trail.endColor = new Color(orbColor.r, orbColor.g, orbColor.b, 0f);
             trail.Clear();
         }
+
+        BuildFlightBounds(from, to);
+        BeginBattleEndListen();
+    }
+
+    private void OnDestroy()
+    {
+        EndBattleEndListen();
     }
 
     private void Update()
@@ -62,25 +73,106 @@ public sealed class ManaOrbVfx : PooledAbilityVfx
         if (!IsSpawned)
             return;
 
+        if (!BattleFlowState.IsGameplayActive)
+        {
+            Release();
+            return;
+        }
+
         age += Time.deltaTime;
         float t = Mathf.Clamp01(age / travelDuration);
+        if (!float.IsFinite(t))
+        {
+            Release();
+            return;
+        }
+
         Vector3 position = Vector3.Lerp(start, destination, t);
         position.y += Mathf.Sin(t * Mathf.PI) * arcHeight;
+        if (!float.IsFinite(position.x) || !float.IsFinite(position.y) || !float.IsFinite(position.z))
+        {
+            Release();
+            return;
+        }
+
+        if (hasFlightBounds && !flightBounds.Contains(position))
+        {
+            Release();
+            return;
+        }
+
         transform.position = position;
         transform.localScale = Vector3.one * (startScale * Mathf.Lerp(1f, 0.35f, t));
         float directionAngle = Mathf.Atan2(destination.y - start.y, destination.x - start.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, directionAngle);
 
-        if (t >= 1f)
+        if (t >= 1f || age >= travelDuration + 0.05f)
             Release();
     }
 
     internal override void OnReturnedToPool()
     {
+        EndBattleEndListen();
+        hasFlightBounds = false;
         if (trail != null && trail.enabled)
             trail.Clear();
         transform.rotation = Quaternion.identity;
         base.OnReturnedToPool();
+    }
+
+    private void OnBattleEnded()
+    {
+        if (IsSpawned)
+            Release();
+    }
+
+    private void BeginBattleEndListen()
+    {
+        if (listeningForBattleEnd)
+            return;
+
+        GameplayEvents.BattleEnded += OnBattleEnded;
+        listeningForBattleEnd = true;
+    }
+
+    private void EndBattleEndListen()
+    {
+        if (!listeningForBattleEnd)
+            return;
+
+        GameplayEvents.BattleEnded -= OnBattleEnded;
+        listeningForBattleEnd = false;
+    }
+
+    private void BuildFlightBounds(Vector3 from, Vector3 to)
+    {
+        hasFlightBounds = false;
+        Camera camera = Camera.main;
+        if (camera == null)
+            return;
+
+        // Soft AABB covering board + footer: keep orbs out of side lanes / sky above the map.
+        Vector3 bl = camera.ViewportToWorldPoint(new Vector3(0.12f, 0.02f, Mathf.Abs(camera.transform.position.z)));
+        Vector3 tr = camera.ViewportToWorldPoint(new Vector3(0.88f, 0.55f, Mathf.Abs(camera.transform.position.z)));
+        bl.z = 0f;
+        tr.z = 0f;
+
+        Vector3 min = Vector3.Min(bl, tr);
+        Vector3 max = Vector3.Max(bl, tr);
+        // Ensure start/end are always inside so a valid HUD path is not rejected at spawn.
+        min = Vector3.Min(min, Vector3.Min(from, to));
+        max = Vector3.Max(max, Vector3.Max(from, to));
+        // Padding for low arc peak.
+        min.y -= arcHeight + 0.35f;
+        max.y += arcHeight + 0.35f;
+        min.x -= 0.35f;
+        max.x += 0.35f;
+
+        Vector3 center = (min + max) * 0.5f;
+        Vector3 size = max - min;
+        size.z = 4f;
+        flightBounds = new Bounds(center, size);
+        hasFlightBounds = true;
     }
 
     private static Sprite GetGeneratedOrbSprite()

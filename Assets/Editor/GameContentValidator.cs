@@ -541,29 +541,29 @@ public static class GameContentValidator
 
     private static void ValidatePhase5AccountGating(StringBuilder sb, ref int errors, ref int warnings)
     {
-        sb.AppendLine("== Phase 5 Account Ability Gating ==");
+        sb.AppendLine("== Phase 5 / Per-Unit Ability Gating ==");
 
-        if (string.IsNullOrEmpty(SaveKeys.AccountLevel))
+        if (string.IsNullOrEmpty(SaveKeys.UnitLevels))
         {
             errors++;
-            sb.AppendLine("ERROR: SaveKeys.AccountLevel is missing.");
+            sb.AppendLine("ERROR: SaveKeys.UnitLevels is missing.");
         }
         else
-            sb.AppendLine("SaveKeys.AccountLevel = " + SaveKeys.AccountLevel);
+            sb.AppendLine("SaveKeys.UnitLevels = " + SaveKeys.UnitLevels);
 
-        Type progressType = typeof(AccountProgressService);
-        if (progressType.GetMethod("GetAccountLevel") == null ||
-            progressType.GetMethod("SetAccountLevel", new[] { typeof(int) }) == null)
+        Type progressType = typeof(UnitProgressService);
+        if (progressType.GetMethod("GetUnitLevel", new[] { typeof(string) }) == null ||
+            progressType.GetMethod("SetUnitLevel", new[] { typeof(string), typeof(int) }) == null)
         {
             errors++;
-            sb.AppendLine("ERROR: AccountProgressService Get/SetAccountLevel missing.");
+            sb.AppendLine("ERROR: UnitProgressService Get/SetUnitLevel missing.");
         }
         else
         {
-            int level = AccountProgressService.GetAccountLevel();
             sb.AppendLine(
-                "AccountProgressService OK — current level=" + level +
-                " saved=" + AccountProgressService.HasSavedAccountLevel());
+                "UnitProgressService OK — sample dragon lv=" +
+                UnitProgressService.GetUnitLevel("unit_dragon") +
+                " (1–" + UnitProgressService.MaxUnitLevel + ").");
         }
 
         GameBalanceConfig balance = null;
@@ -586,7 +586,7 @@ public static class GameContentValidator
         if (balance.l10UnlockAccountLevel < 1 || balance.l20UnlockAccountLevel < 1)
         {
             errors++;
-            sb.AppendLine("ERROR: L10/L20 unlock account levels must be >= 1.");
+            sb.AppendLine("ERROR: L10/L20 unlock unit levels must be >= 1.");
         }
         else if (balance.l20UnlockAccountLevel < balance.l10UnlockAccountLevel)
         {
@@ -599,18 +599,18 @@ public static class GameContentValidator
         {
             sb.AppendLine(
                 "Thresholds OK — L10@" + balance.l10UnlockAccountLevel +
-                " L20@" + balance.l20UnlockAccountLevel + ".");
+                " L20@" + balance.l20UnlockAccountLevel + " (per-unit collection level).");
         }
 
         if (balance.debugForceAllAbilityTiers)
         {
             warnings++;
             sb.AppendLine(
-                "WARN: debugForceAllAbilityTiers is ON — account gating is bypassed. " +
-                "Turn OFF for product / client unlock demos.");
+                "WARN: debugForceAllAbilityTiers is ON — per-unit gating is bypassed. " +
+                "Turn OFF to test L10@10 / L20@20. Tools → Units → Set Unit Level…");
         }
         else
-            sb.AppendLine("debugForceAllAbilityTiers is OFF — real account gating active.");
+            sb.AppendLine("debugForceAllAbilityTiers is OFF — real per-unit gating active.");
     }
 
     private static Type ResolveExpectedAbilityHostType(string unitId)

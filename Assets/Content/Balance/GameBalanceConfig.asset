@@ -24,3 +24,4 @@ MonoBehaviour:
   l10UnlockAccountLevel: 10
   l20UnlockAccountLevel: 20
   debugForceAllAbilityTiers: 0
+  showAbilityTestPanel: 1

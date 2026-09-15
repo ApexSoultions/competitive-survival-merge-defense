@@ -3,36 +3,36 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// QA helpers for Phase 5 account-level L10/L20 gating.
+/// Legacy account-level QA (ability unlocks are now per-unit — use Tools → Units → Set Unit Level…).
 /// Menu: Tools → Account → …
 /// </summary>
 public static class AccountProgressEditorMenu
 {
-    [MenuItem("Tools/Account/Log Current Level")]
+    [MenuItem("Tools/Account/Log Current Level (legacy)")]
     public static void LogCurrentLevel()
     {
         LogUnlockPreview(AccountProgressService.GetAccountLevel(), showDialog: true);
     }
 
-    [MenuItem("Tools/Account/Set Level 1 (L10/L20 off)")]
+    [MenuItem("Tools/Account/Set Level 1 (legacy — gating is per-unit now)")]
     public static void SetLevel1()
     {
         ApplyLevel(1);
     }
 
-    [MenuItem("Tools/Account/Set Level 10 (L10 on, L20 off)")]
+    [MenuItem("Tools/Account/Set Level 10 (legacy — gating is per-unit now)")]
     public static void SetLevel10()
     {
         ApplyLevel(10);
     }
 
-    [MenuItem("Tools/Account/Set Level 20 (L10 + L20 on)")]
+    [MenuItem("Tools/Account/Set Level 20 (legacy — gating is per-unit now)")]
     public static void SetLevel20()
     {
         ApplyLevel(20);
     }
 
-    [MenuItem("Tools/Account/Set Custom Level…")]
+    [MenuItem("Tools/Account/Set Custom Level… (legacy)")]
     public static void SetCustomLevel()
     {
         AccountLevelInputWizard.Open();
@@ -44,41 +44,19 @@ public static class AccountProgressEditorMenu
         int saved = AccountProgressService.GetAccountLevel();
         LogUnlockPreview(saved, showDialog: true);
         Debug.Log("[Account] Saved ACCOUNT_LEVEL=" + saved +
-                  ". Re-summon towers (or restart Play) so UnitAbilityRuntime rebinds.");
+                  ". NOTE: UnitAbilityRuntime now gates by UnitProgressService (Tools → Units → Set Unit Level…).");
     }
 
     private static void LogUnlockPreview(int accountLevel, bool showDialog)
     {
-        GameBalanceConfig balance = LoadBalance();
-        bool force = balance != null && balance.debugForceAllAbilityTiers;
-        int needL10 = balance != null ? balance.l10UnlockAccountLevel : 10;
-        int needL20 = balance != null ? balance.l20UnlockAccountLevel : 20;
-
-        bool l10 = force || accountLevel >= needL10;
-        bool l20 = force || accountLevel >= needL20;
-
         string msg =
-            "level=" + accountLevel +
-            "  saved=" + AccountProgressService.HasSavedAccountLevel() +
-            "  forceAll=" + force +
-            "\n→ L10=" + (l10 ? "ON" : "OFF") +
-            "  L20=" + (l20 ? "ON" : "OFF") +
-            "  (need " + needL10 + " / " + needL20 + ")";
+            "LEGACY account level=" + accountLevel +
+            "\nAbility unlocks are per-unit now." +
+            "\nUse Tools → Units → Set Unit Level… / Set All Units Level 20.";
 
         Debug.Log("[Account] " + msg.Replace("\n", " "));
         if (showDialog)
-            EditorUtility.DisplayDialog("Account Level", msg, "OK");
-    }
-
-    private static GameBalanceConfig LoadBalance()
-    {
-        GameConfigRegistry registry = AssetDatabase.LoadAssetAtPath<GameConfigRegistry>(
-            "Assets/Content/Resources/GameConfigRegistry.asset");
-        if (registry != null && registry.GameBalance != null)
-            return registry.GameBalance;
-
-        return AssetDatabase.LoadAssetAtPath<GameBalanceConfig>(
-            "Assets/Content/Balance/GameBalanceConfig.asset");
+            EditorUtility.DisplayDialog("Account Level (Legacy)", msg, "OK");
     }
 
     private sealed class AccountLevelInputWizard : ScriptableWizard

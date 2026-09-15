@@ -41,9 +41,12 @@ public sealed class HubHeaderView : MonoBehaviour
         if (playerNameText != null && string.IsNullOrEmpty(playerNameText.text))
             SetText(playerNameText, "Commander");
 
-        // Phase 5: show persisted account level (L10/L20 unlock gate).
+        // MVP: ability unlocks are per-unit collection level — do not show account level as player level.
         TMP_Text levelLabel = accountLevelText != null ? accountLevelText : leagueProgressText;
-        SetText(levelLabel, AccountProgressService.GetAccountLevel().ToString());
+        if (accountLevelText != null)
+            SetText(accountLevelText, "—");
+        else if (levelLabel != null && levelLabel == leagueProgressText)
+            SetText(leagueProgressText, "— / —");
 
         if (accountLevelText != null &&
             leagueProgressText != null &&

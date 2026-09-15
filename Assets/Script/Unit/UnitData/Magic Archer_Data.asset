@@ -15,10 +15,10 @@ MonoBehaviour:
   unitId: unit_shadow_assassin
   unitName: Magic Archer
   tagIcon: {fileID: 8180216471678179223, guid: a5cfa0a7def4d0348807ea40848b1268, type: 3}
-  icon: {fileID: -6130079588993408331, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  icon: {fileID: 3950474570671678265, guid: a803b5896fa20e742b8b0c9fc695ba89, type: 3}
   prefab: {fileID: 3444463731680135898, guid: 2deaf5263beb99548a88615b77680856, type: 3}
   levelIcons:
-  - {fileID: -6130079588993408331, guid: eb6d1802b34e3724497dad45223afd3f, type: 3}
+  - {fileID: 3950474570671678265, guid: a803b5896fa20e742b8b0c9fc695ba89, type: 3}
   levelPrefabs:
   - {fileID: 3444463731680135898, guid: 2deaf5263beb99548a88615b77680856, type: 3}
   - {fileID: 3444463731680135898, guid: 591297ec4edc9ef41ac7c1e31554fac8, type: 3}
@@ -47,7 +47,8 @@ MonoBehaviour:
   abilityL1:
     id: shadow_assassin_l1_marked_for_death
     displayName: Marked for Death
-    description: Marks current Boss/Elite; marked targets take +30% damage from this unit.
+    description: Marks current Boss/Elite; marked targets take +30% damage from this
+      unit.
     power: 30
     radius: 0
     durationSeconds: 0

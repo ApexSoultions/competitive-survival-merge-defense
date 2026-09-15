@@ -207,19 +207,32 @@ public sealed class GoldSpiritAbility : TowerAbilityBase
         if (GameStatsTracker.Instance != null)
             GameStatsTracker.Instance.AddManaEarned(grantedAmount);
 
+        if (!BattleFlowState.IsGameplayActive)
+            return true;
+
         float characterScale = AbilityVisualSizing.GetCharacterScale(BoardTower, transform, referenceCharacterSize);
         Vector3 origin = AbilityVisualSizing.GetEffectAnchor(BoardTower, transform, 0.5f);
         Vector3 characterTop = AbilityVisualSizing.GetEffectAnchor(BoardTower, transform, 1f);
         Vector3 orbStart = characterTop + orbSpawnOffset * characterScale;
         Vector3 textPosition = characterTop + textSpawnOffset * characterScale;
+
+        Vector3 hopFallback = orbStart + Vector3.up * (0.5f * characterScale);
         Vector3 target = ManaHudUI.Instance != null
-            ? ManaHudUI.Instance.GetManaVfxWorldPosition(orbStart + Vector3.up * 3f)
+            ? ManaHudUI.Instance.GetManaVfxWorldPosition(hopFallback)
             : BattleTopUI.Instance != null
-                ? BattleTopUI.Instance.GetManaVfxWorldPosition(orbStart + Vector3.up * 3f)
-                : orbStart + Vector3.up * 3f;
+                ? BattleTopUI.Instance.GetManaVfxWorldPosition(hopFallback)
+                : hopFallback;
+
+        // HUD rejected / missing → short local hop so the orb never crosses into enemy lanes.
+        float travelDuration = orbTravelDuration;
+        if ((target - hopFallback).sqrMagnitude < 0.0001f || (target - orbStart).sqrMagnitude < 0.01f)
+        {
+            target = hopFallback;
+            travelDuration = Mathf.Min(orbTravelDuration, 0.35f);
+        }
 
         ManaOrbVfx orb = AbilityVfxPool.Spawn(manaOrbPrefab, orbStart, Quaternion.identity);
-        orb?.Play(orbStart, target, manaColor, orbTravelDuration, characterScale * orbScaleRelativeToCharacter);
+        orb?.Play(orbStart, target, manaColor, travelDuration, characterScale * orbScaleRelativeToCharacter);
 
         if (FloatingDamagePool.Instance != null)
             FloatingDamagePool.Instance.ShowResource(textPosition, grantedAmount, EnemyDamageType.ManaGain);
